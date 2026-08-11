@@ -1,0 +1,320 @@
+:root {
+  --bg-top: #fff8e7;
+  --bg-bottom: #eaf6ff;
+  --ink: #2b2b2b;
+  --ink-soft: #6b6b6b;
+  --card-bg: #ffffff;
+  --accent: #f2a541;
+  --accent-dark: #d98c2b;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page {
+  width: 100%;
+  max-width: 720px;
+  padding: 32px 20px 60px;
+}
+
+/* Header / nav */
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.brand {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent-dark);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+}
+
+/* Greeting */
+.greeting {
+  text-align: center;
+  margin: 28px 0 8px;
+}
+
+.greeting h1 {
+  font-size: 1.6rem;
+  margin: 0 0 6px;
+}
+
+.greeting p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+/* Hero / spin area */
+.hero {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.reel {
+  width: 100%;
+  min-height: 190px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid transparent;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.reel.idle .reel-placeholder {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+.reel-rarity {
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.reel-quest {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.reel-verse {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.reel-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+}
+
+.reel.spinning {
+  animation: pulseBorder 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseBorder {
+  from { box-shadow: var(--shadow); }
+  to { box-shadow: 0 10px 35px rgba(0,0,0,0.18); }
+}
+
+.reel.revealed {
+  animation: popIn 0.4s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.94); }
+  60% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.reel.secret-revealed {
+  animation: popIn 0.4s ease, shimmer 1.8s ease-in-out 0.4s;
+}
+
+@keyframes shimmer {
+  0%, 100% { box-shadow: var(--shadow); }
+  50% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.45); }
+}
+
+.spin-button {
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  border: none;
+  border-radius: 999px;
+  padding: 16px 40px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(217, 140, 43, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.spin-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(217, 140, 43, 0.5);
+}
+
+.spin-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.spin-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.progress-summary {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.progress-summary a {
+  color: var(--accent-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Quest log page */
+.log-intro {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.log-intro h1 {
+  margin-bottom: 4px;
+}
+
+.log-intro p {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.rarity-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  border-left: 8px solid #ccc;
+}
+
+.rarity-section.locked {
+  opacity: 0.65;
+}
+
+.rarity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rarity-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.rarity-chance {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.rarity-verse {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+
+.rarity-progress {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.quest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.quest-list li {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+
+.quest-list li.found {
+  background: rgba(0, 0, 0, 0.04);
+  font-weight: 600;
+}
+
+.quest-list li.unknown {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+footer.credit {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  margin-top: 20px;
+}
+
+@media (max-width: 480px) {
+  .greeting h1 {
+    font-size: 1.35rem;
+  }
+  .reel-quest {
+    font-size: 1.05rem;
+  }
+  .spin-button {
+    width: 100%;
+  }
+}

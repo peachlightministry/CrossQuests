@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jesus Side Quest</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✝️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page">
+  <nav class="site-nav">
+    <a class="brand" href="index.html">✝️ Jesus Side Quest</a>
+    <a class="nav-link" href="log.html">Quest Log</a>
+  </nav>
+
+  <div class="greeting">
+    <h1 id="greeting-text">Welcome!</h1>
+    <p>Ready for today's side quest?</p>
+  </div>
+
+  <div class="hero">
+    <div class="reel idle" id="reel">
+      <span class="reel-placeholder" id="reel-placeholder">Tap the button below to spin!</span>
+    </div>
+
+    <button class="spin-button" id="spin-button">🎲 Spin a Side Quest</button>
+
+    <p class="progress-summary" id="progress-summary"></p>
+  </div>
+</div>
+
+<script src="js/quest-data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/spin.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
