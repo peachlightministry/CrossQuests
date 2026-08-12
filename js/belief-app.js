@@ -155,5 +155,10 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
+document.getElementById('test-spin-button').addEventListener('click', () => {
+  grantTestSpin();
+  refreshSpinStatus();
+});
+
 updateProgressSummary();
 refreshSpinStatus();

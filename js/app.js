@@ -126,6 +126,11 @@ spinButton.addEventListener('click', () => {
   spin();
 });
 
+document.getElementById('test-spin-button').addEventListener('click', () => {
+  grantTestSpin();
+  refreshSpinStatus();
+});
+
 setGreeting();
 updateProgressSummary();
 refreshSpinStatus();

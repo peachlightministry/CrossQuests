@@ -53,6 +53,20 @@ function createSpinLimiter({ storageKey, maxSpins, windowMs }) {
   return { getState, canSpin, useSpin, msUntilReset };
 }
 
+// TEMPORARY testing helper — grants 1 extra spin to both limiters at once. Remove later.
+function grantTestSpin() {
+  for (const [key, max] of [['jsq-quest-spin-limit', 2], ['jsq-belief-spin-limit', 1]]) {
+    try {
+      const state = JSON.parse(localStorage.getItem(key) || 'null') || { remaining: max, resetAt: null };
+      state.remaining = Math.min(max, (state.remaining || 0) + 1);
+      state.resetAt = null;
+      localStorage.setItem(key, JSON.stringify(state));
+    } catch (e) {
+      // ignore
+    }
+  }
+}
+
 function formatCountdown(ms) {
   const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
   const h = Math.floor(totalSeconds / 3600);

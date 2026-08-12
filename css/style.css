@@ -278,6 +278,22 @@ body {
   font-size: 0.95rem;
 }
 
+.test-spin-button {
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: #999;
+  background: transparent;
+  border: 1px dashed #bbb;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.test-spin-button:hover {
+  color: #666;
+  border-color: #999;
+}
+
 .progress-summary a {
   color: var(--accent-dark);
   font-weight: 700;
