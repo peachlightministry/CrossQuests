@@ -1,8 +1,9 @@
-// Weighted-random quest selection. Each rarity tier's weight is 1/oddsN, except the
-// secret tier, where every quest in it is individually 1/oddsN (so the tier's total
-// weight is quests.length/oddsN). A quest is then picked at random within the chosen tier.
+// Weighted-random quest selection. Every rarity tier (including the secret one) has
+// weight 1/oddsN for the tier as a whole, so the stated "1 in N" odds are always
+// directly comparable across tiers and rarer tiers are always less likely to hit.
+// A quest is then picked at random within the chosen tier.
 function rarityWeight(rarity) {
-  return rarity.secret ? rarity.quests.length / rarity.oddsN : 1 / rarity.oddsN;
+  return 1 / rarity.oddsN;
 }
 
 function pickRandomRarity() {
