@@ -1,10 +1,12 @@
 // Common false beliefs Christians carry, paired with a short biblical correction.
+// "challenge" is optional — a concrete next step, not just something to read.
 const FALSE_BELIEFS = [
   {
     id: 'fb-01',
     belief: "I keep repenting then doing the same thing, God must have had enough of me.",
     explanation: "Christ's love for us is infinite and he is patient. The problem is not sin, but you not focusing on the victory Christ achieved and living from that identity.",
     reference: 'Read Romans 6 and 1 John 1:9',
+    challenge: "Confess whatever you're hiding right now, out loud, and thank God for grace before you feel like you've earned it.",
   },
   {
     id: 'fb-02',
@@ -22,7 +24,7 @@ const FALSE_BELIEFS = [
     id: 'fb-04',
     belief: "God won't give you more than you can handle.",
     explanation: "That's a misquote of a verse about resisting temptation, not general suffering. Paul actually wrote that he was crushed beyond his own strength, so he'd rely on God instead of himself.",
-    reference: 'Read 1 Corinthians 10:13 and 2 Corinthians 1:8-9',
+    reference: 'Read 1 Corinthians 10:13 and 2 Corinthians 1',
   },
   {
     id: 'fb-05',
@@ -34,13 +36,14 @@ const FALSE_BELIEFS = [
     id: 'fb-06',
     belief: "If I have enough faith, I'll never suffer, get sick, or be poor.",
     explanation: 'This "prosperity gospel" idea contradicts the New Testament, which treats suffering as something that refines faith, not something faith prevents.',
-    reference: 'Read James 1:2-4 and John 16:33',
+    reference: 'Read James 1 and John 16',
+    challenge: 'Name one hard season honestly in prayer today, without rushing to find the silver lining.',
   },
   {
     id: 'fb-07',
     belief: 'God is mostly angry and just waiting to punish me.',
     explanation: "God's default posture toward His people isn't wrath, it's steadfast love and patience. Jesus is the exact representation of God's character, and He moved toward sinners, not away from them.",
-    reference: 'Read Psalm 103:8-12 and Hebrews 1:3',
+    reference: 'Read Psalm 103 and Hebrews 1:3',
   },
   {
     id: 'fb-08',
@@ -53,18 +56,20 @@ const FALSE_BELIEFS = [
     belief: 'I have to clean myself up before I come to God.',
     explanation: 'You come to God broken, and He does the cleaning up — that\'s the whole point of grace. Trying to fix yourself first skips the part where He meets you as you are.',
     reference: 'Read Romans 5:8 and Matthew 11:28',
+    challenge: "Pray honestly right now, before you feel 'ready' or 'clean enough.'",
   },
   {
     id: 'fb-10',
     belief: "Doubting means I have weak faith, or I'm a bad Christian.",
     explanation: 'Doubt honestly brought to God is not the opposite of faith — it\'s often how faith grows. Even Thomas and John the Baptist doubted, and Jesus met them there instead of rejecting them.',
-    reference: 'Read John 20:24-29 and Jude 1:22',
+    reference: 'Read John 20 and Jude 1:22',
+    challenge: "Tell one trusted person about a doubt you've been hiding.",
   },
   {
     id: 'fb-11',
     belief: "If I were a 'real Christian,' I wouldn't still struggle with this sin.",
     explanation: 'Even Paul described an ongoing internal battle between what he wanted to do and what he actually did. Struggling against sin is evidence you\'re alive to it, not evidence you\'ve failed.',
-    reference: 'Read Romans 7:15-25 and Galatians 5:16-17',
+    reference: 'Read Romans 7 and Galatians 5',
   },
   {
     id: 'fb-12',
@@ -94,7 +99,8 @@ const FALSE_BELIEFS = [
     id: 'fb-16',
     belief: "Faith is a feeling — if I don't feel God, I must not really believe.",
     explanation: 'Faith is trust that holds even when feelings are absent, not a constant emotional high. Some of the most faithful people in Scripture cried out feeling completely abandoned.',
-    reference: 'Read Psalm 22:1-2 and Habakkuk 3:17-18',
+    reference: 'Read Psalm 22 and Habakkuk 3:17-18',
+    challenge: 'Pray today whether or not you feel anything, and thank Him anyway.',
   },
   {
     id: 'fb-17',
@@ -107,12 +113,14 @@ const FALSE_BELIEFS = [
     belief: "God can't use me because of my past.",
     explanation: 'God has a long track record of using flawed, broken people — a murderer led Israel, an adulterer wrote most of the Psalms, and a man who denied Jesus three times preached the first sermon of the church.',
     reference: 'Read 2 Corinthians 12:9 and 1 Timothy 1:15-16',
+    challenge: 'Share one piece of your story with someone this week, past and all.',
   },
   {
     id: 'fb-19',
     belief: 'Confessing sin is a one-time event, not something I keep bringing to God.',
     explanation: "Confession isn't a single transaction at conversion — it's meant to be an ongoing, honest rhythm with God for the rest of your life.",
-    reference: 'Read 1 John 1:9 and Psalm 51',
+    reference: 'Read 1 John 1 and Psalm 51',
+    challenge: "Bring today's specific sin to God in prayer right now, by name.",
   },
   {
     id: 'fb-20',
@@ -125,18 +133,21 @@ const FALSE_BELIEFS = [
     belief: "Judging is always wrong — the Bible says 'judge not.'",
     explanation: 'That verse warns against hypocritical, self-righteous judgment, not against calling sin what it is. Scripture elsewhere calls believers to judge rightly and gently restore one another.',
     reference: 'Read Matthew 7:1-5 and Galatians 6:1',
+    challenge: 'Next time you want to call something out, do it privately and gently, aiming to restore, not shame.',
   },
   {
     id: 'fb-22',
     belief: "Everything happens for a reason, so I shouldn't grieve.",
     explanation: 'God working things for good does not cancel out real sorrow — Jesus himself wept, and Scripture tells believers to mourn with those who mourn.',
     reference: 'Read John 11:35 and Romans 12:15',
+    challenge: 'Let yourself actually grieve something today instead of rushing past it.',
   },
   {
     id: 'fb-23',
     belief: "Giving money is how I earn God's blessing or favor.",
     explanation: 'Giving is meant to flow from gratitude for grace already given, not a transaction to purchase more of it. God loves a cheerful giver, not a bargaining one.',
     reference: 'Read 2 Corinthians 9:7 and Ephesians 2:8-9',
+    challenge: 'Give something this week purely out of gratitude, expecting nothing back.',
   },
   {
     id: 'fb-24',
@@ -149,5 +160,12 @@ const FALSE_BELIEFS = [
     belief: 'Once you become a Christian, temptation and spiritual struggle stop.',
     explanation: "Becoming a Christian starts a lifelong process of transformation, not an instant finish line — the fight between flesh and Spirit continues, and that's normal, not a sign something's wrong.",
     reference: 'Read Philippians 1:6 and Galatians 5:16-17',
+  },
+  {
+    id: 'fb-26',
+    belief: "Maybe God doesn't want me to spread the gospel — that's for other people, not me.",
+    explanation: "Jesus didn't give the Great Commission to a special class of Christians — He gave it to all of His followers, and He promised to go with them as they do it.",
+    reference: 'Read Matthew 28:18-20',
+    challenge: 'This week, share the gospel or your own story with one person, even if it feels awkward.',
   },
 ];

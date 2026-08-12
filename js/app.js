@@ -14,10 +14,10 @@ let countdownTimer = null;
 
 function setGreeting() {
   const hour = new Date().getHours();
-  let greeting = 'Good evening!';
-  if (hour < 12) greeting = 'Good morning!';
-  else if (hour < 18) greeting = 'Good afternoon!';
-  greetingText.textContent = `${greeting} Grace and peace to you today. 🙏`;
+  let greeting = "Hey, still glad you stopped by tonight.";
+  if (hour < 12) greeting = "Morning — glad you're here.";
+  else if (hour < 18) greeting = 'Hey, good to see you today.';
+  greetingText.textContent = greeting;
 }
 
 function updateProgressSummary() {

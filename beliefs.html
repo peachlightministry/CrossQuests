@@ -14,9 +14,14 @@
   <nav class="site-nav">
     <a class="brand" href="index.html">✝️ Jesus Side Quest</a>
     <div class="nav-links">
-      <a class="nav-link" href="index.html">Spin</a>
-      <a class="nav-link" href="log.html">Quest Log</a>
-      <a class="nav-link" href="beliefs-log.html">Belief Log</a>
+      <div class="nav-group">
+        <a class="nav-link" href="index.html">Spin</a>
+        <a class="nav-link current" href="beliefs.html" aria-current="page">Slay a Lie</a>
+      </div>
+      <div class="nav-group">
+        <a class="nav-link" href="log.html">Quest Log</a>
+        <a class="nav-link" href="beliefs-log.html">Belief Log</a>
+      </div>
     </div>
   </nav>
 
@@ -30,12 +35,22 @@
       <span class="reel-placeholder" id="reel-placeholder">Tap below to surface a lie worth slaying.</span>
     </div>
 
-    <button class="conquer-button" id="conquer-button" style="display:none;">✅ We Conquered It</button>
-
     <button class="spin-button belief-button" id="spin-button">⚔️ Slay a Lie</button>
 
     <p class="progress-summary" id="progress-summary"></p>
     <p class="spin-status" id="spin-status"></p>
+  </div>
+</div>
+
+<div class="belief-modal-backdrop" id="belief-modal-backdrop">
+  <div class="belief-modal" id="belief-modal">
+    <button class="belief-modal-close" id="belief-modal-close" aria-label="Close">✕</button>
+    <div class="belief-modal-badge">⚔️ Lie Uncovered</div>
+    <span class="belief-quote" id="modal-belief-quote"></span>
+    <span class="belief-explanation" id="modal-belief-explanation"></span>
+    <span class="belief-reference" id="modal-belief-reference"></span>
+    <span class="belief-challenge" id="modal-belief-challenge"></span>
+    <button class="conquer-button" id="conquer-button">✅ We Conquered It</button>
   </div>
 </div>
 

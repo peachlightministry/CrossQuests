@@ -1,8 +1,15 @@
 const reel = document.getElementById('reel');
 const spinButton = document.getElementById('spin-button');
-const conquerButton = document.getElementById('conquer-button');
 const spinStatus = document.getElementById('spin-status');
 const progressSummary = document.getElementById('progress-summary');
+
+const modalBackdrop = document.getElementById('belief-modal-backdrop');
+const modalClose = document.getElementById('belief-modal-close');
+const modalQuote = document.getElementById('modal-belief-quote');
+const modalExplanation = document.getElementById('modal-belief-explanation');
+const modalReference = document.getElementById('modal-belief-reference');
+const modalChallenge = document.getElementById('modal-belief-challenge');
+const conquerButton = document.getElementById('conquer-button');
 
 const beliefSpinLimiter = createSpinLimiter({
   storageKey: 'jsq-belief-spin-limit',
@@ -52,16 +59,6 @@ function randomBelief() {
   return FALSE_BELIEFS[Math.floor(Math.random() * FALSE_BELIEFS.length)];
 }
 
-function renderReelContent(belief) {
-  const conquered = isConquered(belief.id);
-  reel.innerHTML = `
-    <span class="belief-quote">"${belief.belief}"</span>
-    <span class="belief-explanation">${belief.explanation}</span>
-    <span class="belief-reference">${belief.reference}</span>
-    ${conquered ? '<span class="reel-badge belief-badge">Conquered</span>' : ''}
-  `;
-}
-
 function renderReelCycleFrame() {
   const belief = randomBelief();
   reel.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
@@ -69,16 +66,37 @@ function renderReelCycleFrame() {
 
 function updateConquerButton(belief) {
   const conquered = isConquered(belief.id);
-  conquerButton.style.display = 'inline-block';
   conquerButton.disabled = conquered;
   conquerButton.textContent = conquered ? '✅ Conquered' : '✅ We Conquered It';
+}
+
+function openModal(belief) {
+  currentBelief = belief;
+  modalQuote.textContent = `"${belief.belief}"`;
+  modalExplanation.textContent = belief.explanation;
+  modalReference.textContent = belief.reference;
+  if (belief.challenge) {
+    modalChallenge.textContent = `Challenge: ${belief.challenge}`;
+    modalChallenge.style.display = 'block';
+  } else {
+    modalChallenge.textContent = '';
+    modalChallenge.style.display = 'none';
+  }
+  updateConquerButton(belief);
+
+  modalBackdrop.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeModal() {
+  modalBackdrop.classList.remove('open');
+  document.body.classList.remove('modal-open');
 }
 
 function spin() {
   if (!beliefSpinLimiter.canSpin()) return;
 
   spinButton.disabled = true;
-  conquerButton.style.display = 'none';
   reel.classList.remove('idle', 'revealed');
   reel.classList.add('spinning');
 
@@ -105,14 +123,13 @@ function spin() {
 
 function finishSpin(belief) {
   beliefSpinLimiter.useSpin();
-  currentBelief = belief;
 
-  renderReelContent(belief);
+  reel.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
   reel.classList.remove('spinning');
   reel.classList.add('revealed');
 
-  playSound('beliefReveal', { volume: 0.7 });
-  updateConquerButton(belief);
+  playSound('beliefReveal', { volume: 0.75 });
+  openModal(belief);
   refreshSpinStatus();
 }
 
@@ -128,6 +145,14 @@ conquerButton.addEventListener('click', () => {
   playSound('conquered', { volume: 0.7 });
   updateConquerButton(currentBelief);
   updateProgressSummary();
+});
+
+modalClose.addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', (e) => {
+  if (e.target === modalBackdrop) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
 });
 
 updateProgressSummary();

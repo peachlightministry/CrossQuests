@@ -110,13 +110,15 @@ reveal_6 = sequence(  # Burning Bush (secret) - grandest, longest, most shimmer
 )
 save_wav(os.path.join(out_dir, 'reveal-6.wav'), reveal_6)
 
-# Belief-reveal: a brief "uneasy" interval resolving into a bright tone -
-# a lie being named, then answered with truth.
+# Belief-reveal: a brief "uneasy" interval resolving into a fuller bright
+# chord - a lie being named, then answered with truth. Pairs with the modal
+# popup, so it carries a bit more weight than a plain notification chime.
 belief_reveal = sequence(
     note(587.33, 0.10, volume=0.26),
     note(493.88, 0.09, volume=0.24),
-    note(783.99, 0.13, volume=0.4),
-    note(1046.50, 0.28, volume=0.48, release_ratio=0.6),
+    note(659.25, 0.12, volume=0.36, harmonic=0.1),
+    note(783.99, 0.13, volume=0.42, harmonic=0.12),
+    note(1046.50, 0.34, volume=0.5, harmonic=0.18, release_ratio=0.65),
 )
 save_wav(os.path.join(out_dir, 'belief-reveal.wav'), belief_reveal)
 

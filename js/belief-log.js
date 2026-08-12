@@ -14,6 +14,7 @@ function renderBeliefLog() {
         <span class="belief-quote">"${belief.belief}"</span>
         <span class="belief-explanation">${belief.explanation}</span>
         <span class="belief-reference">${belief.reference}</span>
+        ${belief.challenge ? `<span class="belief-challenge">Challenge: ${belief.challenge}</span>` : ''}
       </li>
     `;
   }).join('');
