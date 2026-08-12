@@ -9,6 +9,7 @@ const RARITIES = [
     chanceLabel: '1 in 2',
     oddsN: 2,
     secret: false,
+    soundKey: 'reveal1',
     color: '#2E7D32',
     colorSoft: '#E8F5E9',
     quests: [
@@ -33,6 +34,7 @@ const RARITIES = [
     chanceLabel: '1 in 7',
     oddsN: 7,
     secret: false,
+    soundKey: 'reveal2',
     color: '#B8860B',
     colorSoft: '#FFF8E1',
     quests: [
@@ -57,6 +59,7 @@ const RARITIES = [
     chanceLabel: '1 in 15',
     oddsN: 15,
     secret: false,
+    soundKey: 'reveal3',
     color: '#1565C0',
     colorSoft: '#E3F2FD',
     quests: [
@@ -81,6 +84,7 @@ const RARITIES = [
     chanceLabel: '1 in 40',
     oddsN: 40,
     secret: false,
+    soundKey: 'reveal4',
     color: '#D2691E',
     colorSoft: '#FBE9E7',
     quests: [
@@ -105,6 +109,7 @@ const RARITIES = [
     chanceLabel: '1 in 70',
     oddsN: 70,
     secret: false,
+    soundKey: 'reveal5',
     color: '#C62828',
     colorSoft: '#FFEBEE',
     quests: [
@@ -129,6 +134,7 @@ const RARITIES = [
     chanceLabel: '1 in 125',
     oddsN: 125,
     secret: true,
+    soundKey: 'reveal6',
     color: '#6A1B9A',
     colorSoft: '#F3E5F5',
     quests: [

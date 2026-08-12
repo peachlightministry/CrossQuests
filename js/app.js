@@ -1,7 +1,16 @@
 const reel = document.getElementById('reel');
 const spinButton = document.getElementById('spin-button');
+const spinStatus = document.getElementById('spin-status');
 const progressSummary = document.getElementById('progress-summary');
 const greetingText = document.getElementById('greeting-text');
+
+const questSpinLimiter = createSpinLimiter({
+  storageKey: 'jsq-quest-spin-limit',
+  maxSpins: 2,
+  windowMs: 12 * 60 * 60 * 1000,
+});
+
+let countdownTimer = null;
 
 function setGreeting() {
   const hour = new Date().getHours();
@@ -15,6 +24,35 @@ function updateProgressSummary() {
   progressSummary.innerHTML =
     `You've discovered <strong>${totalDiscovered()}</strong> of <strong>${totalQuests()}</strong> side quests — ` +
     `<a href="log.html">view your Quest Log</a>`;
+}
+
+function refreshSpinStatus() {
+  const state = questSpinLimiter.getState();
+
+  if (state.remaining > 0) {
+    spinStatus.textContent = `${state.remaining} spin${state.remaining === 1 ? '' : 's'} left`;
+    spinButton.disabled = false;
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+    return;
+  }
+
+  spinButton.disabled = true;
+  const tick = () => {
+    const msLeft = questSpinLimiter.msUntilReset();
+    if (msLeft <= 0) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+      refreshSpinStatus();
+      return;
+    }
+    spinStatus.textContent = `0 spins left, spins refresh in ${formatCountdown(msLeft)}`;
+  };
+  tick();
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(tick, 1000);
 }
 
 function renderReelContent({ rarity, quest }, { isNew }) {
@@ -39,6 +77,8 @@ function renderReelCycleFrame() {
 }
 
 function spin() {
+  if (!questSpinLimiter.canSpin()) return;
+
   spinButton.disabled = true;
   reel.classList.remove('idle', 'revealed', 'secret-revealed');
   reel.classList.add('spinning');
@@ -66,22 +106,26 @@ function spin() {
 }
 
 function finishSpin({ rarity, quest }) {
+  questSpinLimiter.useSpin();
+
   const isNew = markDiscovered(quest.id);
   renderReelContent({ rarity, quest }, { isNew });
 
   reel.classList.remove('spinning');
   reel.classList.add(rarity.secret ? 'secret-revealed' : 'revealed');
 
-  playSound(rarity.secret ? 'revealSecret' : 'reveal', { volume: 0.7 });
+  playSound(rarity.soundKey, { volume: 0.7 });
 
   updateProgressSummary();
-  spinButton.disabled = false;
+  refreshSpinStatus();
 }
 
 spinButton.addEventListener('click', () => {
+  if (!questSpinLimiter.canSpin()) return;
   playSound('click', { volume: 0.4 });
   spin();
 });
 
 setGreeting();
 updateProgressSummary();
+refreshSpinStatus();

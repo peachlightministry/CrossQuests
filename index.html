@@ -13,7 +13,11 @@
 <div class="page">
   <nav class="site-nav">
     <a class="brand" href="index.html">✝️ Jesus Side Quest</a>
-    <a class="nav-link" href="log.html">Quest Log</a>
+    <div class="nav-links">
+      <a class="nav-link" href="log.html">Quest Log</a>
+      <a class="nav-link" href="beliefs.html">Slay a Lie</a>
+      <a class="nav-link" href="beliefs-log.html">Belief Log</a>
+    </div>
   </nav>
 
   <div class="greeting">
@@ -26,7 +30,13 @@
       <span class="reel-placeholder" id="reel-placeholder">Tap the button below to spin!</span>
     </div>
 
-    <button class="spin-button" id="spin-button">🎲 Spin a Side Quest</button>
+    <div class="button-row">
+      <a class="secondary-button" href="beliefs.html">⚔️ Slay a Lie</a>
+      <div class="spin-column">
+        <button class="spin-button" id="spin-button">🎲 Spin a Side Quest</button>
+        <p class="spin-status" id="spin-status"></p>
+      </div>
+    </div>
 
     <p class="progress-summary" id="progress-summary"></p>
   </div>
@@ -36,6 +46,7 @@
 <script src="js/storage.js"></script>
 <script src="js/sound.js"></script>
 <script src="js/spin.js"></script>
+<script src="js/spin-limit.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

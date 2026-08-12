@@ -28,17 +28,6 @@ def note(freq, duration, volume=0.5, attack_ratio=0.08, release_ratio=0.35, harm
         samples.append(val * env * volume)
     return samples
 
-def silence(duration):
-    return [0.0] * int(SAMPLE_RATE * duration)
-
-def mix(*tracks):
-    length = max(len(t) for t in tracks)
-    out = [0.0] * length
-    for t in tracks:
-        for i, v in enumerate(t):
-            out[i] += v
-    return out
-
 def sequence(*parts):
     out = []
     for p in parts:
@@ -62,21 +51,56 @@ def save_wav(filename, samples):
 out_dir = os.path.join(os.path.dirname(__file__), '..', 'sounds')
 os.makedirs(out_dir, exist_ok=True)
 
-# Tick: short blip used while the reel is spinning.
+# Tick: short blip used while a reel is spinning.
 tick = note(880, 0.045, volume=0.35, attack_ratio=0.05, release_ratio=0.5)
 save_wav(os.path.join(out_dir, 'tick.wav'), tick)
 
-# Reveal: a friendly rising major arpeggio (C5 - E5 - G5 - C6).
-reveal = sequence(
-    note(523.25, 0.16, volume=0.4),
-    note(659.25, 0.16, volume=0.42),
-    note(783.99, 0.16, volume=0.45),
-    note(1046.50, 0.32, volume=0.5, release_ratio=0.6),
-)
-save_wav(os.path.join(out_dir, 'reveal.wav'), reveal)
+# Click: soft button press.
+click = note(660, 0.035, volume=0.3, attack_ratio=0.1, release_ratio=0.6)
+save_wav(os.path.join(out_dir, 'click.wav'), click)
 
-# Secret reveal: grander, longer arpeggio with a soft shimmering harmonic.
-secret = sequence(
+# Reveal sounds, graduated by rarity: more notes, a touch more volume/length and
+# shimmer as rarity increases, without any one of them becoming overblown.
+
+reveal_1 = sequence(  # Mustard Seed - simple two-note ding
+    note(659.25, 0.11, volume=0.32),
+    note(880.00, 0.16, volume=0.34, release_ratio=0.55),
+)
+save_wav(os.path.join(out_dir, 'reveal-1.wav'), reveal_1)
+
+reveal_2 = sequence(  # Loaves & Fishes - gentle three-note chime
+    note(523.25, 0.13, volume=0.34),
+    note(659.25, 0.13, volume=0.36),
+    note(880.00, 0.22, volume=0.4, release_ratio=0.55),
+)
+save_wav(os.path.join(out_dir, 'reveal-2.wav'), reveal_2)
+
+reveal_3 = sequence(  # Widow's Mite - three-note chime with a touch of shimmer
+    note(523.25, 0.13, volume=0.36, harmonic=0.08),
+    note(659.25, 0.13, volume=0.38, harmonic=0.08),
+    note(783.99, 0.13, volume=0.4, harmonic=0.1),
+    note(1046.50, 0.24, volume=0.44, harmonic=0.1, release_ratio=0.6),
+)
+save_wav(os.path.join(out_dir, 'reveal-3.wav'), reveal_3)
+
+reveal_4 = sequence(  # Wilderness Wanderer - four-note ascending run
+    note(440.00, 0.12, volume=0.36, harmonic=0.1),
+    note(523.25, 0.12, volume=0.38, harmonic=0.1),
+    note(659.25, 0.12, volume=0.4, harmonic=0.12),
+    note(880.00, 0.28, volume=0.46, harmonic=0.14, release_ratio=0.6),
+)
+save_wav(os.path.join(out_dir, 'reveal-4.wav'), reveal_4)
+
+reveal_5 = sequence(  # Refiner's Fire - five-note run with warmer shimmer
+    note(392.00, 0.12, volume=0.36, harmonic=0.14),
+    note(523.25, 0.12, volume=0.38, harmonic=0.14),
+    note(659.25, 0.12, volume=0.4, harmonic=0.16),
+    note(783.99, 0.12, volume=0.43, harmonic=0.18),
+    note(1046.50, 0.34, volume=0.48, harmonic=0.2, release_ratio=0.65),
+)
+save_wav(os.path.join(out_dir, 'reveal-5.wav'), reveal_5)
+
+reveal_6 = sequence(  # Burning Bush (secret) - grandest, longest, most shimmer
     note(392.00, 0.14, volume=0.35, harmonic=0.15),
     note(523.25, 0.14, volume=0.38, harmonic=0.15),
     note(659.25, 0.14, volume=0.4, harmonic=0.18),
@@ -84,8 +108,22 @@ secret = sequence(
     note(1046.50, 0.22, volume=0.46, harmonic=0.22),
     note(1318.51, 0.55, volume=0.5, harmonic=0.25, release_ratio=0.7),
 )
-save_wav(os.path.join(out_dir, 'reveal-secret.wav'), secret)
+save_wav(os.path.join(out_dir, 'reveal-6.wav'), reveal_6)
 
-# Click: soft button press.
-click = note(660, 0.035, volume=0.3, attack_ratio=0.1, release_ratio=0.6)
-save_wav(os.path.join(out_dir, 'click.wav'), click)
+# Belief-reveal: a brief "uneasy" interval resolving into a bright tone -
+# a lie being named, then answered with truth.
+belief_reveal = sequence(
+    note(587.33, 0.10, volume=0.26),
+    note(493.88, 0.09, volume=0.24),
+    note(783.99, 0.13, volume=0.4),
+    note(1046.50, 0.28, volume=0.48, release_ratio=0.6),
+)
+save_wav(os.path.join(out_dir, 'belief-reveal.wav'), belief_reveal)
+
+# Conquered: a short, decisive confirmation - a low thump then a bright ping.
+conquered = sequence(
+    note(130.81, 0.09, volume=0.5, attack_ratio=0.02, release_ratio=0.55),
+    note(659.25, 0.09, volume=0.38),
+    note(1046.50, 0.22, volume=0.5, release_ratio=0.6),
+)
+save_wav(os.path.join(out_dir, 'conquered.wav'), conquered)
