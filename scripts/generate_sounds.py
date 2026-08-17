@@ -129,3 +129,11 @@ conquered = sequence(
     note(1046.50, 0.22, volume=0.5, release_ratio=0.6),
 )
 save_wav(os.path.join(out_dir, 'conquered.wav'), conquered)
+
+# Quest complete: a very soft, brief two-note approval - quieter and gentler
+# than "conquered", just a small nod that something was marked done.
+quest_complete = sequence(
+    note(783.99, 0.08, volume=0.24, attack_ratio=0.15),
+    note(1046.50, 0.16, volume=0.28, attack_ratio=0.1, release_ratio=0.6),
+)
+save_wav(os.path.join(out_dir, 'quest-complete.wav'), quest_complete)

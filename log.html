@@ -13,14 +13,29 @@
 <div class="page">
   <nav class="site-nav">
     <a class="brand" href="index.html">✝️ Jesus Side Quest</a>
-    <div class="nav-links">
-      <div class="nav-group">
-        <a class="nav-link" href="index.html">Spin</a>
-        <a class="nav-link" href="beliefs.html">Slay a Lie</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <div class="nav-group">
+          <a class="nav-link" href="index.html">Spin</a>
+          <a class="nav-link" href="beliefs.html">Slay a Lie</a>
+        </div>
+        <div class="nav-group">
+          <a class="nav-link current" href="log.html" aria-current="page">Quest Log</a>
+          <a class="nav-link" href="beliefs-log.html">Belief Log</a>
+        </div>
       </div>
-      <div class="nav-group">
-        <a class="nav-link current" href="log.html" aria-current="page">Quest Log</a>
-        <a class="nav-link" href="beliefs-log.html">Belief Log</a>
+      <div class="cross-points" title="Cross Points">
+        <svg class="cross-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <defs>
+            <linearGradient id="crossGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFD54F"/>
+              <stop offset="100%" stop-color="#E8912B"/>
+            </linearGradient>
+          </defs>
+          <circle cx="12" cy="12" r="11" fill="url(#crossGradNav)"/>
+          <path d="M11 5h2v5h5v2h-5v7h-2v-7H6v-2h5V5z" fill="white"/>
+        </svg>
+        <span id="cross-points-value">0</span>
       </div>
     </div>
   </nav>
@@ -37,6 +52,7 @@
 
 <script src="js/quest-data.js"></script>
 <script src="js/storage.js"></script>
+<script src="js/points.js"></script>
 <script src="js/log.js"></script>
 </body>
 </html>

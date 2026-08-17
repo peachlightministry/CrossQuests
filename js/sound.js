@@ -11,6 +11,7 @@ const SOUND_FILES = {
   reveal6: 'sounds/reveal-6.wav',
   beliefReveal: 'sounds/belief-reveal.wav',
   conquered: 'sounds/conquered.wav',
+  questComplete: 'sounds/quest-complete.wav',
 };
 
 const soundCache = {};

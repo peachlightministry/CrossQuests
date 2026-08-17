@@ -10,6 +10,7 @@ const RARITIES = [
     oddsN: 2,
     secret: false,
     soundKey: 'reveal1',
+    points: 2,
     color: '#2E7D32',
     colorSoft: '#E8F5E9',
     quests: [
@@ -35,6 +36,7 @@ const RARITIES = [
     oddsN: 7,
     secret: false,
     soundKey: 'reveal2',
+    points: 3,
     color: '#B8860B',
     colorSoft: '#FFF8E1',
     quests: [
@@ -60,6 +62,7 @@ const RARITIES = [
     oddsN: 15,
     secret: false,
     soundKey: 'reveal3',
+    points: 5,
     color: '#1565C0',
     colorSoft: '#E3F2FD',
     quests: [
@@ -85,6 +88,7 @@ const RARITIES = [
     oddsN: 40,
     secret: false,
     soundKey: 'reveal4',
+    points: 10,
     color: '#D2691E',
     colorSoft: '#FBE9E7',
     quests: [
@@ -110,6 +114,7 @@ const RARITIES = [
     oddsN: 70,
     secret: false,
     soundKey: 'reveal5',
+    points: 20,
     color: '#C62828',
     colorSoft: '#FFEBEE',
     quests: [
@@ -135,6 +140,7 @@ const RARITIES = [
     oddsN: 125,
     secret: true,
     soundKey: 'reveal6',
+    points: 30,
     color: '#6A1B9A',
     colorSoft: '#F3E5F5',
     quests: [

@@ -3,6 +3,8 @@ const spinButton = document.getElementById('spin-button');
 const spinStatus = document.getElementById('spin-status');
 const progressSummary = document.getElementById('progress-summary');
 const greetingText = document.getElementById('greeting-text');
+const todaysQuestsToggle = document.getElementById('todays-quests-toggle');
+const todaysQuestsPanel = document.getElementById('todays-quests-panel');
 
 const questSpinLimiter = createSpinLimiter({
   storageKey: 'jsq-quest-spin-limit',
@@ -11,6 +13,7 @@ const questSpinLimiter = createSpinLimiter({
 });
 
 let countdownTimer = null;
+let todaysQuestsTimer = null;
 
 function setGreeting() {
   const hour = new Date().getHours();
@@ -110,6 +113,7 @@ function finishSpin({ rarity, quest }) {
 
   const isNew = markDiscovered(quest.id);
   renderReelContent({ rarity, quest }, { isNew });
+  addTodaysQuestEntry(rarity, quest);
 
   reel.classList.remove('spinning');
   reel.classList.add(rarity.secret ? 'secret-revealed' : 'revealed');
@@ -118,12 +122,134 @@ function finishSpin({ rarity, quest }) {
 
   updateProgressSummary();
   refreshSpinStatus();
+  if (todaysQuestsPanel.classList.contains('open')) {
+    renderTodaysQuestsPanel();
+  }
 }
 
 spinButton.addEventListener('click', () => {
   if (!questSpinLimiter.canSpin()) return;
   playSound('click', { volume: 0.4 });
   spin();
+});
+
+// --- Today's Quests panel ---
+
+function formatMMSS(ms) {
+  const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function triggerSubtleConfetti(anchorEl) {
+  const rect = anchorEl.getBoundingClientRect();
+  const colors = ['#F2A541', '#66BB6A', '#4FC3F7', '#F06292'];
+  for (let i = 0; i < 7; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'confetti-dot';
+    dot.style.left = `${rect.left + rect.width / 2 + (Math.random() * 40 - 20)}px`;
+    dot.style.top = `${rect.top + window.scrollY}px`;
+    dot.style.background = colors[i % colors.length];
+    dot.style.setProperty('--dx', `${Math.random() * 30 - 15}px`);
+    document.body.appendChild(dot);
+    setTimeout(() => dot.remove(), 700);
+  }
+}
+
+function renderTodaysQuestsPanel() {
+  const state = getTodaysQuestsState();
+
+  if (state.entries.length === 0) {
+    todaysQuestsPanel.innerHTML = `<p class="todays-quests-empty">You didn't spin quests yet.</p>`;
+    if (todaysQuestsTimer) {
+      clearInterval(todaysQuestsTimer);
+      todaysQuestsTimer = null;
+    }
+    return;
+  }
+
+  todaysQuestsPanel.innerHTML = state.entries.map((entry, index) => {
+    const found = findRarityAndQuest(entry.rarityId, entry.questId);
+    if (!found) return '';
+    const { rarity, quest } = found;
+
+    let actionHtml;
+    if (entry.completed) {
+      actionHtml = `<span class="todays-quest-done-badge">✅ Completed — +${rarity.points} earned</span>`;
+    } else if (canCompleteEntry(entry)) {
+      actionHtml = `
+        <button class="quest-done-button" data-index="${index}">✅ Side quest is done!</button>
+        <span class="quest-reward-label">+${rarity.points} ${crossIconSVG(14)}</span>
+      `;
+    } else {
+      actionHtml = `
+        <button class="quest-done-button" disabled>Ready in <span class="quest-cooldown" data-index="${index}">${formatMMSS(msUntilEntryReady(entry))}</span></button>
+        <span class="quest-reward-label">+${rarity.points} ${crossIconSVG(14)}</span>
+      `;
+    }
+
+    const justCompleted = entry.completed && entry.completedAt && Date.now() - entry.completedAt < 1500;
+
+    return `
+      <div class="todays-quest-card${justCompleted ? ' just-completed' : ''}" style="border-left-color:${rarity.color}">
+        <span class="todays-quest-rarity" style="color:${rarity.color}">${rarity.name}</span>
+        <span class="todays-quest-text">${quest.text}</span>
+        <div class="todays-quest-action">${actionHtml}</div>
+      </div>
+    `;
+  }).join('');
+
+  todaysQuestsPanel.querySelectorAll('.quest-done-button:not(:disabled)').forEach((btn) => {
+    btn.addEventListener('click', () => completeQuestEntry(parseInt(btn.dataset.index, 10), btn));
+  });
+
+  if (todaysQuestsTimer) clearInterval(todaysQuestsTimer);
+  todaysQuestsTimer = setInterval(() => {
+    const fresh = getTodaysQuestsState();
+    let needsFullRerender = false;
+    fresh.entries.forEach((entry, index) => {
+      if (entry.completed) return;
+      if (canCompleteEntry(entry)) {
+        needsFullRerender = true;
+      } else {
+        const el = todaysQuestsPanel.querySelector(`.quest-cooldown[data-index="${index}"]`);
+        if (el) el.textContent = formatMMSS(msUntilEntryReady(entry));
+      }
+    });
+    if (needsFullRerender) renderTodaysQuestsPanel();
+  }, 1000);
+}
+
+function completeQuestEntry(index, buttonEl) {
+  const state = getTodaysQuestsState();
+  const entry = state.entries[index];
+  if (!entry || entry.completed || !canCompleteEntry(entry)) return;
+
+  const found = findRarityAndQuest(entry.rarityId, entry.questId);
+  completeTodaysQuestEntryAt(index);
+
+  if (found) {
+    addPoints(found.rarity.points);
+  }
+  playSound('questComplete', { volume: 0.45 });
+  if (buttonEl) triggerSubtleConfetti(buttonEl);
+
+  renderTodaysQuestsPanel();
+}
+
+todaysQuestsToggle.addEventListener('click', () => {
+  const isOpen = todaysQuestsPanel.classList.contains('open');
+  if (isOpen) {
+    todaysQuestsPanel.classList.remove('open');
+    if (todaysQuestsTimer) {
+      clearInterval(todaysQuestsTimer);
+      todaysQuestsTimer = null;
+    }
+  } else {
+    renderTodaysQuestsPanel();
+    todaysQuestsPanel.classList.add('open');
+  }
 });
 
 document.getElementById('test-spin-button').addEventListener('click', () => {
