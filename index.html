@@ -72,36 +72,52 @@
     <div class="reel-wrapper" id="reel-wrapper">
       <svg class="cherub-defs" aria-hidden="true">
         <defs>
-          <symbol id="cherub-symbol" viewBox="0 0 200 260">
-            <linearGradient id="wingGrad" x1="50%" y1="100%" x2="50%" y2="0%">
-              <stop offset="0%" stop-color="#C9922B"/>
+          <symbol id="cherub-symbol" viewBox="40 60 240 300">
+            <linearGradient id="featherGrad" x1="0%" y1="100%" x2="30%" y2="0%">
+              <stop offset="0%" stop-color="#8a6100"/>
+              <stop offset="45%" stop-color="#D9A521"/>
               <stop offset="100%" stop-color="#FFF3C4"/>
             </linearGradient>
-            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="15%" y2="100%">
               <stop offset="0%" stop-color="#FFE9A8"/>
-              <stop offset="100%" stop-color="#D9A521"/>
+              <stop offset="55%" stop-color="#D9A521"/>
+              <stop offset="100%" stop-color="#9c6e00"/>
             </linearGradient>
-            <path d="M115,95 C140,85 163,55 167,14 C168,4 157,2 147,9 C126,24 116,54 114,90 Z" fill="url(#wingGrad)" stroke="#7A5900" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M122,80 C138,68 152,48 158,25" fill="none" stroke="#7A5900" stroke-width="1.2" opacity="0.55"/>
-            <path d="M118,66 C130,54 142,38 148,20" fill="none" stroke="#7A5900" stroke-width="1.2" opacity="0.45"/>
-            <path d="M85,95 C60,85 37,55 33,14 C32,4 43,2 53,9 C74,24 84,54 86,90 Z" fill="url(#wingGrad)" stroke="#7A5900" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M78,80 C62,68 48,48 42,25" fill="none" stroke="#7A5900" stroke-width="1.2" opacity="0.55"/>
-            <path d="M82,66 C70,54 58,38 52,20" fill="none" stroke="#7A5900" stroke-width="1.2" opacity="0.45"/>
-            <ellipse cx="100" cy="42" rx="24" ry="8" fill="none" stroke="#FFF7DE" stroke-width="3"/>
-            <path d="M100,88 C80,90 67,118 69,160 C70,190 130,190 131,160 C133,118 120,90 100,88 Z" fill="url(#bodyGrad)" stroke="#7A5900" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M84,92 C90,100 110,100 116,92" fill="none" stroke="#7A5900" stroke-width="1.5" opacity="0.6"/>
-            <path d="M100,98 L98,182" stroke="#7A5900" stroke-width="1.2" opacity="0.35" fill="none"/>
-            <path d="M84,105 C79,125 78,148 84,178" stroke="#7A5900" stroke-width="1" opacity="0.3" fill="none"/>
-            <path d="M116,105 C121,125 122,148 116,178" stroke="#7A5900" stroke-width="1" opacity="0.3" fill="none"/>
-            <circle cx="100" cy="66" r="21" fill="url(#bodyGrad)" stroke="#7A5900" stroke-width="2"/>
+            <path id="feather" d="M0,0 C-15,-38 -12,-100 0,-165 C12,-100 15,-38 0,0 Z"/>
+            <g stroke="#6b4d00" stroke-width="2" stroke-linejoin="round" fill="url(#featherGrad)">
+              <use href="#feather" transform="translate(118,205) rotate(-10) scale(0.7)"/>
+              <use href="#feather" transform="translate(118,205) rotate(-28) scale(0.95)"/>
+              <use href="#feather" transform="translate(118,205) rotate(-46) scale(0.85)"/>
+            </g>
+            <g stroke="#6b4d00" stroke-width="2" stroke-linejoin="round" fill="url(#featherGrad)">
+              <use href="#feather" transform="translate(182,205) rotate(35) scale(0.95)"/>
+              <use href="#feather" transform="translate(182,205) rotate(70) scale(1.45)"/>
+              <use href="#feather" transform="translate(182,205) rotate(100) scale(1.5)"/>
+              <use href="#feather" transform="translate(182,205) rotate(128) scale(1.0)"/>
+            </g>
+            <circle cx="150" cy="118" r="21" fill="url(#bodyGrad)" stroke="#6b4d00" stroke-width="2.2"/>
+            <path d="M141,121 q9,7 18,0" fill="none" stroke="#6b4d00" stroke-width="1.4" opacity="0.55"/>
+            <path d="M150,140 C132,140 118,155 116,178 C114,195 122,205 150,207 C178,205 186,195 184,178 C182,155 168,140 150,140 Z" fill="url(#bodyGrad)" stroke="#6b4d00" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M150,198 C122,200 100,228 98,272 C96,315 116,345 150,348 C184,345 204,315 202,272 C200,228 178,200 150,198 Z" fill="url(#bodyGrad)" stroke="#6b4d00" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="M118,202 C130,210 170,210 182,202" fill="none" stroke="#6b4d00" stroke-width="1.8" opacity="0.5"/>
+            <path d="M150,208 L147,343" stroke="#6b4d00" stroke-width="1.3" opacity="0.36" fill="none"/>
+            <path d="M124,222 C110,255 107,300 120,338" stroke="#6b4d00" stroke-width="1.1" opacity="0.28" fill="none"/>
+            <path d="M176,222 C190,255 193,300 180,338" stroke="#6b4d00" stroke-width="1.1" opacity="0.28" fill="none"/>
+            <path d="M103,318 C122,338 178,338 197,318" fill="none" stroke="#6b4d00" stroke-width="1.6" opacity="0.4"/>
           </symbol>
         </defs>
       </svg>
-      <div class="ark-band"></div>
       <svg class="ark-cherub left"><use href="#cherub-symbol"/></svg>
       <svg class="ark-cherub right"><use href="#cherub-symbol"/></svg>
+      <div class="ark-lid"></div>
+      <div class="ark-molding"></div>
       <div class="reel idle" id="reel">
         <span class="reel-placeholder" id="reel-placeholder">Tap the button below to spin!</span>
+      </div>
+      <div class="ark-base">
+        <div class="ark-shadow"></div>
+        <div class="ark-foot left"></div>
+        <div class="ark-foot right"></div>
       </div>
     </div>
 

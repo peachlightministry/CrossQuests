@@ -1039,10 +1039,18 @@ body.modal-open {
   max-width: 140px;
 }
 
-/* Ark of the Covenant cosmetic (home page spin reel) */
+/* Ark of the Covenant cosmetic (home page spin reel) - modeled on Exodus
+   25:10-22: an acacia chest overlaid in gold, a gold molding around the rim,
+   a flat gold mercy seat (lid), and two cherubim of hammered gold facing
+   each other with wings spread upward, overshadowing the seat. */
 .reel-wrapper {
   position: relative;
   width: 100%;
+}
+
+.reel-wrapper.ark-theme {
+  padding-top: 145px;
+  padding-bottom: 30px;
 }
 
 .cherub-defs {
@@ -1054,10 +1062,10 @@ body.modal-open {
 .ark-cherub {
   display: none;
   position: absolute;
-  top: -22px;
-  width: 92px;
+  top: 34px;
+  width: 195px;
   height: auto;
-  z-index: 2;
+  z-index: 4;
   filter: drop-shadow(0 4px 6px rgba(90, 58, 2, 0.4));
 }
 
@@ -1074,26 +1082,63 @@ body.modal-open {
   transform: scaleX(-1);
 }
 
-.ark-band {
+.ark-lid,
+.ark-molding,
+.ark-base {
   display: none;
-  position: absolute;
-  left: 4px;
-  right: 4px;
-  top: 4px;
-  height: 8px;
-  background: repeating-linear-gradient(90deg, #8a6100 0 10px, #b8860b 10px 20px);
-  border-radius: 14px 14px 0 0;
-  z-index: 1;
-  pointer-events: none;
 }
 
-.reel-wrapper.ark-theme .ark-band {
+.reel-wrapper.ark-theme .ark-lid,
+.reel-wrapper.ark-theme .ark-molding,
+.reel-wrapper.ark-theme .ark-base {
   display: block;
+}
+
+.ark-lid {
+  position: relative;
+  height: 30px;
+  background: linear-gradient(180deg, #fff3c4 0%, #e0aa2e 60%, #c99420 100%);
+  border: 3px solid #6b4a00;
+  border-radius: 16px;
+  margin: 0 -8px;
+  z-index: 3;
+  box-shadow: 0 4px 8px rgba(90, 58, 2, 0.35);
+}
+
+.ark-molding {
+  position: relative;
+  height: 11px;
+  background-color: #6b4a00;
+  background-image: radial-gradient(circle, #ffe9a8 42%, transparent 44%);
+  background-size: 13px 13px;
+  background-position: 6px center;
+  margin: -3px 2px 0;
+  z-index: 2;
+  border-radius: 0 0 4px 4px;
 }
 
 .reel-wrapper.ark-theme .reel {
   background: radial-gradient(120% 160% at 50% 0%, #ffe9a8 0%, #e0aa2e 45%, #b8860b 100%) !important;
-  border-color: #8a6100 !important;
+  border-color: #6b4a00 !important;
+  border-top: none !important;
+  border-radius: 0 0 18px 18px !important;
+}
+
+.reel-wrapper.ark-theme .reel::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: -2px;
+  height: 12px;
+  background-image: repeating-linear-gradient(
+    115deg,
+    transparent,
+    transparent 6px,
+    rgba(107, 74, 0, 0.55) 6px,
+    rgba(107, 74, 0, 0.55) 9px
+  );
+  pointer-events: none;
 }
 
 .reel-wrapper.ark-theme .reel-placeholder,
@@ -1102,6 +1147,40 @@ body.modal-open {
 .reel-wrapper.ark-theme .reel-verse {
   color: #ffffff !important;
   text-shadow: 0 2px 6px rgba(90, 58, 2, 0.55);
+}
+
+.ark-base {
+  position: relative;
+  height: 28px;
+}
+
+.ark-shadow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 6px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(90, 58, 2, 0.28);
+  filter: blur(3px);
+}
+
+.ark-foot {
+  position: absolute;
+  width: 18px;
+  height: 16px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, #e0aa2e, #8a6100);
+  border: 2px solid #6b4a00;
+  top: 0;
+}
+
+.ark-foot.left {
+  left: 30px;
+}
+
+.ark-foot.right {
+  right: 30px;
 }
 
 @media (max-width: 480px) {
@@ -1128,8 +1207,11 @@ body.modal-open {
     width: 100%;
   }
   .ark-cherub {
-    width: 58px;
-    top: -14px;
+    width: 150px;
+    top: 26px;
+  }
+  .reel-wrapper.ark-theme {
+    padding-top: 118px;
   }
   .shop-label {
     display: none;
