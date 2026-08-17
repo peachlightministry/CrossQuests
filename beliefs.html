@@ -37,6 +37,29 @@
         </svg>
         <span id="cross-points-value">0</span>
       </div>
+      <button class="shop-button" id="shop-button" title="Shop">
+        <svg class="shop-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <defs>
+            <linearGradient id="chestLid" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FFD54F"/>
+              <stop offset="100%" stop-color="#D9A521"/>
+            </linearGradient>
+            <linearGradient id="chestBody" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#E8912B"/>
+              <stop offset="100%" stop-color="#B8730F"/>
+            </linearGradient>
+          </defs>
+          <path d="M2.5 11 C2.5 6.5 6.8 3.5 12 3.5 C17.2 3.5 21.5 6.5 21.5 11 L21.5 12.5 L2.5 12.5 Z" fill="url(#chestLid)" stroke="#7A5900" stroke-width="0.7"/>
+          <rect x="2.5" y="11" width="19" height="1.8" fill="#7A5900" opacity="0.85"/>
+          <rect x="2.5" y="12.5" width="19" height="8" rx="1.8" fill="url(#chestBody)" stroke="#7A5900" stroke-width="0.7"/>
+          <rect x="2.5" y="15.2" width="19" height="1.3" fill="#7A5900" opacity="0.55"/>
+          <rect x="10.6" y="12.5" width="2.8" height="3.6" rx="0.6" fill="#7A5900"/>
+          <circle cx="12" cy="14.1" r="0.55" fill="#FFE9A8"/>
+          <rect x="11.1" y="5.5" width="1.8" height="5.2" rx="0.4" fill="#FFF7DE"/>
+          <rect x="9.4" y="7.2" width="5.2" height="1.8" rx="0.4" fill="#FFF7DE"/>
+        </svg>
+        <span class="shop-label">Shop</span>
+      </button>
     </div>
   </nav>
 
@@ -70,11 +93,36 @@
   </div>
 </div>
 
+<div class="shop-modal-backdrop" id="shop-modal-backdrop">
+  <div class="shop-modal" id="shop-modal">
+    <button class="shop-modal-close" id="shop-modal-close" aria-label="Close">✕</button>
+    <div class="shop-modal-badge">🏛️ Shop</div>
+
+    <div class="shop-tabs">
+      <button class="shop-tab" data-tab="upgrades">Upgrades</button>
+      <button class="shop-tab active" data-tab="cosmetics">Cosmetics</button>
+      <button class="shop-tab" data-tab="event">Event</button>
+    </div>
+
+    <div class="shop-panel" data-panel="upgrades" id="shop-panel-upgrades">
+      <p class="shop-placeholder">Upgrades are coming soon.</p>
+    </div>
+
+    <div class="shop-panel active" data-panel="cosmetics" id="shop-panel-cosmetics"></div>
+
+    <div class="shop-panel" data-panel="event" id="shop-panel-event">
+      <p class="shop-placeholder">This shop opens when there's an event.</p>
+    </div>
+  </div>
+</div>
+
 <script src="js/belief-data.js"></script>
 <script src="js/belief-storage.js"></script>
 <script src="js/sound.js"></script>
 <script src="js/spin-limit.js"></script>
 <script src="js/points.js"></script>
+<script src="js/shop-data.js"></script>
 <script src="js/belief-app.js"></script>
+<script src="js/shop.js"></script>
 </body>
 </html>

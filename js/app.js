@@ -1,4 +1,5 @@
 const reel = document.getElementById('reel');
+const reelWrapper = document.getElementById('reel-wrapper');
 const spinButton = document.getElementById('spin-button');
 const spinStatus = document.getElementById('spin-status');
 const progressSummary = document.getElementById('progress-summary');
@@ -58,6 +59,17 @@ function refreshSpinStatus() {
   countdownTimer = setInterval(tick, 1000);
 }
 
+function applyReelRarityColors(rarity) {
+  if (getEquippedCosmetic() === 'ark') {
+    // Ark theme owns the reel's background/border; rarity color stays out of it.
+    reel.style.background = '';
+    reel.style.borderColor = '';
+    return;
+  }
+  reel.style.background = rarity.colorSoft;
+  reel.style.borderColor = rarity.color;
+}
+
 function renderReelContent({ rarity, quest }, { isNew }) {
   reel.innerHTML = `
     <span class="reel-rarity" style="color:${rarity.color}">Rarity: ${rarity.name}</span>
@@ -65,8 +77,7 @@ function renderReelContent({ rarity, quest }, { isNew }) {
     <span class="reel-verse">${rarity.verse}</span>
     ${isNew ? '<span class="reel-badge">New!</span>' : ''}
   `;
-  reel.style.background = rarity.colorSoft;
-  reel.style.borderColor = rarity.color;
+  applyReelRarityColors(rarity);
 }
 
 function renderReelCycleFrame() {
@@ -75,8 +86,15 @@ function renderReelCycleFrame() {
     <span class="reel-rarity" style="color:${rarity.color}">Rarity: ${rarity.name}</span>
     <span class="reel-quest">${quest.text}</span>
   `;
-  reel.style.background = rarity.colorSoft;
-  reel.style.borderColor = rarity.color;
+  applyReelRarityColors(rarity);
+}
+
+function refreshEquippedCosmeticVisual() {
+  reelWrapper.classList.toggle('ark-theme', getEquippedCosmetic() === 'ark');
+  // Re-apply so a live-equipped Ark theme immediately clears any rarity
+  // background/border currently sitting on the reel as inline styles.
+  reel.style.background = '';
+  reel.style.borderColor = '';
 }
 
 function spin() {
@@ -260,3 +278,4 @@ document.getElementById('test-spin-button').addEventListener('click', () => {
 setGreeting();
 updateProgressSummary();
 refreshSpinStatus();
+refreshEquippedCosmeticVisual();

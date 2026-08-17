@@ -86,6 +86,37 @@ body {
   filter: drop-shadow(0 2px 3px rgba(232, 145, 43, 0.4));
 }
 
+.shop-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.75);
+  border: none;
+  padding: 5px 12px 6px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.shop-button:hover {
+  transform: translateY(-1px);
+}
+
+.shop-icon {
+  display: block;
+  filter: drop-shadow(0 2px 3px rgba(122, 89, 0, 0.4));
+}
+
+.shop-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
 .brand {
   font-size: 1.15rem;
   font-weight: 800;
@@ -774,6 +805,305 @@ body.modal-open {
   padding: 14px 16px;
 }
 
+/* Shop modal */
+.shop-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 23, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.shop-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.shop-modal {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 34px 26px 28px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  transform: scale(0.75) translateY(24px);
+  opacity: 0;
+}
+
+.shop-modal-backdrop.open .shop-modal {
+  animation: beliefModalPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+    shopModalGlow 1.4s ease-out 0.1s;
+}
+
+@keyframes shopModalGlow {
+  0% {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 rgba(232, 145, 43, 0);
+  }
+  45% {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 55px rgba(232, 145, 43, 0.5);
+  }
+  100% {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 rgba(232, 145, 43, 0);
+  }
+}
+
+.shop-modal-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #e8912b 0%, #b8730f 100%);
+  color: white;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.shop-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--ink);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.shop-modal-close:hover {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.shop-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.shop-tab {
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ink-soft);
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.shop-tab:hover {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.shop-tab.active {
+  background: linear-gradient(135deg, #e8912b 0%, #b8730f 100%);
+  color: white;
+}
+
+.shop-panel {
+  display: none;
+  text-align: left;
+}
+
+.shop-panel.active {
+  display: block;
+}
+
+.shop-placeholder {
+  text-align: center;
+  color: #9a9a9a;
+  font-size: 0.95rem;
+  padding: 30px 10px;
+}
+
+.cosmetic-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.cosmetic-card.equipped-card {
+  background: rgba(232, 145, 43, 0.12);
+  box-shadow: inset 0 0 0 2px rgba(232, 145, 43, 0.4);
+}
+
+.cosmetic-swatch {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.cosmetic-swatch-classic {
+  background: var(--card-bg);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.cosmetic-swatch-ark {
+  background: radial-gradient(120% 160% at 50% 0%, #ffe9a8 0%, #e0aa2e 45%, #b8860b 100%);
+  box-shadow: inset 0 0 0 2px #8a6100;
+}
+
+.cosmetic-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cosmetic-name {
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.cosmetic-description {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.cosmetic-action {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.cosmetic-action-button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: white;
+  background: var(--belief-accent);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: transform 0.15s ease;
+}
+
+.cosmetic-action-button:hover {
+  transform: translateY(-1px);
+}
+
+.cosmetic-action-button.buy {
+  background: linear-gradient(135deg, #e8912b 0%, #b8730f 100%);
+}
+
+.cosmetic-status {
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cosmetic-status.equipped {
+  color: #2e7d32;
+}
+
+.cosmetic-status.locked {
+  color: #9a9a9a;
+  text-align: right;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 140px;
+}
+
+/* Ark of the Covenant cosmetic (home page spin reel) */
+.reel-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.cherub-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.ark-cherub {
+  display: none;
+  position: absolute;
+  top: -22px;
+  width: 92px;
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 4px 6px rgba(90, 58, 2, 0.4));
+}
+
+.reel-wrapper.ark-theme .ark-cherub {
+  display: block;
+}
+
+.ark-cherub.left {
+  left: 6px;
+}
+
+.ark-cherub.right {
+  right: 6px;
+  transform: scaleX(-1);
+}
+
+.ark-band {
+  display: none;
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 4px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #8a6100 0 10px, #b8860b 10px 20px);
+  border-radius: 14px 14px 0 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.reel-wrapper.ark-theme .ark-band {
+  display: block;
+}
+
+.reel-wrapper.ark-theme .reel {
+  background: radial-gradient(120% 160% at 50% 0%, #ffe9a8 0%, #e0aa2e 45%, #b8860b 100%) !important;
+  border-color: #8a6100 !important;
+}
+
+.reel-wrapper.ark-theme .reel-placeholder,
+.reel-wrapper.ark-theme .reel-quest,
+.reel-wrapper.ark-theme .reel-rarity,
+.reel-wrapper.ark-theme .reel-verse {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(90, 58, 2, 0.55);
+}
+
 @media (max-width: 480px) {
   .greeting h1 {
     font-size: 1.35rem;
@@ -796,5 +1126,12 @@ body.modal-open {
   }
   .spin-column .spin-button {
     width: 100%;
+  }
+  .ark-cherub {
+    width: 58px;
+    top: -14px;
+  }
+  .shop-label {
+    display: none;
   }
 }
