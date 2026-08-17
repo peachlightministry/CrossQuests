@@ -275,6 +275,10 @@ document.getElementById('test-spin-button').addEventListener('click', () => {
   refreshSpinStatus();
 });
 
+document.getElementById('test-points-button').addEventListener('click', () => {
+  addPoints(50);
+});
+
 setGreeting();
 updateProgressSummary();
 refreshSpinStatus();
