@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slay a Lie — Jesus Side Quest</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+<title>Community — Jesus Side Quest</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✝️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -17,14 +17,14 @@
       <div class="nav-links">
         <div class="nav-group">
           <a class="nav-link" href="index.html">Spin</a>
-          <a class="nav-link current" href="beliefs.html" aria-current="page">Slay a Lie</a>
+          <a class="nav-link" href="beliefs.html">Slay a Lie</a>
         </div>
         <div class="nav-group">
           <a class="nav-link" href="log.html">Quest Log</a>
           <a class="nav-link" href="beliefs-log.html">Belief Log</a>
         </div>
       </div>
-      <a class="nav-link nav-link-standalone" href="community.html">Community</a>
+      <a class="nav-link nav-link-standalone current" href="community.html" aria-current="page">Community</a>
       <div class="cross-points" title="Cross Points">
         <svg class="cross-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
           <defs>
@@ -64,33 +64,9 @@
     </div>
   </nav>
 
-  <div class="greeting">
-    <h1>⚔️ Slay a Lie</h1>
-    <p>Every believer carries a few beliefs that sound Christian but aren't. Spin one, read the truth, and conquer it.</p>
-  </div>
-
-  <div class="hero">
-    <div class="reel idle belief-reel" id="reel">
-      <span class="reel-placeholder" id="reel-placeholder">Tap below to surface a lie worth slaying.</span>
-    </div>
-
-    <button class="spin-button belief-button" id="spin-button">⚔️ Slay a Lie</button>
-
-    <p class="progress-summary" id="progress-summary"></p>
-    <p class="spin-status" id="spin-status"></p>
-    <button class="test-spin-button" id="test-spin-button">🔧 +1 Spin (test only)</button>
-  </div>
-</div>
-
-<div class="belief-modal-backdrop" id="belief-modal-backdrop">
-  <div class="belief-modal" id="belief-modal">
-    <button class="belief-modal-close" id="belief-modal-close" aria-label="Close">✕</button>
-    <div class="belief-modal-badge">⚔️ Lie Uncovered</div>
-    <span class="belief-quote" id="modal-belief-quote"></span>
-    <span class="belief-explanation" id="modal-belief-explanation"></span>
-    <span class="belief-reference" id="modal-belief-reference"></span>
-    <span class="belief-challenge" id="modal-belief-challenge"></span>
-    <button class="conquer-button" id="conquer-button">✅ We Conquered It</button>
+  <div class="log-intro">
+    <h1>Community</h1>
+    <p>Coming soon.</p>
   </div>
 </div>
 
@@ -117,13 +93,9 @@
   </div>
 </div>
 
-<script src="js/belief-data.js"></script>
-<script src="js/belief-storage.js"></script>
 <script src="js/sound.js"></script>
-<script src="js/spin-limit.js"></script>
 <script src="js/points.js"></script>
 <script src="js/shop-data.js"></script>
-<script src="js/belief-app.js"></script>
 <script src="js/shop.js"></script>
 </body>
 </html>
