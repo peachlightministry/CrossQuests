@@ -595,6 +595,10 @@ footer.credit {
   margin-top: 20px;
 }
 
+footer.credit a {
+  color: var(--ink-soft);
+}
+
 /* Slay a Lie page */
 .belief-reel {
   border-color: var(--belief-accent);
@@ -1063,8 +1067,8 @@ body.modal-open {
 .ark-cherub {
   display: none;
   position: absolute;
-  top: 40px;
-  width: 205px;
+  top: 60px;
+  width: 175px;
   height: auto;
   z-index: 4;
   filter: drop-shadow(0 4px 6px rgba(90, 58, 2, 0.4));
@@ -1075,11 +1079,11 @@ body.modal-open {
 }
 
 .ark-cherub.left {
-  left: 30px;
+  left: 10px;
 }
 
 .ark-cherub.right {
-  right: 30px;
+  right: 10px;
   transform: scaleX(-1);
 }
 
@@ -1296,8 +1300,8 @@ body.modal-open {
     width: 100%;
   }
   .ark-cherub {
-    width: 130px;
-    top: 26px;
+    width: 115px;
+    top: 44px;
   }
   .ark-cherub.left {
     left: 4px;
