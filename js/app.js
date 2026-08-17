@@ -1,4 +1,5 @@
 const reel = document.getElementById('reel');
+const reelContent = document.getElementById('reel-content');
 const reelWrapper = document.getElementById('reel-wrapper');
 const spinButton = document.getElementById('spin-button');
 const spinStatus = document.getElementById('spin-status');
@@ -60,8 +61,9 @@ function refreshSpinStatus() {
 }
 
 function applyReelRarityColors(rarity) {
-  if (getEquippedCosmetic() === 'ark') {
-    // Ark theme owns the reel's background/border; rarity color stays out of it.
+  const equipped = getEquippedCosmetic();
+  if (equipped === 'ark' || equipped === 'divine') {
+    // These themes own the reel's background/border; rarity color stays out of it.
     reel.style.background = '';
     reel.style.borderColor = '';
     return;
@@ -71,7 +73,7 @@ function applyReelRarityColors(rarity) {
 }
 
 function renderReelContent({ rarity, quest }, { isNew }) {
-  reel.innerHTML = `
+  reelContent.innerHTML = `
     <span class="reel-rarity" style="color:${rarity.color}">Rarity: ${rarity.name}</span>
     <span class="reel-quest">${quest.text}</span>
     <span class="reel-verse">${rarity.verse}</span>
@@ -82,7 +84,7 @@ function renderReelContent({ rarity, quest }, { isNew }) {
 
 function renderReelCycleFrame() {
   const { rarity, quest } = pickRandomQuest();
-  reel.innerHTML = `
+  reelContent.innerHTML = `
     <span class="reel-rarity" style="color:${rarity.color}">Rarity: ${rarity.name}</span>
     <span class="reel-quest">${quest.text}</span>
   `;
@@ -90,11 +92,24 @@ function renderReelCycleFrame() {
 }
 
 function refreshEquippedCosmeticVisual() {
-  reelWrapper.classList.toggle('ark-theme', getEquippedCosmetic() === 'ark');
-  // Re-apply so a live-equipped Ark theme immediately clears any rarity
+  const equipped = getEquippedCosmetic();
+  reelWrapper.classList.toggle('ark-theme', equipped === 'ark');
+  reelWrapper.classList.toggle('divine-theme', equipped === 'divine');
+  // Re-apply so a live-equipped theme immediately clears any rarity
   // background/border currently sitting on the reel as inline styles.
   reel.style.background = '';
   reel.style.borderColor = '';
+
+  spinButton.classList.remove('ark-button', 'divine-button');
+  if (equipped === 'ark') {
+    spinButton.classList.add('ark-button');
+    spinButton.innerHTML = '📜 Open the Ark';
+  } else if (equipped === 'divine') {
+    spinButton.classList.add('divine-button');
+    spinButton.innerHTML = '🙏 Pray for a Quest';
+  } else {
+    spinButton.innerHTML = '🎲 Spin a Side Quest';
+  }
 }
 
 function spin() {

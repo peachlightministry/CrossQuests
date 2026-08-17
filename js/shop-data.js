@@ -13,6 +13,12 @@ const COSMETICS = [
     price: 50,
     description: 'Golden, with two cherubim watching over your quest.',
   },
+  {
+    id: 'divine',
+    name: 'Divine Glory',
+    price: 50,
+    description: 'Blinding white and gold, with embers rising from the seat.',
+  },
 ];
 
 // Cosmetics ownership/equip state. Lives here (rather than shop.js) so pages

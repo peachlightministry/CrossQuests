@@ -204,6 +204,10 @@ body {
   transition: border-color 0.3s ease, background 0.3s ease;
 }
 
+#reel-content {
+  display: contents;
+}
+
 .reel.idle .reel-placeholder {
   color: var(--ink-soft);
   font-size: 1.05rem;
@@ -992,6 +996,11 @@ body.modal-open {
   box-shadow: inset 0 0 0 2px #8a6100;
 }
 
+.cosmetic-swatch-divine {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 3px #ffd700, 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
 .cosmetic-info {
   flex: 1;
   display: flex;
@@ -1298,6 +1307,140 @@ body.modal-open {
 
 .ark-foot.right {
   right: 30px;
+}
+
+/* Skin-specific spin button treatments */
+.spin-button.ark-button {
+  background: linear-gradient(135deg, #ffe9a8 0%, #e0aa2e 55%, #b8860b 100%);
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(90, 58, 2, 0.55);
+  box-shadow: 0 8px 20px rgba(184, 134, 11, 0.45);
+}
+
+.spin-button.ark-button:hover:not(:disabled) {
+  box-shadow: 0 12px 26px rgba(184, 134, 11, 0.55);
+}
+
+.spin-button.divine-button {
+  background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(130, 90, 0, 0.5);
+  box-shadow: 0 0 22px 4px rgba(255, 215, 0, 0.65), 0 8px 20px rgba(255, 179, 0, 0.4);
+}
+
+.spin-button.divine-button:hover:not(:disabled) {
+  box-shadow: 0 0 30px 6px rgba(255, 215, 0, 0.8), 0 12px 26px rgba(255, 179, 0, 0.5);
+}
+
+/* Divine Glory cosmetic - blinding white and gold, embers rising from the seat */
+.reel-wrapper.divine-theme .reel {
+  border: 5px solid #ffd700 !important;
+  border-radius: var(--radius) !important;
+  background: #ffffff !important;
+  overflow: visible;
+  animation: divineFlash 1.8s ease-in-out infinite;
+}
+
+@keyframes divineFlash {
+  0%,
+  100% {
+    background: #ffffff;
+    box-shadow: 0 0 24px 6px rgba(255, 215, 0, 0.55), inset 0 0 20px rgba(255, 215, 0, 0.22);
+    border-color: #ffd700;
+  }
+  50% {
+    background: #fffdf3;
+    box-shadow: 0 0 46px 14px rgba(255, 215, 0, 0.9), inset 0 0 34px rgba(255, 215, 0, 0.38);
+    border-color: #ffeb6e;
+  }
+}
+
+.reel-wrapper.divine-theme .reel-quest,
+.reel-wrapper.divine-theme .reel-verse,
+.reel-wrapper.divine-theme .reel-placeholder {
+  color: #ffc700 !important;
+  text-shadow: 0 0 1px #c9960c, 0 0 2px #c9960c, 0 0 10px rgba(255, 215, 0, 0.8);
+  position: relative;
+  z-index: 2;
+}
+
+.reel-wrapper.divine-theme .reel-rarity {
+  /* keeps its own rarity color, just needs a touch of definition against white */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 2;
+}
+
+.divine-flame {
+  display: none;
+  position: absolute;
+  top: -10px;
+  width: 14px;
+  height: 20px;
+  margin-left: -7px;
+  background: radial-gradient(ellipse at bottom, #ffd700 0%, #ffa500 55%, transparent 80%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: divineFlameFlicker 1.2s ease-in-out infinite;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.reel-wrapper.divine-theme .divine-flame {
+  display: block;
+}
+
+@keyframes divineFlameFlicker {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1) translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1.35) scaleX(0.85) translateY(-3px);
+    opacity: 1;
+  }
+}
+
+.divine-particle {
+  display: none;
+  position: absolute;
+  top: -4px;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 3;
+  animation: divineParticleRise 1.4s ease-out infinite;
+}
+
+.reel-wrapper.divine-theme .divine-particle {
+  display: block;
+}
+
+.divine-particle.gold {
+  background: #ffd700;
+  box-shadow: 0 0 4px rgba(255, 215, 0, 0.9);
+}
+
+.divine-particle.white {
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
+}
+
+@keyframes divineParticleRise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.95;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-42px) scale(0.3);
+    opacity: 0;
+  }
 }
 
 @media (max-width: 480px) {
