@@ -72,10 +72,10 @@
     <div class="reel-wrapper" id="reel-wrapper">
       <svg class="cherub-defs" aria-hidden="true">
         <defs>
-          <symbol id="cherub-symbol" viewBox="40 60 240 300">
+          <symbol id="cherub-symbol" viewBox="30 60 250 300">
             <linearGradient id="featherGrad" x1="0%" y1="100%" x2="30%" y2="0%">
-              <stop offset="0%" stop-color="#8a6100"/>
-              <stop offset="45%" stop-color="#D9A521"/>
+              <stop offset="0%" stop-color="#7a5600"/>
+              <stop offset="42%" stop-color="#D9A521"/>
               <stop offset="100%" stop-color="#FFF3C4"/>
             </linearGradient>
             <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="15%" y2="100%">
@@ -83,17 +83,20 @@
               <stop offset="55%" stop-color="#D9A521"/>
               <stop offset="100%" stop-color="#9c6e00"/>
             </linearGradient>
-            <path id="feather" d="M0,0 C-15,-38 -12,-100 0,-165 C12,-100 15,-38 0,0 Z"/>
+            <path id="feather" d="M0,0 C-16,-40 -15,-105 -4,-160 C0,-174 10,-174 14,-160 C18,-105 14,-40 0,0 Z"/>
             <g stroke="#6b4d00" stroke-width="2" stroke-linejoin="round" fill="url(#featherGrad)">
-              <use href="#feather" transform="translate(118,205) rotate(-10) scale(0.7)"/>
-              <use href="#feather" transform="translate(118,205) rotate(-28) scale(0.95)"/>
-              <use href="#feather" transform="translate(118,205) rotate(-46) scale(0.85)"/>
+              <use href="#feather" transform="translate(118,205) rotate(-6) scale(0.62)"/>
+              <use href="#feather" transform="translate(118,205) rotate(-22) scale(0.82)"/>
+              <use href="#feather" transform="translate(118,205) rotate(-38) scale(0.92)"/>
+              <use href="#feather" transform="translate(118,205) rotate(-54) scale(0.78)"/>
             </g>
             <g stroke="#6b4d00" stroke-width="2" stroke-linejoin="round" fill="url(#featherGrad)">
-              <use href="#feather" transform="translate(182,205) rotate(35) scale(0.95)"/>
-              <use href="#feather" transform="translate(182,205) rotate(70) scale(1.45)"/>
-              <use href="#feather" transform="translate(182,205) rotate(100) scale(1.5)"/>
-              <use href="#feather" transform="translate(182,205) rotate(128) scale(1.0)"/>
+              <use href="#feather" transform="translate(182,205) rotate(28) scale(0.85)"/>
+              <use href="#feather" transform="translate(182,205) rotate(52) scale(1.25)"/>
+              <use href="#feather" transform="translate(182,205) rotate(80) scale(1.95)"/>
+              <use href="#feather" transform="translate(182,205) rotate(108) scale(2.25)"/>
+              <use href="#feather" transform="translate(182,205) rotate(124) scale(1.6)"/>
+              <use href="#feather" transform="translate(182,205) rotate(144) scale(1.05)"/>
             </g>
             <circle cx="150" cy="118" r="21" fill="url(#bodyGrad)" stroke="#6b4d00" stroke-width="2.2"/>
             <path d="M141,121 q9,7 18,0" fill="none" stroke="#6b4d00" stroke-width="1.4" opacity="0.55"/>
@@ -109,9 +112,18 @@
       </svg>
       <svg class="ark-cherub left"><use href="#cherub-symbol"/></svg>
       <svg class="ark-cherub right"><use href="#cherub-symbol"/></svg>
-      <div class="ark-lid"></div>
+      <div class="ark-lid-tier t1"></div>
+      <div class="ark-lid-tier t2"></div>
       <div class="ark-molding"></div>
+      <div class="ark-pole left"></div>
+      <div class="ark-pole right"></div>
+      <div class="ark-ring left"></div>
+      <div class="ark-ring right"></div>
       <div class="reel idle" id="reel">
+        <div class="ark-medallion tl"></div>
+        <div class="ark-medallion tr"></div>
+        <div class="ark-medallion bl"></div>
+        <div class="ark-medallion br"></div>
         <span class="reel-placeholder" id="reel-placeholder">Tap the button below to spin!</span>
       </div>
       <div class="ark-base">

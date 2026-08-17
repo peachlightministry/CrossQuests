@@ -1041,16 +1041,17 @@ body.modal-open {
 
 /* Ark of the Covenant cosmetic (home page spin reel) - modeled on Exodus
    25:10-22: an acacia chest overlaid in gold, a gold molding around the rim,
-   a flat gold mercy seat (lid), and two cherubim of hammered gold facing
-   each other with wings spread upward, overshadowing the seat. */
+   carrying poles through rings, a flat gold mercy seat (lid), and two
+   cherubim of hammered gold facing each other with wings spread upward,
+   overshadowing the seat. */
 .reel-wrapper {
   position: relative;
   width: 100%;
 }
 
 .reel-wrapper.ark-theme {
-  padding-top: 145px;
-  padding-bottom: 30px;
+  padding-top: 155px;
+  padding-bottom: 34px;
 }
 
 .cherub-defs {
@@ -1062,8 +1063,8 @@ body.modal-open {
 .ark-cherub {
   display: none;
   position: absolute;
-  top: 34px;
-  width: 195px;
+  top: 40px;
+  width: 205px;
   height: auto;
   z-index: 4;
   filter: drop-shadow(0 4px 6px rgba(90, 58, 2, 0.4));
@@ -1074,34 +1075,51 @@ body.modal-open {
 }
 
 .ark-cherub.left {
-  left: 6px;
+  left: 30px;
 }
 
 .ark-cherub.right {
-  right: 6px;
+  right: 30px;
   transform: scaleX(-1);
 }
 
-.ark-lid,
+.ark-lid-tier,
 .ark-molding,
-.ark-base {
+.ark-base,
+.ark-pole,
+.ark-ring,
+.ark-medallion {
   display: none;
 }
 
-.reel-wrapper.ark-theme .ark-lid,
+.reel-wrapper.ark-theme .ark-lid-tier,
 .reel-wrapper.ark-theme .ark-molding,
-.reel-wrapper.ark-theme .ark-base {
+.reel-wrapper.ark-theme .ark-base,
+.reel-wrapper.ark-theme .ark-pole,
+.reel-wrapper.ark-theme .ark-ring,
+.reel-wrapper.ark-theme .ark-medallion {
   display: block;
 }
 
-.ark-lid {
+.ark-lid-tier {
   position: relative;
-  height: 30px;
-  background: linear-gradient(180deg, #fff3c4 0%, #e0aa2e 60%, #c99420 100%);
-  border: 3px solid #6b4a00;
-  border-radius: 16px;
-  margin: 0 -8px;
   z-index: 3;
+}
+
+.ark-lid-tier.t1 {
+  height: 10px;
+  background: linear-gradient(180deg, #fff3c4 0%, #e0aa2e 100%);
+  border: 2px solid #6b4a00;
+  border-radius: 10px;
+  margin: 0 6px;
+}
+
+.ark-lid-tier.t2 {
+  height: 22px;
+  background: linear-gradient(180deg, #fff3c4 0%, #e0aa2e 55%, #c99420 100%);
+  border: 3px solid #6b4a00;
+  border-radius: 14px;
+  margin: -3px -8px 0;
   box-shadow: 0 4px 8px rgba(90, 58, 2, 0.35);
 }
 
@@ -1117,28 +1135,97 @@ body.modal-open {
   border-radius: 0 0 4px 4px;
 }
 
+.ark-pole {
+  position: absolute;
+  top: 173px;
+  height: 6px;
+  width: 46px;
+  background: linear-gradient(180deg, #c99420, #6b4a00);
+  border-radius: 3px;
+  z-index: 5;
+}
+
+.ark-pole.left {
+  left: -34px;
+}
+
+.ark-pole.right {
+  right: -34px;
+}
+
+.ark-ring {
+  position: absolute;
+  top: 165px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 4px solid #6b4a00;
+  z-index: 5;
+}
+
+.ark-ring.left {
+  left: 2px;
+}
+
+.ark-ring.right {
+  right: 2px;
+}
+
 .reel-wrapper.ark-theme .reel {
   background: radial-gradient(120% 160% at 50% 0%, #ffe9a8 0%, #e0aa2e 45%, #b8860b 100%) !important;
   border-color: #6b4a00 !important;
   border-top: none !important;
   border-radius: 0 0 18px 18px !important;
+  overflow: hidden;
 }
 
-.reel-wrapper.ark-theme .reel::before {
+.reel-wrapper.ark-theme .reel::after {
   content: '';
   position: absolute;
-  left: -2px;
-  right: -2px;
-  top: -2px;
-  height: 12px;
-  background-image: repeating-linear-gradient(
-    115deg,
-    transparent,
-    transparent 6px,
-    rgba(107, 74, 0, 0.55) 6px,
-    rgba(107, 74, 0, 0.55) 9px
-  );
+  inset: 10px;
+  border: 2px solid rgba(107, 74, 0, 0.4);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(255, 244, 214, 0.35);
   pointer-events: none;
+}
+
+.ark-medallion {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c4, #c99420 65%, #8a6100 100%);
+  border: 2px solid #6b4a00;
+  box-shadow: inset 0 0 0 2px rgba(255, 244, 214, 0.5);
+  z-index: 1;
+}
+
+.ark-medallion::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(107, 74, 0, 0.5);
+}
+
+.ark-medallion.tl {
+  top: 12px;
+  left: 12px;
+}
+
+.ark-medallion.tr {
+  top: 12px;
+  right: 12px;
+}
+
+.ark-medallion.bl {
+  bottom: 12px;
+  left: 12px;
+}
+
+.ark-medallion.br {
+  bottom: 12px;
+  right: 12px;
 }
 
 .reel-wrapper.ark-theme .reel-placeholder,
@@ -1147,18 +1234,20 @@ body.modal-open {
 .reel-wrapper.ark-theme .reel-verse {
   color: #ffffff !important;
   text-shadow: 0 2px 6px rgba(90, 58, 2, 0.55);
+  position: relative;
+  z-index: 2;
 }
 
 .ark-base {
   position: relative;
-  height: 28px;
+  height: 30px;
 }
 
 .ark-shadow {
   position: absolute;
   left: 8%;
   right: 8%;
-  top: 6px;
+  top: 8px;
   height: 14px;
   border-radius: 50%;
   background: rgba(90, 58, 2, 0.28);
@@ -1168,7 +1257,7 @@ body.modal-open {
 .ark-foot {
   position: absolute;
   width: 18px;
-  height: 16px;
+  height: 18px;
   border-radius: 0 0 6px 6px;
   background: linear-gradient(180deg, #e0aa2e, #8a6100);
   border: 2px solid #6b4a00;
@@ -1207,11 +1296,23 @@ body.modal-open {
     width: 100%;
   }
   .ark-cherub {
-    width: 150px;
+    width: 130px;
     top: 26px;
+  }
+  .ark-cherub.left {
+    left: 4px;
+  }
+  .ark-cherub.right {
+    right: 4px;
   }
   .reel-wrapper.ark-theme {
     padding-top: 118px;
+  }
+  .ark-pole {
+    top: 136px;
+  }
+  .ark-ring {
+    top: 128px;
   }
   .shop-label {
     display: none;
