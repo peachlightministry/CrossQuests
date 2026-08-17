@@ -1332,11 +1332,11 @@ body.modal-open {
   box-shadow: 0 0 30px 6px rgba(255, 215, 0, 0.8), 0 12px 26px rgba(255, 179, 0, 0.5);
 }
 
-/* Divine Glory cosmetic - blinding white and gold, embers rising from the seat */
+/* Divine Glory cosmetic - blinding white and gold, particles rising from the seat */
 .reel-wrapper.divine-theme .reel {
-  border: 5px solid #ffd700 !important;
+  border: 6px solid #ffd700;
   border-radius: var(--radius) !important;
-  background: #ffffff !important;
+  background: #ffffff;
   overflow: visible;
   animation: divineFlash 1.8s ease-in-out infinite;
 }
@@ -1345,13 +1345,18 @@ body.modal-open {
   0%,
   100% {
     background: #ffffff;
-    box-shadow: 0 0 24px 6px rgba(255, 215, 0, 0.55), inset 0 0 20px rgba(255, 215, 0, 0.22);
+    box-shadow: 0 0 16px 3px rgba(255, 215, 0, 0.4), inset 0 0 14px rgba(255, 215, 0, 0.15);
     border-color: #ffd700;
   }
-  50% {
-    background: #fffdf3;
-    box-shadow: 0 0 46px 14px rgba(255, 215, 0, 0.9), inset 0 0 34px rgba(255, 215, 0, 0.38);
-    border-color: #ffeb6e;
+  25% {
+    background: #ffffff;
+    box-shadow: 0 0 70px 22px rgba(255, 255, 255, 1), 0 0 30px 8px rgba(255, 255, 255, 0.9), inset 0 0 30px rgba(255, 255, 255, 0.7);
+    border-color: #ffffff;
+  }
+  75% {
+    background: #fffaea;
+    box-shadow: 0 0 80px 26px rgba(255, 215, 0, 1), 0 0 40px 12px rgba(255, 180, 0, 0.8), inset 0 0 40px rgba(255, 215, 0, 0.6);
+    border-color: #ffdc73;
   }
 }
 
@@ -1369,37 +1374,6 @@ body.modal-open {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   position: relative;
   z-index: 2;
-}
-
-.divine-flame {
-  display: none;
-  position: absolute;
-  top: -10px;
-  width: 14px;
-  height: 20px;
-  margin-left: -7px;
-  background: radial-gradient(ellipse at bottom, #ffd700 0%, #ffa500 55%, transparent 80%);
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  animation: divineFlameFlicker 1.2s ease-in-out infinite;
-  opacity: 0.85;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.reel-wrapper.divine-theme .divine-flame {
-  display: block;
-}
-
-@keyframes divineFlameFlicker {
-  0%,
-  100% {
-    transform: scaleY(1) scaleX(1) translateY(0);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scaleY(1.35) scaleX(0.85) translateY(-3px);
-    opacity: 1;
-  }
 }
 
 .divine-particle {
