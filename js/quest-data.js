@@ -1,12 +1,15 @@
 // Side quest data: rarities ordered from most common to rarest.
 // "oddsN" is the tier's stated "1 in N" chance. For the secret tier,
-// each individual quest is 1 in N (not the tier as a whole).
+// each individual quest is 1 in N (not the tier as a whole). Mustard
+// Seed isn't rolled directly — it's the fallback when nothing rarer
+// hits (see spin.js), so its true chance (~60%) is set by the other
+// five tiers' odds, not by its own oddsN/chanceLabel below.
 const RARITIES = [
   {
     id: 'mustard-seed',
     name: 'Mustard Seed',
     verse: 'Matthew 17:20',
-    chanceLabel: '1 in 2',
+    chanceLabel: 'About 60%',
     oddsN: 2,
     secret: false,
     soundKey: 'reveal1',
@@ -32,8 +35,8 @@ const RARITIES = [
     id: 'loaves-and-fishes',
     name: 'Loaves & Fishes',
     verse: 'John 6:9-13',
-    chanceLabel: '1 in 7',
-    oddsN: 7,
+    chanceLabel: '1 in 5',
+    oddsN: 5,
     secret: false,
     soundKey: 'reveal2',
     points: 3,
@@ -58,8 +61,8 @@ const RARITIES = [
     id: 'widows-mite',
     name: "Widow's Mite",
     verse: 'Mark 12:41-44',
-    chanceLabel: '1 in 15',
-    oddsN: 15,
+    chanceLabel: '1 in 10',
+    oddsN: 10,
     secret: false,
     soundKey: 'reveal3',
     points: 5,
@@ -84,8 +87,8 @@ const RARITIES = [
     id: 'wilderness-wanderer',
     name: 'Wilderness Wanderer',
     verse: 'Deuteronomy 8:2',
-    chanceLabel: '1 in 40',
-    oddsN: 40,
+    chanceLabel: '1 in 15',
+    oddsN: 15,
     secret: false,
     soundKey: 'reveal4',
     points: 10,
@@ -110,8 +113,8 @@ const RARITIES = [
     id: 'refiners-fire',
     name: "Refiner's Fire",
     verse: 'Malachi 3:2-3',
-    chanceLabel: '1 in 70',
-    oddsN: 70,
+    chanceLabel: '1 in 19',
+    oddsN: 19,
     secret: false,
     soundKey: 'reveal5',
     points: 20,
@@ -136,8 +139,8 @@ const RARITIES = [
     id: 'burning-bush',
     name: 'Burning Bush',
     verse: 'Exodus 3:2-5',
-    chanceLabel: '1 in 125',
-    oddsN: 125,
+    chanceLabel: '1 in 34',
+    oddsN: 34,
     secret: true,
     soundKey: 'reveal6',
     points: 30,
