@@ -1,6 +1,6 @@
 // Quest selection uses a sequence of independent rolls, rarest tier first, rather than
 // splitting 100% across all six tiers. Each roll is a literal, unmodified 1-in-oddsN
-// check with no rescaling, so "1 in 34" always means exactly that. The first roll that
+// check with no rescaling, so "1 in 110" always means exactly that. The first roll that
 // hits wins the spin. Mustard Seed is never rolled for directly — it's the guaranteed
 // result when none of the rarer checks hit, since it's the everyday/default tier.
 const RARITY_CHECK_ORDER = [...RARITIES].sort((a, b) => b.oddsN - a.oddsN);

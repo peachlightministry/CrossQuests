@@ -2,14 +2,14 @@
 // "oddsN" is the tier's stated "1 in N" chance. For the secret tier,
 // each individual quest is 1 in N (not the tier as a whole). Mustard
 // Seed isn't rolled directly — it's the fallback when nothing rarer
-// hits (see spin.js), so its true chance (~60%) is set by the other
+// hits (see spin.js), so its true chance (~67%) is set by the other
 // five tiers' odds, not by its own oddsN/chanceLabel below.
 const RARITIES = [
   {
     id: 'mustard-seed',
     name: 'Mustard Seed',
     verse: 'Matthew 17:20',
-    chanceLabel: 'About 60%',
+    chanceLabel: 'About 67%',
     oddsN: 2,
     secret: false,
     soundKey: 'reveal1',
@@ -87,8 +87,8 @@ const RARITIES = [
     id: 'wilderness-wanderer',
     name: 'Wilderness Wanderer',
     verse: 'Deuteronomy 8:2',
-    chanceLabel: '1 in 15',
-    oddsN: 15,
+    chanceLabel: '1 in 30',
+    oddsN: 30,
     secret: false,
     soundKey: 'reveal4',
     points: 10,
@@ -113,8 +113,8 @@ const RARITIES = [
     id: 'refiners-fire',
     name: "Refiner's Fire",
     verse: 'Malachi 3:2-3',
-    chanceLabel: '1 in 19',
-    oddsN: 19,
+    chanceLabel: '1 in 55',
+    oddsN: 55,
     secret: false,
     soundKey: 'reveal5',
     points: 20,
@@ -139,8 +139,8 @@ const RARITIES = [
     id: 'burning-bush',
     name: 'Burning Bush',
     verse: 'Exodus 3:2-5',
-    chanceLabel: '1 in 34',
-    oddsN: 34,
+    chanceLabel: '1 in 110',
+    oddsN: 110,
     secret: true,
     soundKey: 'reveal6',
     points: 30,
