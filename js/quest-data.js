@@ -9,7 +9,7 @@ const RARITIES = [
     id: 'mustard-seed',
     name: 'Mustard Seed',
     verse: 'Matthew 17:20',
-    chanceLabel: 'About 67%',
+    chanceLabel: '1 in 2',
     oddsN: 2,
     secret: false,
     soundKey: 'reveal1',

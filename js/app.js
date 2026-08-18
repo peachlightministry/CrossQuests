@@ -7,6 +7,7 @@ const progressSummary = document.getElementById('progress-summary');
 const greetingText = document.getElementById('greeting-text');
 const todaysQuestsToggle = document.getElementById('todays-quests-toggle');
 const todaysQuestsPanel = document.getElementById('todays-quests-panel');
+const todaysQuestsBadge = document.getElementById('todays-quests-badge');
 
 const questSpinLimiter = createSpinLimiter({
   storageKey: 'jsq-quest-spin-limit',
@@ -142,12 +143,24 @@ function spin() {
   tick();
 }
 
+function refreshTodaysQuestsBadge({ pop } = {}) {
+  const count = getTodaysQuestsState().entries.length;
+  todaysQuestsBadge.textContent = count;
+  todaysQuestsBadge.classList.toggle('visible', count > 0);
+  if (pop && count > 0) {
+    todaysQuestsBadge.classList.remove('pop');
+    void todaysQuestsBadge.offsetWidth;
+    todaysQuestsBadge.classList.add('pop');
+  }
+}
+
 function finishSpin({ rarity, quest }) {
   questSpinLimiter.useSpin();
 
   const isNew = markDiscovered(quest.id);
   renderReelContent({ rarity, quest }, { isNew });
   addTodaysQuestEntry(rarity, quest);
+  refreshTodaysQuestsBadge({ pop: true });
 
   reel.classList.remove('spinning');
   reel.classList.add(rarity.secret ? 'secret-revealed' : 'revealed');
@@ -299,3 +312,4 @@ setGreeting();
 updateProgressSummary();
 refreshSpinStatus();
 refreshEquippedCosmeticVisual();
+refreshTodaysQuestsBadge();

@@ -8,6 +8,7 @@ const shopPanels = document.querySelectorAll('.shop-panel');
 
 function openShop() {
   renderCosmeticsPanel();
+  renderUpgradesPanel();
   shopBackdrop.classList.add('open');
   document.body.classList.add('modal-open');
 }
@@ -66,6 +67,44 @@ function renderCosmeticsPanel() {
     btn.addEventListener('click', () => {
       if (buyCosmetic(btn.dataset.id)) {
         renderCosmeticsPanel();
+      }
+    });
+  });
+}
+
+function renderUpgradesPanel() {
+  const panel = document.getElementById('shop-panel-upgrades');
+  if (!panel) return;
+
+  const points = getPoints();
+
+  panel.innerHTML = UPGRADES.map((item) => {
+    const owned = isUpgradeOwned(item.id);
+
+    let actionHtml;
+    if (owned) {
+      actionHtml = `<span class="cosmetic-status equipped">✅ Owned</span>`;
+    } else if (points >= item.price) {
+      actionHtml = `<button class="cosmetic-action-button buy" data-action="buy-upgrade" data-id="${item.id}">Buy for ${item.price} ${crossIconSVG(14)}</button>`;
+    } else {
+      actionHtml = `<span class="cosmetic-status locked">Need ${item.price} ${crossIconSVG(14)} — you have ${points}</span>`;
+    }
+
+    return `
+      <div class="cosmetic-card${owned ? ' equipped-card' : ''}">
+        <div class="cosmetic-info">
+          <span class="cosmetic-name">${item.name}</span>
+          <span class="cosmetic-description">${item.description}</span>
+        </div>
+        <div class="cosmetic-action">${actionHtml}</div>
+      </div>
+    `;
+  }).join('');
+
+  panel.querySelectorAll('[data-action="buy-upgrade"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (buyUpgrade(btn.dataset.id)) {
+        renderUpgradesPanel();
       }
     });
   });

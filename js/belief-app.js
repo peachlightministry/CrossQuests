@@ -1,4 +1,6 @@
 const reel = document.getElementById('reel');
+const reelContent = document.getElementById('reel-content');
+const reelWrapper = document.getElementById('reel-wrapper');
 const spinButton = document.getElementById('spin-button');
 const spinStatus = document.getElementById('spin-status');
 const progressSummary = document.getElementById('progress-summary');
@@ -61,7 +63,14 @@ function randomBelief() {
 
 function renderReelCycleFrame() {
   const belief = randomBelief();
-  reel.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
+  reelContent.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
+}
+
+function refreshEquippedCosmeticVisual() {
+  const equipped = getEquippedCosmetic();
+  reelWrapper.classList.toggle('ark-theme', equipped === 'ark');
+  reelWrapper.classList.toggle('divine-theme', equipped === 'divine');
+  reelWrapper.classList.toggle('divine2-theme', equipped === 'divine2');
 }
 
 function updateConquerButton(belief) {
@@ -124,7 +133,7 @@ function spin() {
 function finishSpin(belief) {
   beliefSpinLimiter.useSpin();
 
-  reel.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
+  reelContent.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
   reel.classList.remove('spinning');
   reel.classList.add('revealed');
 
@@ -162,3 +171,4 @@ document.getElementById('test-spin-button').addEventListener('click', () => {
 
 updateProgressSummary();
 refreshSpinStatus();
+refreshEquippedCosmeticVisual();

@@ -358,6 +358,7 @@ body {
 
 /* Today's Quests toggle panel */
 .todays-quests-toggle {
+  position: relative;
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 700;
@@ -373,6 +374,44 @@ body {
 
 .todays-quests-toggle:hover {
   transform: translateY(-1px);
+}
+
+.todays-quests-badge {
+  display: none;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #e53935;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.todays-quests-badge.visible {
+  display: flex;
+}
+
+.todays-quests-badge.pop {
+  animation: todaysQuestsBadgePop 0.4s ease;
+}
+
+@keyframes todaysQuestsBadgePop {
+  0% {
+    transform: scale(0.3);
+  }
+  60% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .todays-quests-panel {
@@ -1121,7 +1160,8 @@ body.modal-open {
 
 .reel-wrapper.ark-theme .reel-placeholder,
 .reel-wrapper.ark-theme .reel-quest,
-.reel-wrapper.ark-theme .reel-verse {
+.reel-wrapper.ark-theme .reel-verse,
+.reel-wrapper.ark-theme .belief-quote {
   color: #ffffff !important;
   text-shadow: 0 2px 6px rgba(90, 58, 2, 0.6), 0 1px 2px rgba(0, 0, 0, 0.4);
   position: relative;
@@ -1138,7 +1178,8 @@ body.modal-open {
 }
 
 .reel-wrapper.ark-theme .reel-quest,
-.reel-wrapper.ark-theme .reel-placeholder {
+.reel-wrapper.ark-theme .reel-placeholder,
+.reel-wrapper.ark-theme .belief-quote {
   font-size: 3.2cqw;
   line-height: 1.3;
 }
@@ -1295,9 +1336,11 @@ body.modal-open {
 .reel-wrapper.divine-theme .reel-quest,
 .reel-wrapper.divine-theme .reel-verse,
 .reel-wrapper.divine-theme .reel-placeholder,
+.reel-wrapper.divine-theme .belief-quote,
 .reel-wrapper.divine2-theme .reel-quest,
 .reel-wrapper.divine2-theme .reel-verse,
-.reel-wrapper.divine2-theme .reel-placeholder {
+.reel-wrapper.divine2-theme .reel-placeholder,
+.reel-wrapper.divine2-theme .belief-quote {
   color: #c99420 !important;
   text-shadow: none;
   position: relative;
@@ -1315,8 +1358,10 @@ body.modal-open {
 
 .reel-wrapper.divine-theme .reel-quest,
 .reel-wrapper.divine-theme .reel-placeholder,
+.reel-wrapper.divine-theme .belief-quote,
 .reel-wrapper.divine2-theme .reel-quest,
-.reel-wrapper.divine2-theme .reel-placeholder {
+.reel-wrapper.divine2-theme .reel-placeholder,
+.reel-wrapper.divine2-theme .belief-quote {
   font-size: 3.6cqw;
   line-height: 1.25;
 }
