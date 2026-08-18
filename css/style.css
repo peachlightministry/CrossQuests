@@ -1070,136 +1070,29 @@ body.modal-open {
   max-width: 140px;
 }
 
-/* Ark of the Covenant cosmetic (home page spin reel) - modeled on Exodus
-   25:10-22: an acacia chest overlaid in gold, a gold molding around the rim,
-   carrying poles through rings, a flat gold mercy seat (lid), and two
-   cherubim of hammered gold facing each other with wings spread upward,
-   overshadowing the seat. */
+/* Ark of the Covenant cosmetic (home page spin reel) - a user-supplied,
+   user-owned AI-generated image of the Ark (cherubim, lid, molding, poles,
+   rings), cropped to sit as a "topper" above the quest reel; the reel
+   itself continues the gold panel below it as the box's front face. */
 .reel-wrapper {
   position: relative;
   width: 100%;
 }
 
-.reel-wrapper.ark-theme {
-  padding-top: 155px;
-  padding-bottom: 34px;
-}
-
-.cherub-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
-.ark-cherub {
+.ark-photo {
   display: none;
-  position: absolute;
-  top: 60px;
-  width: 175px;
+}
+
+.reel-wrapper.ark-theme .ark-photo {
+  display: block;
+  width: 100%;
   height: auto;
-  z-index: 4;
-  filter: drop-shadow(0 4px 6px rgba(90, 58, 2, 0.4));
-}
-
-.reel-wrapper.ark-theme .ark-cherub {
-  display: block;
-}
-
-.ark-cherub.left {
-  left: 10px;
-}
-
-.ark-cherub.right {
-  right: 10px;
-  transform: scaleX(-1);
-}
-
-.ark-lid-tier,
-.ark-molding,
-.ark-base,
-.ark-pole,
-.ark-ring,
-.ark-medallion {
-  display: none;
-}
-
-.reel-wrapper.ark-theme .ark-lid-tier,
-.reel-wrapper.ark-theme .ark-molding,
-.reel-wrapper.ark-theme .ark-base,
-.reel-wrapper.ark-theme .ark-pole,
-.reel-wrapper.ark-theme .ark-ring,
-.reel-wrapper.ark-theme .ark-medallion {
-  display: block;
-}
-
-.ark-lid-tier {
   position: relative;
-  z-index: 3;
-}
-
-.ark-lid-tier.t1 {
-  height: 10px;
-  background: linear-gradient(180deg, #fff3c4 0%, #e0aa2e 100%);
-  border: 2px solid #6b4a00;
-  border-radius: 10px;
-  margin: 0 6px;
-}
-
-.ark-lid-tier.t2 {
-  height: 22px;
-  background: linear-gradient(180deg, #fff3c4 0%, #e0aa2e 55%, #c99420 100%);
-  border: 3px solid #6b4a00;
-  border-radius: 14px;
-  margin: -3px -8px 0;
-  box-shadow: 0 4px 8px rgba(90, 58, 2, 0.35);
-}
-
-.ark-molding {
-  position: relative;
-  height: 11px;
-  background-color: #6b4a00;
-  background-image: radial-gradient(circle, #ffe9a8 42%, transparent 44%);
-  background-size: 13px 13px;
-  background-position: 6px center;
-  margin: -3px 2px 0;
-  z-index: 2;
-  border-radius: 0 0 4px 4px;
-}
-
-.ark-pole {
-  position: absolute;
-  top: 173px;
-  height: 6px;
-  width: 46px;
-  background: linear-gradient(180deg, #c99420, #6b4a00);
-  border-radius: 3px;
-  z-index: 5;
-}
-
-.ark-pole.left {
-  left: -34px;
-}
-
-.ark-pole.right {
-  right: -34px;
-}
-
-.ark-ring {
-  position: absolute;
-  top: 165px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 4px solid #6b4a00;
-  z-index: 5;
-}
-
-.ark-ring.left {
-  left: 2px;
-}
-
-.ark-ring.right {
-  right: 2px;
+  z-index: 1;
+  margin-bottom: -6px;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 6px 10px rgba(90, 58, 2, 0.35));
 }
 
 .reel-wrapper.ark-theme .reel {
@@ -1220,45 +1113,6 @@ body.modal-open {
   pointer-events: none;
 }
 
-.ark-medallion {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff3c4, #c99420 65%, #8a6100 100%);
-  border: 2px solid #6b4a00;
-  box-shadow: inset 0 0 0 2px rgba(255, 244, 214, 0.5);
-  z-index: 1;
-}
-
-.ark-medallion::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(107, 74, 0, 0.5);
-}
-
-.ark-medallion.tl {
-  top: 12px;
-  left: 12px;
-}
-
-.ark-medallion.tr {
-  top: 12px;
-  right: 12px;
-}
-
-.ark-medallion.bl {
-  bottom: 12px;
-  left: 12px;
-}
-
-.ark-medallion.br {
-  bottom: 12px;
-  right: 12px;
-}
-
 .reel-wrapper.ark-theme .reel-placeholder,
 .reel-wrapper.ark-theme .reel-quest,
 .reel-wrapper.ark-theme .reel-verse {
@@ -1273,40 +1127,6 @@ body.modal-open {
   text-shadow: 0 1px 3px rgba(90, 58, 2, 0.5), 0 0 6px rgba(255, 255, 255, 0.6);
   position: relative;
   z-index: 2;
-}
-
-.ark-base {
-  position: relative;
-  height: 30px;
-}
-
-.ark-shadow {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 8px;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(90, 58, 2, 0.28);
-  filter: blur(3px);
-}
-
-.ark-foot {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 0 0 6px 6px;
-  background: linear-gradient(180deg, #e0aa2e, #8a6100);
-  border: 2px solid #6b4a00;
-  top: 0;
-}
-
-.ark-foot.left {
-  left: 30px;
-}
-
-.ark-foot.right {
-  right: 30px;
 }
 
 /* Skin-specific spin button treatments */
@@ -1439,25 +1259,6 @@ body.modal-open {
   }
   .spin-column .spin-button {
     width: 100%;
-  }
-  .ark-cherub {
-    width: 115px;
-    top: 44px;
-  }
-  .ark-cherub.left {
-    left: 4px;
-  }
-  .ark-cherub.right {
-    right: 4px;
-  }
-  .reel-wrapper.ark-theme {
-    padding-top: 118px;
-  }
-  .ark-pole {
-    top: 136px;
-  }
-  .ark-ring {
-    top: 128px;
   }
   .shop-label {
     display: none;
