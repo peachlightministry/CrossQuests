@@ -62,7 +62,7 @@ function refreshSpinStatus() {
 
 function applyReelRarityColors(rarity) {
   const equipped = getEquippedCosmetic();
-  if (equipped === 'ark' || equipped === 'divine') {
+  if (equipped === 'ark' || equipped === 'divine' || equipped === 'divine2') {
     // These themes own the reel's background/border; rarity color stays out of it.
     reel.style.background = '';
     reel.style.borderColor = '';
@@ -95,6 +95,7 @@ function refreshEquippedCosmeticVisual() {
   const equipped = getEquippedCosmetic();
   reelWrapper.classList.toggle('ark-theme', equipped === 'ark');
   reelWrapper.classList.toggle('divine-theme', equipped === 'divine');
+  reelWrapper.classList.toggle('divine2-theme', equipped === 'divine2');
   // Re-apply so a live-equipped theme immediately clears any rarity
   // background/border currently sitting on the reel as inline styles.
   reel.style.background = '';
@@ -104,7 +105,7 @@ function refreshEquippedCosmeticVisual() {
   if (equipped === 'ark') {
     spinButton.classList.add('ark-button');
     spinButton.innerHTML = '📜 Open the Ark';
-  } else if (equipped === 'divine') {
+  } else if (equipped === 'divine' || equipped === 'divine2') {
     spinButton.classList.add('divine-button');
     spinButton.innerHTML = '🙏 Pray for a Quest';
   } else {
