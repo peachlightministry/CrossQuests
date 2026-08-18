@@ -1152,89 +1152,154 @@ body.modal-open {
   box-shadow: 0 0 30px 6px rgba(255, 215, 0, 0.8), 0 12px 26px rgba(255, 179, 0, 0.5);
 }
 
-/* Divine Glory cosmetic - blinding white and gold, particles rising from the seat */
-.reel-wrapper.divine-theme .reel {
-  border: 6px solid #ffd700;
-  border-radius: var(--radius) !important;
-  background: #ffffff;
-  overflow: visible;
-  animation: divineFlash 1.8s ease-in-out infinite;
+/* Divine Glory cosmetic - a user-supplied, user-owned AI-generated ornate
+   gold frame image. The quest reel sits inside its white panel; the two
+   star bursts get a slow pulsing glow overlay, and small light orbs
+   travel an elliptical path around the frame border to suggest the
+   frame's light lines drifting, both subtle and slow. */
+.divine-photo {
+  display: none;
 }
 
-@keyframes divineFlash {
+.reel-wrapper.divine-theme .divine-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.divine-star-glow,
+.divine-light-orb {
+  display: none;
+}
+
+.reel-wrapper.divine-theme .divine-star-glow,
+.reel-wrapper.divine-theme .divine-light-orb {
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: screen;
+}
+
+.divine-star-glow {
+  width: 15%;
+  height: 15%;
+  left: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 225, 140, 0.5) 42%, transparent 72%);
+  transform: translate(-50%, -50%) scale(0.85);
+  animation: divineStarPulse 3.8s ease-in-out infinite;
+}
+
+.divine-star-glow.top {
+  top: 23%;
+}
+
+.divine-star-glow.bottom {
+  top: 72.5%;
+  animation-delay: 1.9s;
+}
+
+@keyframes divineStarPulse {
   0%,
   100% {
-    background: #ffffff;
-    box-shadow: 0 0 16px 3px rgba(255, 215, 0, 0.4), 0 0 8px 2px rgba(255, 215, 0, 0.3), inset 0 0 14px rgba(255, 215, 0, 0.15);
-    border-color: #ffd700;
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.8);
   }
-  25% {
-    background: #ffffff;
-    box-shadow: 0 0 70px 22px rgba(255, 255, 255, 1), 0 0 30px 8px rgba(255, 255, 255, 0.9), inset 0 0 30px rgba(255, 255, 255, 0.7);
-    border-color: #ffffff;
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.2);
   }
-  75% {
-    background: #fff0b8;
-    box-shadow: 0 0 90px 30px #ffd700, 0 0 45px 14px rgba(255, 180, 0, 0.95), inset 0 0 45px rgba(255, 215, 0, 0.7);
-    border-color: #ffd700;
+}
+
+.divine-light-orb {
+  width: 4%;
+  height: 4%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 215, 0, 0.6) 45%, transparent 75%);
+  offset-path: ellipse(47% 35% at 50% 50%);
+  offset-rotate: 0deg;
+  animation: divineOrbTravel 18s linear infinite;
+}
+
+.divine-light-orb.b {
+  animation-delay: -9s;
+}
+
+@keyframes divineOrbTravel {
+  from {
+    offset-distance: 0%;
   }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.reel-wrapper.divine-theme {
+  container-type: inline-size;
+  container-name: divinepanel;
+}
+
+.reel-wrapper.divine-theme .reel {
+  position: absolute;
+  left: 11.5%;
+  top: 34.5%;
+  width: 77%;
+  height: 29%;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2% 4%;
+  gap: 0;
+  z-index: 3;
 }
 
 .reel-wrapper.divine-theme .reel-quest,
 .reel-wrapper.divine-theme .reel-verse,
 .reel-wrapper.divine-theme .reel-placeholder {
-  color: #ffc700 !important;
-  text-shadow: 0 0 1px #c9960c, 0 0 2px #c9960c, 0 0 10px rgba(255, 215, 0, 0.8);
+  color: #c99420 !important;
+  text-shadow: none;
   position: relative;
   z-index: 2;
 }
 
 .reel-wrapper.divine-theme .reel-rarity {
-  /* keeps its own rarity color, just needs a touch of definition against white */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  /* keeps its own rarity color, no extra shadow needed against the white panel */
   position: relative;
   z-index: 2;
+  font-size: 3cqw;
+  margin-bottom: 1.2cqw;
 }
 
-.divine-particle {
-  display: none;
-  position: absolute;
-  top: -4px;
-  width: 5px;
-  height: 5px;
-  margin-left: -2.5px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 3;
-  animation: divineParticleRise 1.4s ease-out infinite;
+.reel-wrapper.divine-theme .reel-quest,
+.reel-wrapper.divine-theme .reel-placeholder {
+  font-size: 3.6cqw;
+  line-height: 1.25;
 }
 
-.reel-wrapper.divine-theme .divine-particle {
-  display: block;
+.reel-wrapper.divine-theme .reel-verse {
+  font-size: 2.4cqw;
+  margin-top: 1cqw;
 }
 
-.divine-particle.gold {
-  background: #ffd700;
-  box-shadow: 0 0 4px rgba(255, 215, 0, 0.9);
-}
-
-.divine-particle.white {
-  background: #ffffff;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.95);
-}
-
-@keyframes divineParticleRise {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.95;
+@container divinepanel (max-width: 420px) {
+  .reel-wrapper.divine-theme .reel-verse {
+    display: none;
   }
-  70% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(-42px) scale(0.3);
-    opacity: 0;
-  }
+}
+
+.reel-wrapper.divine-theme .reel-badge {
+  top: 3%;
+  right: 3%;
+  font-size: 2.2cqw;
+  padding: 0.6cqw 1.6cqw;
 }
 
 @media (max-width: 480px) {
