@@ -84,8 +84,7 @@ function buyCosmetic(id) {
 }
 
 // Upgrades catalog. Permanent, one-time purchases (no equip step, unlike
-// cosmetics). Their gameplay effect is not wired up yet - purchase and
-// ownership tracking work, but they don't change spin odds yet.
+// cosmetics).
 const UPGRADES = [
   {
     id: 'quest-luck-1',
@@ -98,6 +97,18 @@ const UPGRADES = [
     name: 'Quest Luck 2',
     price: 70,
     description: 'Improves your odds even further, stacking with Quest Luck 1.',
+  },
+  {
+    id: 'perfectionist',
+    name: 'Perfectionist',
+    price: 15,
+    description: 'Earn a bonus point on any day you complete both side quests and slay a lie.',
+  },
+  {
+    id: 'divine-gambling',
+    name: 'Divine Gambling😏',
+    price: 25,
+    description: "Land Mustard Seed and there's a 1-in-3 chance a Reroll button appears.",
   },
 ];
 

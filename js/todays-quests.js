@@ -41,6 +41,27 @@ function addTodaysQuestEntry(rarity, quest) {
   return state;
 }
 
+// Used by the Divine Gambling reroll: swaps the most recently added entry
+// for a fresh one instead of appending, so a free reroll doesn't inflate
+// the day's quest count.
+function replaceLastTodaysQuestEntry(rarity, quest) {
+  const state = getTodaysQuestsState();
+  const newEntry = {
+    questId: quest.id,
+    rarityId: rarity.id,
+    spunAt: Date.now(),
+    completed: false,
+    completedAt: null,
+  };
+  if (state.entries.length > 0) {
+    state.entries[state.entries.length - 1] = newEntry;
+  } else {
+    state.entries.push(newEntry);
+  }
+  writeTodaysQuestsState(state);
+  return state;
+}
+
 function completeTodaysQuestEntryAt(index) {
   const state = getTodaysQuestsState();
   const entry = state.entries[index];

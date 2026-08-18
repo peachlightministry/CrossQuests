@@ -151,6 +151,7 @@ spinButton.addEventListener('click', () => {
 conquerButton.addEventListener('click', () => {
   if (!currentBelief || conquerButton.disabled) return;
   markConquered(currentBelief.id);
+  recordBeliefConquestForPerfectionist();
   playSound('conquered', { volume: 0.7 });
   updateConquerButton(currentBelief);
   updateProgressSummary();

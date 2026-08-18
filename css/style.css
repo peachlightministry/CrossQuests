@@ -350,6 +350,36 @@ body {
   min-height: 1em;
 }
 
+.reroll-button {
+  display: none;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ba68c8 0%, #7b1fa2 100%);
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(123, 31, 162, 0.4);
+  animation: rerollPop 0.3s ease;
+}
+
+.reroll-button.visible {
+  display: inline-block;
+}
+
+@keyframes rerollPop {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .progress-summary {
   text-align: center;
   color: var(--ink-soft);

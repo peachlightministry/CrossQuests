@@ -8,6 +8,7 @@ const greetingText = document.getElementById('greeting-text');
 const todaysQuestsToggle = document.getElementById('todays-quests-toggle');
 const todaysQuestsPanel = document.getElementById('todays-quests-panel');
 const todaysQuestsBadge = document.getElementById('todays-quests-badge');
+const rerollButton = document.getElementById('reroll-button');
 
 const questSpinLimiter = createSpinLimiter({
   storageKey: 'jsq-quest-spin-limit',
@@ -172,6 +173,39 @@ function finishSpin({ rarity, quest }) {
   if (todaysQuestsPanel.classList.contains('open')) {
     renderTodaysQuestsPanel();
   }
+
+  maybeShowRerollButton(rarity);
+}
+
+function maybeShowRerollButton(rarity) {
+  rerollButton.classList.remove('visible');
+  rerollButton.onclick = null;
+
+  if (rarity.id !== 'mustard-seed') return;
+  if (!isUpgradeOwned('divine-gambling')) return;
+  if (Math.random() >= 1 / 3) return;
+
+  rerollButton.classList.add('visible');
+  rerollButton.onclick = () => {
+    rerollButton.classList.remove('visible');
+    rerollButton.onclick = null;
+    playSound('click', { volume: 0.4 });
+
+    const result = pickRandomQuest();
+    replaceLastTodaysQuestEntry(result.rarity, result.quest);
+    const isNew = markDiscovered(result.quest.id);
+    renderReelContent(result, { isNew });
+    playSound(result.rarity.soundKey, { volume: 0.7 });
+
+    reel.classList.remove('revealed', 'secret-revealed');
+    reel.classList.add(result.rarity.secret ? 'secret-revealed' : 'revealed');
+
+    updateProgressSummary();
+    refreshTodaysQuestsBadge();
+    if (todaysQuestsPanel.classList.contains('open')) {
+      renderTodaysQuestsPanel();
+    }
+  };
 }
 
 spinButton.addEventListener('click', () => {
@@ -279,6 +313,7 @@ function completeQuestEntry(index, buttonEl) {
   if (found) {
     addPoints(found.rarity.points);
   }
+  recordQuestCompletionForPerfectionist();
   playSound('questComplete', { volume: 0.45 });
   if (buttonEl) triggerSubtleConfetti(buttonEl);
 
