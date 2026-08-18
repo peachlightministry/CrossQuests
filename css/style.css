@@ -1282,7 +1282,7 @@ body.modal-open {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
   mix-blend-mode: screen;
 }
 
@@ -1352,15 +1352,16 @@ body.modal-open {
   left: 11.5%;
   top: 34.5%;
   width: 77%;
-  height: 29%;
-  min-height: 0;
-  background: transparent;
+  height: auto;
+  min-height: 29%;
+  overflow: visible;
+  background: #fffdf7;
   border: none;
-  border-radius: 0;
+  border-radius: 14px;
   box-shadow: none;
   padding: 2% 4%;
   gap: 0;
-  z-index: 3;
+  z-index: 2;
 }
 
 .reel-wrapper.divine-theme .reel-quest,
