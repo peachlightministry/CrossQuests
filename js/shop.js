@@ -30,7 +30,7 @@ function renderCosmeticsPanel() {
   const equipped = getEquippedCosmetic();
   const points = getPoints();
 
-  panel.innerHTML = COSMETICS.filter((item) => !item.hidden || isCosmeticOwned(item.id)).map((item) => {
+  panel.innerHTML = COSMETICS.filter((item) => !item.hidden || isCosmeticOwned(item.id) || (item.revealCheck && item.revealCheck())).map((item) => {
     const owned = isCosmeticOwned(item.id);
     const isEquipped = equipped === item.id;
 
@@ -39,6 +39,8 @@ function renderCosmeticsPanel() {
       actionHtml = `<span class="cosmetic-status equipped">✅ Equipped</span>`;
     } else if (owned) {
       actionHtml = `<button class="cosmetic-action-button" data-action="equip" data-id="${item.id}">Equip</button>`;
+    } else if (item.price === 0 && points >= item.price) {
+      actionHtml = `<button class="cosmetic-action-button buy" data-action="buy" data-id="${item.id}">Claim (Free)</button>`;
     } else if (points >= item.price) {
       actionHtml = `<button class="cosmetic-action-button buy" data-action="buy" data-id="${item.id}">Buy for ${item.price} ${crossIconSVG(14)}</button>`;
     } else {

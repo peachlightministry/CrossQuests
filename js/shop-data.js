@@ -30,7 +30,39 @@ const COSMETICS = [
     price: 1,
     description: 'Same glory, with a light that actually travels the frame in a figure-eight.',
   },
+  {
+    id: 'world-over-heaven',
+    name: 'The World Over Heaven',
+    price: 0,
+    description: 'A secret, world-reshaping skin. Reveals itself once you crack the sky.',
+    // Hidden like the Ark, but with its own unlock condition instead of
+    // ownership: it shows up as a free claim once revealSecretCheck()
+    // passes, regardless of whether it's been claimed yet.
+    hidden: true,
+    revealCheck: () => isWorldOverHeavenRevealed(),
+  },
 ];
+
+// The World Over Heaven's secret reveal flag — flipped by the "Crack the
+// Sky" button (see index.html / app.js). Separate from ownership: revealing
+// it just makes it show up in the shop as a free claim.
+const WOH_REVEALED_KEY = 'jsq-woh-revealed';
+
+function isWorldOverHeavenRevealed() {
+  try {
+    return localStorage.getItem(WOH_REVEALED_KEY) === '1';
+  } catch (e) {
+    return false;
+  }
+}
+
+function revealWorldOverHeaven() {
+  try {
+    localStorage.setItem(WOH_REVEALED_KEY, '1');
+  } catch (e) {
+    // ignore
+  }
+}
 
 // Cosmetics ownership/equip state. Lives here (rather than shop.js) so pages
 // that render a cosmetic's effect, like the home page reel, can read it
@@ -66,10 +98,23 @@ function setEquippedCosmetic(id) {
   } catch (e) {
     // ignore
   }
+  applyGlobalCosmeticTheme();
   if (typeof refreshEquippedCosmeticVisual === 'function') {
     refreshEquippedCosmeticVisual();
   }
 }
+
+// The World Over Heaven reskins more than the reel (nav bar, side columns,
+// page width) so it needs a body-level class on every page, not just the
+// ones with a reel-wrapper. Runs on load and whenever equip state changes.
+function applyGlobalCosmeticTheme() {
+  const isWoh = getEquippedCosmetic() === 'world-over-heaven';
+  document.body.classList.toggle('woh-theme', isWoh);
+  document.querySelectorAll('.nav-link[href="beliefs.html"]').forEach((el) => {
+    el.textContent = isWoh ? 'Crush Deception' : 'Slay a Lie';
+  });
+}
+applyGlobalCosmeticTheme();
 
 function buyCosmetic(id) {
   const item = COSMETICS.find((c) => c.id === id);

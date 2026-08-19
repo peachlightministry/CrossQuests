@@ -64,7 +64,7 @@ function refreshSpinStatus() {
 
 function applyReelRarityColors(rarity) {
   const equipped = getEquippedCosmetic();
-  if (equipped === 'ark' || equipped === 'divine' || equipped === 'divine2') {
+  if (equipped === 'ark' || equipped === 'divine' || equipped === 'divine2' || equipped === 'world-over-heaven') {
     // These themes own the reel's background/border; rarity color stays out of it.
     reel.style.background = '';
     reel.style.borderColor = '';
@@ -98,20 +98,44 @@ function refreshEquippedCosmeticVisual() {
   reelWrapper.classList.toggle('ark-theme', equipped === 'ark');
   reelWrapper.classList.toggle('divine-theme', equipped === 'divine');
   reelWrapper.classList.toggle('divine2-theme', equipped === 'divine2');
+  reelWrapper.classList.toggle('woh-theme', equipped === 'world-over-heaven');
   // Re-apply so a live-equipped theme immediately clears any rarity
   // background/border currently sitting on the reel as inline styles.
   reel.style.background = '';
   reel.style.borderColor = '';
 
-  spinButton.classList.remove('ark-button', 'divine-button');
+  spinButton.classList.remove('ark-button', 'divine-button', 'woh-button');
   if (equipped === 'ark') {
     spinButton.classList.add('ark-button');
     spinButton.innerHTML = '📜 Open the Ark';
   } else if (equipped === 'divine' || equipped === 'divine2') {
     spinButton.classList.add('divine-button');
     spinButton.innerHTML = '🙏 Pray for a Quest';
+  } else if (equipped === 'world-over-heaven') {
+    spinButton.classList.add('woh-button');
+    spinButton.innerHTML =
+      '<img class="woh-button-icon" src="img/woh-icon-spear.png" alt="">' +
+      '<span class="woh-button-text">' +
+      '<span class="woh-button-title">Spin a Side Quest</span>' +
+      '<span class="woh-button-subtitle">I will surpass even Heaven.</span>' +
+      '</span>';
   } else {
     spinButton.innerHTML = '🎲 Spin a Side Quest';
+  }
+
+  const secondaryButton = document.querySelector('.secondary-button');
+  if (secondaryButton) {
+    secondaryButton.classList.toggle('woh-button', equipped === 'world-over-heaven');
+    if (equipped === 'world-over-heaven') {
+      secondaryButton.innerHTML =
+        '<img class="woh-button-icon" src="img/woh-icon-crush.png" alt="">' +
+        '<span class="woh-button-text">' +
+        '<span class="woh-button-title">Crush Deception</span>' +
+        '<span class="woh-button-subtitle">Break falsehood.</span>' +
+        '</span>';
+    } else {
+      secondaryButton.innerHTML = '⚔️ Slay a Lie';
+    }
   }
 }
 
@@ -342,6 +366,13 @@ document.getElementById('test-spin-button').addEventListener('click', () => {
 
 document.getElementById('test-points-button').addEventListener('click', () => {
   addPoints(50);
+});
+
+document.getElementById('crack-sky-button').addEventListener('click', () => {
+  revealWorldOverHeaven();
+  playSound('click', { volume: 0.5 });
+  openShop();
+  switchShopTab('cosmetics');
 });
 
 setGreeting();

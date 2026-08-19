@@ -1714,3 +1714,327 @@ body.modal-open {
     font-size: 1.3rem;
   }
 }
+
+/* ============================================================
+   The World Over Heaven — secret, site-wide reskin. Unlocked via the
+   "Crack the Sky" button (index.html), claimed free in the shop, then
+   equipped like any other cosmetic. Reskins the whole page chrome (nav,
+   decorative side columns, hero/reel), not just the reel box, so it
+   needs a body-level class in addition to the reel-wrapper theme class
+   the other cosmetics use.
+   ============================================================ */
+
+body.woh-theme {
+  background: linear-gradient(180deg, #fdf8ec 0%, #f2e3bf 100%);
+}
+
+body.woh-theme .page {
+  max-width: 1300px;
+}
+
+/* Decorative fixed side columns — purely ornamental, wide screens only.
+   Thinned ~27.5% from the source art's natural proportions; the icons
+   inside shrink right along with the column since it's one flat image. */
+.woh-sidebar {
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: clamp(85px, 8vw, 125px);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.woh-sidebar-left {
+  left: 0;
+  background-image: url('../img/woh-sidebar-left.png');
+}
+
+.woh-sidebar-right {
+  right: 0;
+  background-image: url('../img/woh-sidebar-right.png');
+}
+
+@media (min-width: 1000px) {
+  body.woh-theme .woh-sidebar {
+    display: block;
+  }
+}
+
+/* Nav bar — the gold-arch strip art, ~20% smaller than a full-width bar
+   and nudged up slightly, per spec. Nav text/points/shop stay as real
+   live elements (current-page state, live point value) sized in cqw so
+   they scale down right along with the artwork. */
+body.woh-theme .site-nav {
+  position: relative;
+  container-type: inline-size;
+  width: 80%;
+  max-width: 1080px;
+  margin: -10px auto 14px;
+  aspect-ratio: 1357 / 108;
+  background-image: url('../img/woh-navbar.png');
+  background-size: 100% 100%;
+  padding: 0 3.5% 0.5% 9%;
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+body.woh-theme .brand {
+  color: transparent;
+  flex-shrink: 0;
+}
+
+body.woh-theme .nav-links {
+  gap: 1.6cqw;
+}
+
+body.woh-theme .nav-group {
+  gap: 1.6cqw;
+}
+
+body.woh-theme .nav-link {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.65cqw;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #6b5013;
+  background: transparent;
+  box-shadow: none;
+  padding: 0.6cqw 1cqw;
+  white-space: nowrap;
+}
+
+body.woh-theme .nav-link.current {
+  background: rgba(201, 162, 39, 0.18);
+  color: #4a3208;
+  font-weight: 700;
+}
+
+body.woh-theme .nav-link-standalone {
+  margin-left: 0;
+}
+
+body.woh-theme .cross-points {
+  background: transparent;
+  box-shadow: none;
+  color: #6b5013;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5cqw;
+}
+
+body.woh-theme .shop-button {
+  background: transparent;
+  box-shadow: none;
+}
+
+body.woh-theme .shop-label {
+  display: none;
+}
+
+/* Hero — wings, cross crest, and the ornate reel frame. Same "flat art +
+   live text overlay" technique as the Ark/Divine Glory skins, just with
+   a much larger background image. */
+.woh-hero-photo {
+  display: none;
+}
+
+.reel-wrapper.woh-theme .woh-hero-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.reel-wrapper.woh-theme {
+  container-type: inline-size;
+  container-name: wohpanel;
+}
+
+.reel-wrapper.woh-theme .reel {
+  position: absolute;
+  left: 11%;
+  top: 38%;
+  width: 78%;
+  height: 55%;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2% 4%;
+  z-index: 2;
+}
+
+.reel-wrapper.woh-theme .reel-placeholder,
+.reel-wrapper.woh-theme .reel-quest,
+.reel-wrapper.woh-theme .reel-verse,
+.reel-wrapper.woh-theme .belief-quote {
+  color: #6b5013 !important;
+  text-shadow: none;
+  font-family: 'Cinzel', Georgia, serif;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.reel-wrapper.woh-theme .reel-rarity {
+  font-size: 2cqw;
+  margin-bottom: 1cqw;
+  text-shadow: none;
+}
+
+.reel-wrapper.woh-theme .reel-quest,
+.reel-wrapper.woh-theme .reel-placeholder,
+.reel-wrapper.woh-theme .belief-quote {
+  font-size: 2.6cqw;
+  line-height: 1.4;
+}
+
+.reel-wrapper.woh-theme .reel-verse {
+  font-size: 1.7cqw;
+  margin-top: 1cqw;
+  opacity: 0.85;
+  font-family: 'Nunito', sans-serif;
+}
+
+.reel-wrapper.woh-theme .reel-badge {
+  top: 4%;
+  right: 4%;
+  font-size: 1.6cqw;
+  padding: 0.5cqw 1.4cqw;
+}
+
+/* Spin / Crush Deception buttons — freshly styled gold pill (not baked
+   into the art, since these need real hover/disabled states), with the
+   isolated weapon icon shrunk to ~35% of its size in the source mockup. */
+.spin-button.woh-button,
+.secondary-button.woh-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #fffaf0 0%, #f3e6c8 100%);
+  border: 2px solid #c9a227;
+  color: #6b5013;
+  box-shadow: 0 4px 14px rgba(140, 100, 20, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  text-shadow: none;
+}
+
+.spin-button.woh-button:hover:not(:disabled),
+.secondary-button.woh-button:hover:not(:disabled) {
+  box-shadow: 0 6px 18px rgba(140, 100, 20, 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.spin-button.woh-button:disabled {
+  opacity: 0.55;
+}
+
+.woh-button-icon {
+  height: 38px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.woh-button-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+}
+
+.woh-button-title {
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.woh-button-subtitle {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #8a6d2e;
+}
+
+/* Progress / spin-status / today's-quests text, and the shop swatch */
+body.woh-theme .greeting h1 {
+  font-family: 'Cinzel', Georgia, serif;
+  color: #6b5013;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+body.woh-theme .greeting p {
+  color: #8a6d2e;
+}
+
+body.woh-theme .progress-summary,
+body.woh-theme .spin-status {
+  color: #6b5013;
+}
+
+body.woh-theme .progress-summary a {
+  color: #a3781c;
+}
+
+body.woh-theme .todays-quests-toggle {
+  font-family: 'Cinzel', Georgia, serif;
+  color: #6b5013;
+  background: rgba(255, 250, 240, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(201, 162, 39, 0.4);
+}
+
+.cosmetic-swatch-world-over-heaven {
+  background: radial-gradient(120% 160% at 50% 0%, #fffdf5 0%, #f3e6c8 45%, #c9a227 100%);
+  box-shadow: inset 0 0 0 2px #8a6d2e, 0 0 10px rgba(201, 162, 39, 0.5);
+}
+
+.crack-sky-button {
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8a6d2e;
+  background: transparent;
+  border: 1px dashed #c9a227;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  body.woh-theme .site-nav {
+    width: 100%;
+    aspect-ratio: auto;
+    background-image: none;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+  body.woh-theme .brand {
+    color: var(--ink);
+  }
+  body.woh-theme .nav-link {
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: var(--shadow);
+    padding: 8px 16px;
+  }
+  body.woh-theme .nav-link.current {
+    background: rgba(0, 0, 0, 0.14);
+  }
+  body.woh-theme .cross-points {
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: var(--shadow);
+    font-size: 1rem;
+  }
+  body.woh-theme .page {
+    max-width: 720px;
+  }
+}
