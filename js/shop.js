@@ -30,7 +30,7 @@ function renderCosmeticsPanel() {
   const equipped = getEquippedCosmetic();
   const points = getPoints();
 
-  panel.innerHTML = COSMETICS.map((item) => {
+  panel.innerHTML = COSMETICS.filter((item) => !item.hidden || isCosmeticOwned(item.id)).map((item) => {
     const owned = isCosmeticOwned(item.id);
     const isEquipped = equipped === item.id;
 

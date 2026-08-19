@@ -93,6 +93,32 @@
   </div>
 </div>
 
+<button class="achievements-fab" id="achievements-button" title="Achievements" aria-label="Achievements">🏅</button>
+
+<div class="achievements-modal-backdrop" id="achievements-modal-backdrop">
+  <div class="achievements-modal" id="achievements-modal">
+    <button class="achievements-modal-close" id="achievements-modal-close" aria-label="Close">✕</button>
+    <div class="achievements-modal-badge">🏅 Achievements</div>
+
+    <div class="achievements-grid" id="achievements-grid"></div>
+
+    <div class="achievements-progress">
+      <span class="achievements-progress-text" id="achievements-progress-text">0 / 7 achievements completed</span>
+      <div class="achievements-progress-bar">
+        <div class="achievements-progress-fill" id="achievements-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="achievements-grand-reward">
+      <div class="achievements-grand-reward-info">
+        <span class="achievements-grand-reward-label">Grand Reward</span>
+        <span class="achievements-grand-reward-name">🏆 Ark of the Covenant (skin)</span>
+      </div>
+      <button class="achievements-grand-reward-button" id="achievements-grand-reward-claim" disabled>Locked — complete all 7 achievements</button>
+    </div>
+  </div>
+</div>
+
 <div class="belief-modal-backdrop" id="belief-modal-backdrop">
   <div class="belief-modal" id="belief-modal">
     <button class="belief-modal-close" id="belief-modal-close" aria-label="Close">✕</button>
@@ -126,6 +152,8 @@
   </div>
 </div>
 
+<script src="js/quest-data.js"></script>
+<script src="js/storage.js"></script>
 <script src="js/belief-data.js"></script>
 <script src="js/belief-storage.js"></script>
 <script src="js/sound.js"></script>
@@ -135,5 +163,6 @@
 <script src="js/perfectionist.js"></script>
 <script src="js/belief-app.js"></script>
 <script src="js/shop.js"></script>
+<script src="js/achievements.js"></script>
 </body>
 </html>

@@ -314,6 +314,7 @@ function completeQuestEntry(index, buttonEl) {
     addPoints(found.rarity.points);
   }
   recordQuestCompletionForPerfectionist();
+  recordQuestCompletionForAchievements();
   playSound('questComplete', { volume: 0.45 });
   if (buttonEl) triggerSubtleConfetti(buttonEl);
 

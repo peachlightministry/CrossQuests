@@ -12,6 +12,11 @@ const COSMETICS = [
     name: 'Ark of the Covenant',
     price: 50,
     description: 'Golden, with two cherubim watching over your quest.',
+    // Not purchasable — earned as the grand reward for completing all 7
+    // achievements (see achievements.js). Hidden from the regular shop
+    // listing but kept in this array since it's still a real cosmetic:
+    // ownable, equippable, and rendered like any other.
+    hidden: true,
   },
   {
     id: 'divine',
