@@ -1816,6 +1816,10 @@ body.woh-theme {
   display: none;
 }
 
+.woh-spin-quest-link {
+  display: none;
+}
+
 @media (min-width: 900px) {
   body.woh-theme:has(.hero) .woh-stage-photo {
     display: block;
@@ -1842,7 +1846,8 @@ body.woh-theme {
   body.woh-theme:has(.hero) #progress-summary,
   body.woh-theme:has(.hero) #todays-quests-toggle,
   body.woh-theme:has(.hero) .todays-quests-badge,
-  body.woh-theme:has(.hero) .spin-button.belief-button {
+  body.woh-theme:has(.hero) .spin-button.belief-button,
+  body.woh-theme:has(.hero) .woh-spin-quest-link {
     z-index: 3;
   }
 
@@ -1923,29 +1928,15 @@ body.woh-theme {
     font-weight: 700;
   }
 
+  /* The picture already has its own greeting baked in — no live override,
+     no erasure, nothing covering it. Drop the real greeting text out of
+     view entirely rather than positioning it on top of anything. */
   body.woh-theme:has(.hero) .greeting {
     position: absolute;
-    top: 21%;
-    left: 27%;
-    width: 46%;
-    height: 11%;
-    margin: 0;
-    text-align: center;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  body.woh-theme:has(.hero) .greeting h1 {
-    font-family: 'Cinzel', Georgia, serif;
-    color: #6b5013;
-    font-weight: 600;
-  }
-
-  body.woh-theme:has(.hero) .greeting p {
-    color: #8a6d2e;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
   }
 
   body.woh-theme:has(.hero) #reel-wrapper {
@@ -2107,8 +2098,19 @@ body.woh-theme {
     left: 15%;
   }
 
-  /* On the Crush Deception page, its one button is the picture's right
-     ("Crush Deception") pill, not the left ("Spin") one. */
+  /* On the Crush Deception page, its one real button is the picture's
+     right ("Crush Deception") pill, not the left ("Spin") one — but the
+     left pill is still drawn and still reads "Spin a Side Quest", so it
+     needs to actually go there when clicked rather than doing nothing. */
+  body.woh-theme:has(.hero) .woh-spin-quest-link {
+    position: absolute;
+    top: 72.5%;
+    left: 18.3%;
+    width: 30.3%;
+    height: 13.8%;
+    display: block;
+  }
+
   body.woh-theme:has(.hero) .spin-button.belief-button {
     position: absolute;
     top: 72.5%;
