@@ -1741,6 +1741,16 @@ body.woh-theme .page {
   max-width: 1300px;
 }
 
+/* On the picture pages, nothing should cap the design short of the
+   actual browser edge — the picture and pillars stretch to fill however
+   wide the window is, instead of stopping at a fixed width and leaving
+   plain background on either side. */
+@media (min-width: 900px) {
+  body.woh-theme:has(.hero) .page {
+    max-width: none;
+  }
+}
+
 /* Decorative side pillars — unedited crops of the picture's own side
    columns, tiled vertically so they run the full length of any page,
    however tall. Wide screens only (the mockup is a desktop composition). */
@@ -1762,15 +1772,13 @@ body.woh-theme {
   z-index: 1;
 }
 
-/* .page centers itself within body (max-width: 1300px, margin: auto),
-   so its edges only sit flush with body's edges below that width — above
-   it, .page's left/right edges sit inset by (bodyWidth - 1300px) / 2.
-   These are positioned relative to body (for full-page height, since
-   .page's own height is deliberately just the picture's height — see
-   the trailing-content rules further down), so they need that same
-   inset reproduced here, or they drift away from the picture's own
-   baked-in pillar the moment the viewport exceeds 1300px, showing as
-   two visibly offset copies of the same column. */
+/* On pages with no picture (Quest Log, etc.), .page still caps at
+   1300px and centers — so the pillars need that same inset reproduced
+   here to stay flush with .page's edges instead of the raw body edges.
+   On the picture pages .page is now uncapped (see above), always flush
+   with body, so the pillars can just sit at 0 — and their own cap comes
+   off too, so they stretch right along with the picture instead of
+   leaving a gap past a fixed pillar width. */
 .woh-sidebar-left {
   left: max(0px, calc(50% - 650px));
   background-image: url('../img/woh-sidebar-left.png');
@@ -1779,6 +1787,20 @@ body.woh-theme {
 .woh-sidebar-right {
   right: max(0px, calc(50% - 650px));
   background-image: url('../img/woh-sidebar-right.png');
+}
+
+@media (min-width: 900px) {
+  body.woh-theme:has(.hero) .woh-sidebar {
+    max-width: none;
+  }
+
+  body.woh-theme:has(.hero) .woh-sidebar-left {
+    left: 0;
+  }
+
+  body.woh-theme:has(.hero) .woh-sidebar-right {
+    right: 0;
+  }
 }
 
 @media (min-width: 900px) {
