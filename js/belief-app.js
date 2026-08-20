@@ -75,12 +75,7 @@ function refreshEquippedCosmeticVisual() {
 
   spinButton.classList.toggle('woh-button', equipped === 'world-over-heaven');
   if (equipped === 'world-over-heaven') {
-    spinButton.innerHTML =
-      '<img class="woh-button-icon" src="img/woh-icon-crush.png" alt="">' +
-      '<span class="woh-button-text">' +
-      '<span class="woh-button-title">Crush Deception</span>' +
-      '<span class="woh-button-subtitle">Break falsehood.</span>' +
-      '</span>';
+    spinButton.innerHTML = '⚔️ Crush Deception';
   } else {
     spinButton.innerHTML = '⚔️ Slay a Lie';
   }

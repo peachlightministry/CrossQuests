@@ -113,12 +113,7 @@ function refreshEquippedCosmeticVisual() {
     spinButton.innerHTML = '🙏 Pray for a Quest';
   } else if (equipped === 'world-over-heaven') {
     spinButton.classList.add('woh-button');
-    spinButton.innerHTML =
-      '<img class="woh-button-icon" src="img/woh-icon-spear.png" alt="">' +
-      '<span class="woh-button-text">' +
-      '<span class="woh-button-title">Spin a Side Quest</span>' +
-      '<span class="woh-button-subtitle">I will surpass even Heaven.</span>' +
-      '</span>';
+    spinButton.innerHTML = '🎲 Spin a Side Quest';
   } else {
     spinButton.innerHTML = '🎲 Spin a Side Quest';
   }
@@ -127,12 +122,7 @@ function refreshEquippedCosmeticVisual() {
   if (secondaryButton) {
     secondaryButton.classList.toggle('woh-button', equipped === 'world-over-heaven');
     if (equipped === 'world-over-heaven') {
-      secondaryButton.innerHTML =
-        '<img class="woh-button-icon" src="img/woh-icon-crush.png" alt="">' +
-        '<span class="woh-button-text">' +
-        '<span class="woh-button-title">Crush Deception</span>' +
-        '<span class="woh-button-subtitle">Break falsehood.</span>' +
-        '</span>';
+      secondaryButton.innerHTML = '⚔️ Crush Deception';
     } else {
       secondaryButton.innerHTML = '⚔️ Slay a Lie';
     }
