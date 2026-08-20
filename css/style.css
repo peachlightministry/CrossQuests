@@ -1821,8 +1821,29 @@ body.woh-theme {
     display: block;
     width: 100%;
     height: auto;
+    position: relative;
+    z-index: 2;
     pointer-events: none;
     user-select: none;
+  }
+
+  /* Every real, live element floats above the picture — so wherever the
+     picture's own art (the wordmark, the button pills, etc.) would
+     otherwise sit UNDER a decorative pillar, the picture wins and shows
+     through untouched; the pillar only actually shows where nothing
+     else is painted on top of it (below the picture, on any content
+     that runs past it). */
+  body.woh-theme:has(.hero) .site-nav,
+  body.woh-theme:has(.hero) .greeting,
+  body.woh-theme:has(.hero) #reel-wrapper,
+  body.woh-theme:has(.hero) .spin-column,
+  body.woh-theme:has(.hero) .secondary-button,
+  body.woh-theme:has(.hero) #spin-status,
+  body.woh-theme:has(.hero) #progress-summary,
+  body.woh-theme:has(.hero) #todays-quests-toggle,
+  body.woh-theme:has(.hero) .todays-quests-badge,
+  body.woh-theme:has(.hero) .spin-button.belief-button {
+    z-index: 3;
   }
 
   body.woh-theme:has(.hero) .page {
