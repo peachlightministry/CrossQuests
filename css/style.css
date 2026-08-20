@@ -1762,13 +1762,22 @@ body.woh-theme {
   z-index: 1;
 }
 
+/* .page centers itself within body (max-width: 1300px, margin: auto),
+   so its edges only sit flush with body's edges below that width — above
+   it, .page's left/right edges sit inset by (bodyWidth - 1300px) / 2.
+   These are positioned relative to body (for full-page height, since
+   .page's own height is deliberately just the picture's height — see
+   the trailing-content rules further down), so they need that same
+   inset reproduced here, or they drift away from the picture's own
+   baked-in pillar the moment the viewport exceeds 1300px, showing as
+   two visibly offset copies of the same column. */
 .woh-sidebar-left {
-  left: 0;
+  left: max(0px, calc(50% - 650px));
   background-image: url('../img/woh-sidebar-left.png');
 }
 
 .woh-sidebar-right {
-  right: 0;
+  right: max(0px, calc(50% - 650px));
   background-image: url('../img/woh-sidebar-right.png');
 }
 
