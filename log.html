@@ -10,6 +10,31 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div id="jsq-auth-gate" class="jsq-auth-gate">
+  <div class="jsq-auth-gate-card">
+    <div class="jsq-auth-gate-badge">✝️ Jesus Side Quest</div>
+    <p class="jsq-auth-gate-text" id="jsq-auth-gate-text">Checking sign-in status…</p>
+    <button class="jsq-auth-gate-button" id="jsq-auth-gate-button" hidden>Sign in with Google</button>
+    <p class="jsq-auth-gate-error" id="jsq-auth-gate-error"></p>
+  </div>
+</div>
+<div id="jsq-account-chip" class="jsq-account-chip" hidden>
+  <span id="jsq-account-email"></span>
+  <button id="jsq-account-signout">Sign out</button>
+</div>
+<script>
+  setTimeout(function () {
+    var gate = document.getElementById('jsq-auth-gate');
+    var text = document.getElementById('jsq-auth-gate-text');
+    if (gate && !gate.hidden && text && text.textContent === 'Checking sign-in status…') {
+      text.textContent = "Couldn't reach the sign-in service.";
+      var err = document.getElementById('jsq-auth-gate-error');
+      if (err) err.textContent = 'Check your connection and reload the page to try again.';
+    }
+  }, 8000);
+</script>
+<script type="module" src="js/firebase-init.js"></script>
+<script type="module" src="js/cloud-sync.js"></script>
 <div class="woh-sidebar woh-sidebar-left" aria-hidden="true"></div>
 <div class="woh-sidebar woh-sidebar-right" aria-hidden="true"></div>
 <div class="page">
@@ -73,7 +98,7 @@
 
   <div id="log-container"></div>
 
-  <footer class="credit">Progress is saved in this browser only.</footer>
+  <footer class="credit">Progress is saved to your Google account.</footer>
 </div>
 
 <button class="achievements-fab" id="achievements-button" title="Achievements" aria-label="Achievements">🏅</button>

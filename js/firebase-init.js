@@ -63,10 +63,13 @@ window.jsqFirestoreTestRead = async () => {
 
 window.jsqFirebaseReady = true;
 window.jsqFirebaseCurrentUser = null;
+window.jsqFirebaseAuthSettled = false;
 
 onAuthStateChanged(firebaseAuth, (user) => {
   window.jsqFirebaseCurrentUser = user;
-  document.dispatchEvent(new CustomEvent("jsq-auth-changed", { detail: { user } }));
+  const firstCheck = !window.jsqFirebaseAuthSettled;
+  window.jsqFirebaseAuthSettled = true;
+  document.dispatchEvent(new CustomEvent("jsq-auth-changed", { detail: { user, firstCheck } }));
 });
 
 document.dispatchEvent(new CustomEvent("jsq-firebase-ready"));
