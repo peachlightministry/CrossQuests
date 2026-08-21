@@ -18,6 +18,15 @@
     <p class="jsq-auth-gate-error" id="jsq-auth-gate-error"></p>
   </div>
 </div>
+<script>
+  (function () {
+    try {
+      if (sessionStorage.getItem('jsq-cloud-session-active') === '1') {
+        document.getElementById('jsq-auth-gate').hidden = true;
+      }
+    } catch (e) {}
+  })();
+</script>
 <div id="jsq-account-chip" class="jsq-account-chip" hidden>
   <span id="jsq-account-email"></span>
   <button id="jsq-account-signout">Sign out</button>

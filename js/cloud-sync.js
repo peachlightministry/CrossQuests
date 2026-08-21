@@ -35,6 +35,7 @@ function showGate(text, showButton) {
 
 function hideGate() {
   gate.hidden = true;
+  sessionStorage.setItem("jsq-cloud-session-active", "1");
 }
 
 function setGateError(message) {
@@ -177,6 +178,7 @@ gateButton.addEventListener("click", async () => {
 accountSignout.addEventListener("click", async () => {
   await flushPendingWrites();
   if (currentUid) sessionStorage.removeItem(SESSION_FLAG_PREFIX + currentUid);
+  sessionStorage.removeItem("jsq-cloud-session-active");
   clearLocalAppData();
   await window.jsqSignOut();
   location.reload();
