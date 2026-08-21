@@ -61,7 +61,11 @@ window.jsqFirestoreTestRead = async () => {
   return snap.exists() ? snap.data() : null;
 };
 
+window.jsqFirebaseReady = true;
+window.jsqFirebaseCurrentUser = null;
+
 onAuthStateChanged(firebaseAuth, (user) => {
+  window.jsqFirebaseCurrentUser = user;
   document.dispatchEvent(new CustomEvent("jsq-auth-changed", { detail: { user } }));
 });
 

@@ -92,13 +92,20 @@ your existing quest/points/cosmetics data.</p>
     el.className = cls;
   }
 
-  document.addEventListener('jsq-firebase-ready', () => {
+  function markSdkReady() {
     setStatus(statusSdk, 'yes', 'ok');
     log('Firebase app initialized (project: jesussidequest).');
-  });
+  }
 
-  document.addEventListener('jsq-auth-changed', (e) => {
-    const user = e.detail.user;
+  // firebase-init.js runs as an earlier module script, so its ready event
+  // can fire before this listener is attached — check the flag it leaves too.
+  if (window.jsqFirebaseReady) {
+    markSdkReady();
+  } else {
+    document.addEventListener('jsq-firebase-ready', markSdkReady);
+  }
+
+  function applyAuthState(user) {
     if (user) {
       setStatus(statusAuth, `yes (${user.email})`, 'ok');
       log(`Signed in as ${user.email}.`);
@@ -111,7 +118,12 @@ your existing quest/points/cosmetics data.</p>
       signoutButton.disabled = true;
       testButton.disabled = true;
     }
-  });
+  }
+
+  document.addEventListener('jsq-auth-changed', (e) => applyAuthState(e.detail.user));
+  if (window.jsqFirebaseReady) {
+    applyAuthState(window.jsqFirebaseCurrentUser);
+  }
 
   signinButton.addEventListener('click', async () => {
     log('Opening Google sign-in popup…');
