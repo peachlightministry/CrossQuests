@@ -10,6 +10,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  deleteField,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const SESSION_FLAG_PREFIX = "jsq-cloud-hydrated-";
@@ -49,8 +50,13 @@ function allLocalStorageKeys() {
   return Object.keys(localStorage).filter((key) => !key.startsWith("firebase"));
 }
 
+// Captured before any patching, so purely-local cleanup (sign-out, resets
+// before hydrating from the cloud) never gets mistaken for a user edit and
+// mirrored to Firestore as a deletion.
+const originalRemoveItem = Storage.prototype.removeItem;
+
 function clearLocalAppData() {
-  allLocalStorageKeys().forEach((key) => localStorage.removeItem(key));
+  allLocalStorageKeys().forEach((key) => originalRemoveItem.call(localStorage, key));
 }
 
 function installWriteMirror() {
@@ -61,6 +67,13 @@ function installWriteMirror() {
     originalSetItem.call(this, key, value);
     if (this === window.localStorage && currentUid) {
       pendingWrites[key] = value;
+      scheduleFlush();
+    }
+  };
+  Storage.prototype.removeItem = function patchedRemoveItem(key) {
+    originalRemoveItem.call(this, key);
+    if (this === window.localStorage && currentUid) {
+      pendingWrites[key] = deleteField();
       scheduleFlush();
     }
   };

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slay a Lie — Jesus Side Quest</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+<title>Event — Jesus Side Quest</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✝️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -44,17 +44,16 @@
 </script>
 <script type="module" src="js/firebase-init.js"></script>
 <script type="module" src="js/cloud-sync.js"></script>
+<div class="woh-sidebar woh-sidebar-left" aria-hidden="true"></div>
+<div class="woh-sidebar woh-sidebar-right" aria-hidden="true"></div>
 <div class="page">
-  <div class="woh-sidebar woh-sidebar-left" aria-hidden="true"></div>
-  <div class="woh-sidebar woh-sidebar-right" aria-hidden="true"></div>
-  <img class="woh-stage-photo" src="img/woh-full.png" alt="" aria-hidden="true">
   <nav class="site-nav">
     <a class="brand" href="index.html">✝️ Jesus Side Quest</a>
     <div class="nav-right">
       <div class="nav-links">
         <div class="nav-group">
           <a class="nav-link" href="index.html">Spin</a>
-          <a class="nav-link current" href="beliefs.html" aria-current="page">Slay a Lie</a>
+          <a class="nav-link" href="beliefs.html">Slay a Lie</a>
         </div>
         <div class="nav-group">
           <a class="nav-link" href="log.html">Quest Log</a>
@@ -62,7 +61,7 @@
         </div>
       </div>
       <a class="nav-link nav-link-standalone" href="community.html">Community</a>
-      <a class="nav-link nav-link-standalone" href="event.html">Event</a>
+      <a class="nav-link nav-link-standalone current" href="event.html" aria-current="page">Event</a>
       <div class="cross-points" title="Cross Points">
         <svg class="cross-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
           <defs>
@@ -102,35 +101,23 @@
     </div>
   </nav>
 
-  <div class="greeting">
-    <h1>⚔️ Slay a Lie</h1>
-    <p>Every believer carries a few beliefs that sound Christian but aren't. Spin one, read the truth, and conquer it.</p>
+  <div class="log-intro">
+    <h1>🌐 Event</h1>
+    <p>Global events pit every player against each other on a shared leaderboard.</p>
   </div>
 
-  <div class="hero">
-    <div class="reel-wrapper" id="reel-wrapper">
-      <img class="ark-photo" src="img/ark-of-covenant.png" alt="The Ark of the Covenant: two gold cherubim with wings spread over the mercy seat">
-      <img class="divine-photo" src="img/divine-glory-frame.png" alt="An ornate glowing gold frame">
-      <img class="divine2-photo" src="img/divine-glory-2.gif" alt="An ornate glowing gold frame with a light traveling around its border">
-      <div class="divine-star-glow top"></div>
-      <div class="divine-star-glow bottom"></div>
-      <div class="divine-light-orb a"></div>
-      <div class="divine-light-orb b"></div>
-      <div class="reel idle belief-reel" id="reel">
-        <div class="reel-content" id="reel-content">
-          <span class="reel-placeholder" id="reel-placeholder">Tap below to surface a lie worth slaying.</span>
-        </div>
-      </div>
+  <div class="event-username-card" id="event-username-form">
+    <label for="event-username-input">Choose a username for events (4–12 characters)</label>
+    <div class="event-username-row">
+      <input type="text" id="event-username-input" minlength="4" maxlength="12" placeholder="e.g. QuestKnight">
+      <button id="event-username-save">Save</button>
     </div>
+    <p class="event-username-error" id="event-username-error"></p>
+  </div>
 
-    <button class="spin-button belief-button" id="spin-button">⚔️ Slay a Lie</button>
-    <a class="woh-spin-quest-link" href="index.html" aria-label="Spin a Side Quest"></a>
-
-    <a class="woh-todays-quests-link" href="index.html" aria-label="Today's Quests"></a>
-
-    <p class="progress-summary" id="progress-summary"></p>
-    <p class="spin-status" id="spin-status"></p>
-    <button class="test-spin-button" id="test-spin-button">🔧 +1 Spin (test only)</button>
+  <div class="event-status-card" id="event-status-card" hidden>
+    <p class="event-status-username">Your event username: <strong id="event-username-display"></strong> <button class="event-username-change" id="event-username-change">Change</button></p>
+    <p class="event-status-message">There's no event running right now. You'll get a notification in your mailbox when there's an event scheduled.</p>
   </div>
 </div>
 
@@ -160,18 +147,6 @@
   </div>
 </div>
 
-<div class="belief-modal-backdrop" id="belief-modal-backdrop">
-  <div class="belief-modal" id="belief-modal">
-    <button class="belief-modal-close" id="belief-modal-close" aria-label="Close">✕</button>
-    <div class="belief-modal-badge">⚔️ Lie Uncovered</div>
-    <span class="belief-quote" id="modal-belief-quote"></span>
-    <span class="belief-explanation" id="modal-belief-explanation"></span>
-    <span class="belief-reference" id="modal-belief-reference"></span>
-    <span class="belief-challenge" id="modal-belief-challenge"></span>
-    <button class="conquer-button" id="conquer-button">✅ We Conquered It</button>
-  </div>
-</div>
-
 <div class="shop-modal-backdrop" id="shop-modal-backdrop">
   <div class="shop-modal" id="shop-modal">
     <button class="shop-modal-close" id="shop-modal-close" aria-label="Close">✕</button>
@@ -198,12 +173,10 @@
 <script src="js/belief-data.js"></script>
 <script src="js/belief-storage.js"></script>
 <script src="js/sound.js"></script>
-<script src="js/spin-limit.js"></script>
 <script src="js/points.js"></script>
 <script src="js/shop-data.js"></script>
-<script src="js/perfectionist.js"></script>
-<script src="js/belief-app.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/achievements.js"></script>
+<script src="js/event.js"></script>
 </body>
 </html>
