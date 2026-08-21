@@ -127,6 +127,13 @@ function refreshEquippedCosmeticVisual() {
       secondaryButton.innerHTML = '⚔️ Slay a Lie';
     }
   }
+
+  const reelPlaceholder = document.getElementById('reel-placeholder');
+  if (reelPlaceholder) {
+    reelPlaceholder.textContent = equipped === 'world-over-heaven'
+      ? 'Shatter the skies above the earth'
+      : 'Tap the button below to spin!';
+  }
 }
 
 function spin() {

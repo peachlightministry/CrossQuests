@@ -1803,8 +1803,12 @@ body.woh-theme {
   }
 }
 
+/* Only shown on the two pages that actually carry the picture (Spin,
+   Crush Deception) — everywhere else there's no artwork for the pillar
+   to visually belong to, so it just reads as a stray decorative strip
+   bolted onto an otherwise plain page. */
 @media (min-width: 900px) {
-  body.woh-theme .woh-sidebar {
+  body.woh-theme:has(.hero) .woh-sidebar {
     display: block;
   }
 }
@@ -1817,6 +1821,10 @@ body.woh-theme {
 }
 
 .woh-spin-quest-link {
+  display: none;
+}
+
+.woh-todays-quests-link {
   display: none;
 }
 
@@ -1854,7 +1862,7 @@ body.woh-theme {
   body.woh-theme:has(.hero) .page {
     position: relative;
     padding: 0;
-    margin-bottom: 200px;
+    margin-bottom: 0;
   }
 
   body.woh-theme:has(.hero) .site-nav {
@@ -2059,11 +2067,25 @@ body.woh-theme {
     top: 94.6%;
     left: 41.2%;
     width: 17.7%;
+    height: 4.3%;
     margin: 0;
     color: transparent;
     font-size: 0;
     background: transparent;
     box-shadow: none;
+  }
+
+  /* Today's Quests tracks side-quest completions, which don't exist on
+     the Crush Deception page — its one working equivalent is just to
+     send you back to the Spin page instead of doing nothing. */
+  body.woh-theme:has(.hero) .woh-todays-quests-link {
+    display: block;
+    position: absolute;
+    top: 94.6%;
+    left: 41.2%;
+    width: 17.7%;
+    height: 4.3%;
+    z-index: 3;
   }
 
   body.woh-theme:has(.hero) .todays-quests-badge {
@@ -2080,35 +2102,17 @@ body.woh-theme {
     margin-top: 0;
   }
 
-  /* Everything below the picture (the today's-quests panel, dev-test
-     buttons, Crack the Sky) must ALSO be taken out of normal flow —
-     otherwise it adds real height to .page, and every top:%/height:%
-     value above (which assumes .page's height IS the picture's height)
-     resolves against that inflated total instead. */
-  body.woh-theme:has(.hero) #todays-quests-panel {
-    position: absolute;
-    top: 100%;
-    left: 15%;
-    width: 85%;
-    margin-top: 12px;
-  }
-
-  body.woh-theme:has(.hero) #test-spin-button {
-    position: absolute;
-    top: calc(100% + 20px);
-    left: 15%;
-  }
-
-  body.woh-theme:has(.hero) #test-points-button {
-    position: absolute;
-    top: calc(100% + 60px);
-    left: 15%;
-  }
-
+  /* The page ends exactly where the picture ends for this skin — no
+     dev-test buttons, no Crack the Sky (once it's already equipped
+     there's nothing left for it to reveal), no today's-quests panel
+     spilling out below. This also means .page's height really is just
+     the picture's height with nothing padding it out, which is what
+     every top:%/height:% value above already assumes. */
+  body.woh-theme:has(.hero) #todays-quests-panel,
+  body.woh-theme:has(.hero) #test-spin-button,
+  body.woh-theme:has(.hero) #test-points-button,
   body.woh-theme:has(.hero) .crack-sky-button {
-    position: absolute;
-    top: calc(100% + 100px);
-    left: 15%;
+    display: none;
   }
 
   /* On the Crush Deception page, its one real button is the picture's
