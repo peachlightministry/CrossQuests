@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase Connection Test — Jesus Side Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Nunito', sans-serif;
+    max-width: 640px;
+    margin: 48px auto;
+    padding: 0 20px;
+    color: #2b2118;
+    line-height: 1.5;
+  }
+  h1 { font-size: 1.4rem; }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  button {
+    font: inherit;
+    padding: 0.6em 1.1em;
+    border-radius: 8px;
+    border: none;
+    background: #4285F4;
+    color: white;
+    cursor: pointer;
+    margin-right: 8px;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary { background: #6b5013; }
+  pre {
+    background: #f5f2ec;
+    border-radius: 8px;
+    padding: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.85rem;
+  }
+  .status-line { margin: 4px 0; }
+  .ok { color: #1a7f37; font-weight: 700; }
+  .fail { color: #c0392b; font-weight: 700; }
+  .pending { color: #a3781c; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>🔥 Firebase Connection Test</h1>
+<p>This page is not linked from the site's navigation. It only checks that this
+project talks to Firebase (Authentication + Firestore) — nothing on it touches
+your existing quest/points/cosmetics data.</p>
+
+<div class="card">
+  <div class="status-line">SDK loaded: <span id="status-sdk" class="pending">checking…</span></div>
+  <div class="status-line">Signed in: <span id="status-auth" class="pending">no</span></div>
+  <div class="status-line">Firestore write: <span id="status-write" class="pending">not tested</span></div>
+  <div class="status-line">Firestore read: <span id="status-read" class="pending">not tested</span></div>
+</div>
+
+<div class="card">
+  <button id="signin-button">Sign in with Google</button>
+  <button id="signout-button" class="secondary" disabled>Sign out</button>
+  <button id="test-button" disabled>Run Firestore read/write test</button>
+</div>
+
+<div class="card">
+  <strong>Log</strong>
+  <pre id="log">Waiting for Firebase SDK to load…</pre>
+</div>
+
+<script type="module" src="js/firebase-init.js"></script>
+<script type="module">
+  const logEl = document.getElementById('log');
+  const statusSdk = document.getElementById('status-sdk');
+  const statusAuth = document.getElementById('status-auth');
+  const statusWrite = document.getElementById('status-write');
+  const statusRead = document.getElementById('status-read');
+  const signinButton = document.getElementById('signin-button');
+  const signoutButton = document.getElementById('signout-button');
+  const testButton = document.getElementById('test-button');
+
+  function log(msg) {
+    logEl.textContent += `\n${new Date().toLocaleTimeString()}  ${msg}`;
+  }
+
+  function setStatus(el, text, cls) {
+    el.textContent = text;
+    el.className = cls;
+  }
+
+  document.addEventListener('jsq-firebase-ready', () => {
+    setStatus(statusSdk, 'yes', 'ok');
+    log('Firebase app initialized (project: jesussidequest).');
+  });
+
+  document.addEventListener('jsq-auth-changed', (e) => {
+    const user = e.detail.user;
+    if (user) {
+      setStatus(statusAuth, `yes (${user.email})`, 'ok');
+      log(`Signed in as ${user.email}.`);
+      signinButton.disabled = true;
+      signoutButton.disabled = false;
+      testButton.disabled = false;
+    } else {
+      setStatus(statusAuth, 'no', 'pending');
+      signinButton.disabled = false;
+      signoutButton.disabled = true;
+      testButton.disabled = true;
+    }
+  });
+
+  signinButton.addEventListener('click', async () => {
+    log('Opening Google sign-in popup…');
+    try {
+      await window.jsqSignInWithGoogle();
+    } catch (err) {
+      log(`Sign-in failed: ${err.message}`);
+    }
+  });
+
+  signoutButton.addEventListener('click', async () => {
+    await window.jsqSignOut();
+    log('Signed out.');
+    setStatus(statusWrite, 'not tested', 'pending');
+    setStatus(statusRead, 'not tested', 'pending');
+  });
+
+  testButton.addEventListener('click', async () => {
+    try {
+      log('Writing test document to Firestore…');
+      const path = await window.jsqFirestoreTestWrite();
+      setStatus(statusWrite, 'ok', 'ok');
+      log(`Wrote ${path}.`);
+
+      log('Reading it back…');
+      const data = await window.jsqFirestoreTestRead();
+      setStatus(statusRead, 'ok', 'ok');
+      log(`Read back: ${JSON.stringify(data)}`);
+    } catch (err) {
+      log(`Firestore test failed: ${err.message}`);
+      if (err.message.includes('write') || !document.getElementById('status-write').classList.contains('ok')) {
+        setStatus(statusWrite, 'failed', 'fail');
+      } else {
+        setStatus(statusRead, 'failed', 'fail');
+      }
+    }
+  });
+
+  setTimeout(() => {
+    if (statusSdk.textContent === 'checking…') {
+      setStatus(statusSdk, 'failed to load', 'fail');
+      log('SDK did not report ready within 5s — check the browser console for a network or config error.');
+    }
+  }, 5000);
+</script>
+</body>
+</html>
