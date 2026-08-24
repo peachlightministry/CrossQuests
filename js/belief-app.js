@@ -12,6 +12,7 @@ const modalExplanation = document.getElementById('modal-belief-explanation');
 const modalReference = document.getElementById('modal-belief-reference');
 const modalChallenge = document.getElementById('modal-belief-challenge');
 const conquerButton = document.getElementById('conquer-button');
+const dismissLieButton = document.getElementById('dismiss-lie-button');
 
 const pendingLieToggle = document.getElementById('pending-lie-toggle');
 const pendingLiePanel = document.getElementById('pending-lie-panel');
@@ -36,6 +37,16 @@ function updateProgressSummary() {
 }
 
 function refreshSpinStatus() {
+  if (isUnlimitedSpins()) {
+    spinButton.disabled = false;
+    spinStatus.textContent = '♾️ Unlimited spins (dev)';
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+    return;
+  }
+
   if (getPendingBeliefId()) {
     spinButton.disabled = true;
     spinStatus.textContent = 'Conquer your pending lie to spin again.';
@@ -119,6 +130,7 @@ function updateConquerButton(belief) {
   const conquered = isConquered(belief.id);
   conquerButton.disabled = conquered;
   conquerButton.textContent = conquered ? '✅ Conquered' : '✅ We Conquered It';
+  dismissLieButton.hidden = conquered;
 }
 
 function openModal(belief) {
@@ -165,7 +177,7 @@ function conquerBelief(belief) {
 
 function spin() {
   if (!beliefSpinLimiter.canSpin()) return;
-  if (getPendingBeliefId()) return;
+  if (getPendingBeliefId() && !isUnlimitedSpins()) return;
 
   const pool = unspunBeliefsPool();
   if (pool.length === 0) {
@@ -200,8 +212,10 @@ function spin() {
 
 function finishSpin(belief) {
   beliefSpinLimiter.useSpin();
-  markSpun(belief.id);
-  setPendingBeliefId(belief.id);
+  if (!isUnlimitedSpins()) {
+    markSpun(belief.id);
+    setPendingBeliefId(belief.id);
+  }
 
   reelContent.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
   reel.classList.remove('spinning');
@@ -218,7 +232,7 @@ function finishSpin(belief) {
 
 spinButton.addEventListener('click', () => {
   if (!beliefSpinLimiter.canSpin()) return;
-  if (getPendingBeliefId()) return;
+  if (getPendingBeliefId() && !isUnlimitedSpins()) return;
   playSound('click', { volume: 0.4 });
   spin();
 });
@@ -230,6 +244,7 @@ conquerButton.addEventListener('click', () => {
 });
 
 modalClose.addEventListener('click', closeModal);
+dismissLieButton.addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', (e) => {
   if (e.target === modalBackdrop) closeModal();
 });
