@@ -189,6 +189,20 @@
   <footer class="credit">Progress is saved to your Google account.</footer>
 </div>
 
+<button class="settings-fab" id="settings-button" title="Settings" aria-label="Settings">⚙️</button>
+
+<div class="settings-modal-backdrop" id="settings-modal-backdrop">
+  <div class="settings-modal" id="settings-modal">
+    <button class="settings-modal-close" id="settings-modal-close" aria-label="Close">✕</button>
+    <div class="settings-modal-badge">⚙️ Settings</div>
+
+    <div class="settings-section">
+      <h3 class="settings-section-title">🎨 Color Palette</h3>
+      <div class="palette-swatch-grid" id="palette-swatch-grid"></div>
+    </div>
+  </div>
+</div>
+
 <button class="achievements-fab" id="achievements-button" title="Achievements" aria-label="Achievements">🏅</button>
 
 <div class="achievements-modal-backdrop" id="achievements-modal-backdrop">
@@ -246,5 +260,6 @@
 <script src="js/belief-log.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/achievements.js"></script>
+<script src="js/settings.js"></script>
 </body>
 </html>

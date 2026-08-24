@@ -22,10 +22,38 @@ body {
   min-height: 100vh;
   font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
   color: var(--ink);
-  background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-mid) 45%, #fff3da 72%, var(--bg-bottom) 100%);
+  background:
+    radial-gradient(1400px 900px at 15% 105%, rgba(255, 215, 0, 0.32), transparent 60%),
+    radial-gradient(1200px 800px at 85% 105%, rgba(242, 165, 65, 0.28), transparent 55%),
+    radial-gradient(1000px 700px at 50% 115%, rgba(255, 224, 178, 0.35), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #fffaf0 40%, #fff3da 70%, #ffe6b0 100%);
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* Alternate background palettes, picked from Settings -> Color Palette.
+   "Golden Peach" (above) is the default and has no class of its own. */
+body.palette-sky-dawn {
+  background:
+    radial-gradient(1400px 900px at 20% 105%, rgba(129, 199, 239, 0.3), transparent 60%),
+    radial-gradient(1100px 750px at 80% 105%, rgba(179, 229, 252, 0.32), transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, #f5fbff 45%, #e3f4fd 75%, #cdeafc 100%);
+  background-attachment: fixed;
+}
+
+body.palette-rose-quartz {
+  background:
+    radial-gradient(1400px 900px at 20% 105%, rgba(244, 169, 188, 0.3), transparent 60%),
+    radial-gradient(1100px 750px at 80% 105%, rgba(255, 205, 210, 0.32), transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, #fff5f6 45%, #ffe9ec 75%, #ffd7dc 100%);
+  background-attachment: fixed;
+}
+
+body.palette-classic-cream {
+  background: linear-gradient(180deg, #fff8e7 0%, #eaf6ff 100%);
+  background-attachment: fixed;
 }
 
 .page {
@@ -2648,4 +2676,157 @@ body.woh-theme {
 .ornate-icon {
   display: block;
   flex-shrink: 0;
+}
+
+/* ===== Settings (gear button, top-right) + Color Palette picker ===== */
+
+.settings-fab {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #fffaf0 0%, #f0e0b8 100%);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  font-size: 1.3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 900;
+  transition: transform 0.2s ease, box-shadow 0.15s ease;
+}
+
+.settings-fab:hover {
+  transform: rotate(35deg);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.settings-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 23, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.settings-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.settings-modal {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 34px 26px 28px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  transform: scale(0.75) translateY(24px);
+  opacity: 0;
+}
+
+.settings-modal-backdrop.open .settings-modal {
+  animation: beliefModalPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.settings-modal-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #e8912b 0%, #b8730f 100%);
+  color: white;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.settings-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--ink);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-modal-close:hover {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.settings-section-title {
+  font-size: 1.05rem;
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+.palette-swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.palette-swatch {
+  position: relative;
+  height: 84px;
+  border-radius: 14px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+
+.palette-swatch:hover {
+  transform: translateY(-2px);
+}
+
+.palette-swatch.selected {
+  border-color: var(--accent-dark);
+  box-shadow: 0 0 0 2px rgba(217, 140, 43, 0.3);
+}
+
+.palette-swatch-name {
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink);
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .settings-fab {
+    right: 14px;
+    top: 14px;
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+  }
 }
