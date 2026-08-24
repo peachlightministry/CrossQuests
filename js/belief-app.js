@@ -11,7 +11,6 @@ const modalQuote = document.getElementById('modal-belief-quote');
 const modalExplanation = document.getElementById('modal-belief-explanation');
 const modalReference = document.getElementById('modal-belief-reference');
 const modalChallenge = document.getElementById('modal-belief-challenge');
-const conquerButton = document.getElementById('conquer-button');
 const dismissLieButton = document.getElementById('dismiss-lie-button');
 
 const pendingLieToggle = document.getElementById('pending-lie-toggle');
@@ -126,13 +125,6 @@ function refreshEquippedCosmeticVisual() {
   }
 }
 
-function updateConquerButton(belief) {
-  const conquered = isConquered(belief.id);
-  conquerButton.disabled = conquered;
-  conquerButton.textContent = conquered ? '✅ Conquered' : '✅ We Conquered It';
-  dismissLieButton.hidden = conquered;
-}
-
 function openModal(belief) {
   currentBelief = belief;
   modalQuote.textContent = `"${belief.belief}"`;
@@ -145,7 +137,6 @@ function openModal(belief) {
     modalChallenge.textContent = '';
     modalChallenge.style.display = 'none';
   }
-  updateConquerButton(belief);
 
   modalBackdrop.classList.add('open');
   document.body.classList.add('modal-open');
@@ -235,12 +226,6 @@ spinButton.addEventListener('click', () => {
   if (getPendingBeliefId() && !isUnlimitedSpins()) return;
   playSound('click', { volume: 0.4 });
   spin();
-});
-
-conquerButton.addEventListener('click', () => {
-  if (!currentBelief || conquerButton.disabled) return;
-  conquerBelief(currentBelief);
-  updateConquerButton(currentBelief);
 });
 
 modalClose.addEventListener('click', closeModal);

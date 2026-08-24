@@ -1036,11 +1036,9 @@ body.modal-open {
   font-size: 1.25rem;
 }
 
-.belief-modal .conquer-button {
-  margin-top: 22px;
-}
-
-.conquer-button {
+.dismiss-lie-button {
+  display: block;
+  margin: 22px auto 0;
   font-family: inherit;
   font-size: 1rem;
   font-weight: 800;
@@ -1051,34 +1049,11 @@ body.modal-open {
   padding: 12px 28px;
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-
-.conquer-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-}
-
-.conquer-button:disabled {
-  opacity: 0.55;
-  cursor: default;
-}
-
-.dismiss-lie-button {
-  display: block;
-  margin: 12px auto 0;
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--ink-muted, #7a6a55);
-  background: transparent;
-  border: none;
-  padding: 6px 10px;
-  cursor: pointer;
-  text-decoration: underline;
+  transition: transform 0.15s ease;
 }
 
 .dismiss-lie-button:hover {
-  color: var(--ink);
+  transform: translateY(-2px);
 }
 
 .belief-log-progress {
