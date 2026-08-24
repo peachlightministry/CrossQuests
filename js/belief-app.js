@@ -13,6 +13,13 @@ const modalReference = document.getElementById('modal-belief-reference');
 const modalChallenge = document.getElementById('modal-belief-challenge');
 const conquerButton = document.getElementById('conquer-button');
 
+const pendingLieToggle = document.getElementById('pending-lie-toggle');
+const pendingLiePanel = document.getElementById('pending-lie-panel');
+const pendingLieBadge = document.getElementById('pending-lie-badge');
+
+const IDLE_PLACEHOLDER = 'Tap below to surface a lie worth slaying.';
+const BLOCKED_PLACEHOLDER = 'Come back once conquered!';
+
 const beliefSpinLimiter = createSpinLimiter({
   storageKey: 'jsq-belief-spin-limit',
   maxSpins: 1,
@@ -29,6 +36,16 @@ function updateProgressSummary() {
 }
 
 function refreshSpinStatus() {
+  if (getPendingBeliefId()) {
+    spinButton.disabled = true;
+    spinStatus.textContent = 'Conquer your pending lie to spin again.';
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+    return;
+  }
+
   const state = beliefSpinLimiter.getState();
 
   if (state.remaining > 0) {
@@ -61,9 +78,26 @@ function randomBelief() {
   return FALSE_BELIEFS[Math.floor(Math.random() * FALSE_BELIEFS.length)];
 }
 
+function unspunBeliefsPool() {
+  const spunIds = getSpunBeliefIds();
+  return FALSE_BELIEFS.filter((b) => !spunIds.has(b.id));
+}
+
 function renderReelCycleFrame() {
   const belief = randomBelief();
   reelContent.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
+}
+
+function showIdleReelState() {
+  reel.classList.remove('spinning', 'revealed');
+  reel.classList.add('idle');
+  reelContent.innerHTML = `<span class="reel-placeholder" id="reel-placeholder">${IDLE_PLACEHOLDER}</span>`;
+}
+
+function showBlockedReelState() {
+  reel.classList.remove('spinning', 'revealed');
+  reel.classList.add('idle');
+  reelContent.innerHTML = `<span class="reel-placeholder" id="reel-placeholder">${BLOCKED_PLACEHOLDER}</span>`;
 }
 
 function refreshEquippedCosmeticVisual() {
@@ -108,16 +142,42 @@ function openModal(belief) {
 function closeModal() {
   modalBackdrop.classList.remove('open');
   document.body.classList.remove('modal-open');
+  if (currentBelief && getPendingBeliefId() === currentBelief.id) {
+    showBlockedReelState();
+  }
+}
+
+function conquerBelief(belief) {
+  markConquered(belief.id);
+  if (getPendingBeliefId() === belief.id) {
+    setPendingBeliefId(null);
+  }
+  recordBeliefConquestForPerfectionist();
+  playSound('conquered', { volume: 0.7 });
+  updateProgressSummary();
+  refreshSpinStatus();
+  showIdleReelState();
+  refreshPendingLieBadge();
+  if (pendingLiePanel.classList.contains('open')) {
+    renderPendingLiePanel();
+  }
 }
 
 function spin() {
   if (!beliefSpinLimiter.canSpin()) return;
+  if (getPendingBeliefId()) return;
+
+  const pool = unspunBeliefsPool();
+  if (pool.length === 0) {
+    spinStatus.textContent = "You've drawn every lie — nothing new to slay right now.";
+    return;
+  }
 
   spinButton.disabled = true;
   reel.classList.remove('idle', 'revealed');
   reel.classList.add('spinning');
 
-  const result = randomBelief();
+  const result = pool[Math.floor(Math.random() * pool.length)];
   const steps = 14;
   const baseDelay = 60;
   let step = 0;
@@ -140,6 +200,8 @@ function spin() {
 
 function finishSpin(belief) {
   beliefSpinLimiter.useSpin();
+  markSpun(belief.id);
+  setPendingBeliefId(belief.id);
 
   reelContent.innerHTML = `<span class="belief-quote">"${belief.belief}"</span>`;
   reel.classList.remove('spinning');
@@ -148,21 +210,23 @@ function finishSpin(belief) {
   playSound('beliefReveal', { volume: 0.75 });
   openModal(belief);
   refreshSpinStatus();
+  refreshPendingLieBadge({ pop: true });
+  if (pendingLiePanel.classList.contains('open')) {
+    renderPendingLiePanel();
+  }
 }
 
 spinButton.addEventListener('click', () => {
   if (!beliefSpinLimiter.canSpin()) return;
+  if (getPendingBeliefId()) return;
   playSound('click', { volume: 0.4 });
   spin();
 });
 
 conquerButton.addEventListener('click', () => {
   if (!currentBelief || conquerButton.disabled) return;
-  markConquered(currentBelief.id);
-  recordBeliefConquestForPerfectionist();
-  playSound('conquered', { volume: 0.7 });
+  conquerBelief(currentBelief);
   updateConquerButton(currentBelief);
-  updateProgressSummary();
 });
 
 modalClose.addEventListener('click', closeModal);
@@ -173,6 +237,51 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
+// --- Pending Lie panel ---
+
+function refreshPendingLieBadge({ pop } = {}) {
+  const hasPending = !!getPendingBeliefId();
+  pendingLieBadge.textContent = hasPending ? '1' : '';
+  pendingLieBadge.classList.toggle('visible', hasPending);
+  if (pop && hasPending) {
+    pendingLieBadge.classList.remove('pop');
+    void pendingLieBadge.offsetWidth;
+    pendingLieBadge.classList.add('pop');
+  }
+}
+
+function renderPendingLiePanel() {
+  const pendingId = getPendingBeliefId();
+  const belief = pendingId ? FALSE_BELIEFS.find((b) => b.id === pendingId) : null;
+
+  if (!belief) {
+    if (pendingId) setPendingBeliefId(null); // stale reference safety net
+    pendingLiePanel.innerHTML = `<p class="todays-quests-empty">No lie awaiting conquest right now.</p>`;
+    return;
+  }
+
+  pendingLiePanel.innerHTML = `
+    <div class="pending-lie-card">
+      <span class="pending-lie-quote">"${belief.belief}"</span>
+      <button class="pending-lie-conquer-button" id="pending-lie-conquer-button">✅ We've Conquered It!</button>
+    </div>
+  `;
+
+  document.getElementById('pending-lie-conquer-button').addEventListener('click', () => {
+    conquerBelief(belief);
+  });
+}
+
+pendingLieToggle.addEventListener('click', () => {
+  const isOpen = pendingLiePanel.classList.contains('open');
+  if (isOpen) {
+    pendingLiePanel.classList.remove('open');
+  } else {
+    renderPendingLiePanel();
+    pendingLiePanel.classList.add('open');
+  }
+});
+
 document.getElementById('test-spin-button').addEventListener('click', () => {
   grantTestSpin();
   refreshSpinStatus();
@@ -181,3 +290,7 @@ document.getElementById('test-spin-button').addEventListener('click', () => {
 updateProgressSummary();
 refreshSpinStatus();
 refreshEquippedCosmeticVisual();
+refreshPendingLieBadge();
+if (getPendingBeliefId()) {
+  showBlockedReelState();
+}
