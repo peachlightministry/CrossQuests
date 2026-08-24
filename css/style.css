@@ -246,6 +246,20 @@ body {
   transition: border-color 0.3s ease, background 0.3s ease;
 }
 
+/* The spinbox (reel) keeps the original casual font even though the rest
+   of the site moved to the serif rebrand — quest/belief text reads better
+   in it. The World Over Heaven skin has its own explicit font override
+   further down and is unaffected either way. */
+.reel-placeholder,
+.reel-quest,
+.reel-verse,
+.reel-rarity,
+.reel-badge,
+.belief-quote,
+.belief-explanation {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 #reel-content {
   display: contents;
 }
@@ -2159,11 +2173,36 @@ body.woh-theme {
      spilling out below. This also means .page's height really is just
      the picture's height with nothing padding it out, which is what
      every top:%/height:% value above already assumes. */
-  body.woh-theme:has(.hero) #todays-quests-panel,
   body.woh-theme:has(.hero) #test-spin-button,
   body.woh-theme:has(.hero) #test-points-button,
   body.woh-theme:has(.hero) .crack-sky-button {
     display: none;
+  }
+
+  /* Today's Quests still needs to actually open under this skin. A normal
+     in-flow panel would push page height past the picture's bottom edge,
+     which this skin can't have — so instead it opens as a floating
+     overlay, leaving the picture's own height untouched either way. */
+  body.woh-theme:has(.hero) #todays-quests-panel {
+    display: none;
+  }
+
+  body.woh-theme:has(.hero) #todays-quests-panel.open {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90vw, 480px);
+    max-height: 80vh;
+    overflow-y: auto;
+    background: #fffaf0;
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    padding: 24px;
+    z-index: 5000;
+    font-family: 'Nunito', -apple-system, sans-serif;
+    color: var(--ink);
   }
 
   /* On the Crush Deception page, its one real button is the picture's
