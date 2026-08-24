@@ -30,7 +30,7 @@ body {
 
 .page {
   width: 100%;
-  max-width: 1300px;
+  max-width: 720px;
   padding: 32px 20px 60px;
 }
 
@@ -2517,12 +2517,28 @@ body.woh-theme {
 
 /* ===== Ornate Navbar ===== */
 
+/* The nav is intentionally NOT inside .page -- it gets its own wider,
+   independently-centered container so it can be wider than the 720px
+   content column every other page element still uses. */
 .ornate-nav {
+  display: block;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto 8px;
+  padding: 24px 20px 0;
+  box-sizing: border-box;
+}
+
+.ornate-logo-row {
+  margin-bottom: 14px;
+}
+
+.ornate-nav-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 22px;
-  margin-bottom: 8px;
+  gap: 16px;
 }
 
 .ornate-logo {
