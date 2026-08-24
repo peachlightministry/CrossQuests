@@ -2493,6 +2493,15 @@ body.woh-theme {
   flex-shrink: 0;
 }
 
+#jsq-account-blur-toggle {
+  padding: 6px 10px;
+}
+
+#jsq-account-email.blurred {
+  filter: blur(6px);
+  user-select: none;
+}
+
 .jsq-account-chip button:hover {
   background: rgba(0, 0, 0, 0.16);
 }

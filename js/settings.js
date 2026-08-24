@@ -69,6 +69,14 @@ function renderPaletteSwatches() {
 // Apply immediately on load so there's no flash of the wrong palette.
 applyPalette(getSelectedPalette());
 
+const accountEmailEl = document.getElementById('jsq-account-email');
+const blurToggle = document.getElementById('jsq-account-blur-toggle');
+if (accountEmailEl && blurToggle) {
+  blurToggle.addEventListener('click', () => {
+    accountEmailEl.classList.toggle('blurred');
+  });
+}
+
 const settingsButton = document.getElementById('settings-button');
 const settingsBackdrop = document.getElementById('settings-modal-backdrop');
 const settingsClose = document.getElementById('settings-modal-close');
