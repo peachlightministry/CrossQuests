@@ -2578,10 +2578,20 @@ body.woh-theme {
 .ornate-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border-top: 2px solid #c9a227;
   border-bottom: 2px solid #c9a227;
   flex-wrap: wrap;
+  gap: 20px 32px;
   min-height: 44px;
+  padding: 0 4px;
+}
+
+/* Each group is two segments fused into one pill (thin divider between
+   them); real gaps only appear BETWEEN groups, via .ornate-bar's own gap. */
+.ornate-group {
+  display: flex;
+  align-items: center;
 }
 
 .ornate-segment {
@@ -2598,8 +2608,18 @@ body.woh-theme {
   letter-spacing: 0.03em;
   text-decoration: none;
   white-space: nowrap;
-  clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
+  border: none;
+  cursor: pointer;
   transition: filter 0.15s ease;
+}
+
+.ornate-segment.group-start {
+  clip-path: polygon(12px 0%, 100% 0%, 100% 100%, 12px 100%, 0% 50%);
+}
+
+.ornate-segment.group-end {
+  clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%);
+  border-left: 1px solid rgba(107, 80, 19, 0.35);
 }
 
 .ornate-segment:hover {
@@ -2611,57 +2631,18 @@ body.woh-theme {
   box-shadow: inset 0 0 0 1px rgba(155, 121, 39, 0.55);
 }
 
-.ornate-joint {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #fff6d9, #9c7a2e);
-  transform: rotate(45deg);
-  box-shadow: 0 0 0 1px #c9a227;
-  margin: 0 -1px;
-}
-
 .ornate-segment.special {
   background: linear-gradient(180deg, #1c2c4e 0%, #101a30 100%);
   color: #f0d78c;
   box-shadow: inset 0 0 0 1px #c9a227;
 }
 
+.ornate-segment.special.group-end {
+  border-left-color: rgba(201, 162, 39, 0.7);
+}
+
 .ornate-segment.special.community {
   background: linear-gradient(180deg, #33204f 0%, #1e1130 100%);
-}
-
-.ornate-utility {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  margin-left: 4px;
-}
-
-.ornate-coin,
-.ornate-shop {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 16px;
-  background: linear-gradient(180deg, #fffaf0 0%, #f0e0b8 100%);
-  border: 1px solid #c9a227;
-  border-radius: 999px;
-  font-family: 'Cinzel', Georgia, serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: #4a3208;
-}
-
-.ornate-shop {
-  cursor: pointer;
-  font-family: 'Cinzel', Georgia, serif;
-}
-
-.ornate-shop:hover {
-  filter: brightness(1.06);
 }
 
 .ornate-icon {
