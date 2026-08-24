@@ -3109,3 +3109,45 @@ body.woh-theme {
   color: var(--ink-muted, #7a6a55);
   min-height: 1em;
 }
+
+.dev-skin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.dev-skin-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 0.82rem;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.dev-skin-option input {
+  width: auto;
+  padding: 0;
+}
+
+.dev-skin-name {
+  flex: 1;
+}
+
+.dev-skin-secret {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-dark);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 6px;
+  border-radius: 999px;
+}

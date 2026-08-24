@@ -133,6 +133,26 @@ function buyCosmetic(id) {
   return true;
 }
 
+// Grants ownership of a cosmetic for free, no price check — used by gifted
+// skins from the Inbox. Unlike buyCosmetic, doesn't auto-equip; the player
+// chooses to wear it from the Shop like any other owned skin.
+function grantCosmetic(id) {
+  const item = COSMETICS.find((c) => c.id === id);
+  if (!item) return false;
+  const owned = getOwnedCosmetics();
+  if (owned.has(id)) return true;
+  owned.add(id);
+  try {
+    localStorage.setItem(OWNED_COSMETICS_KEY, JSON.stringify([...owned]));
+  } catch (e) {
+    // ignore
+  }
+  return true;
+}
+
+window.COSMETICS = COSMETICS;
+window.grantCosmetic = grantCosmetic;
+
 // Upgrades catalog. Permanent, one-time purchases (no equip step, unlike
 // cosmetics).
 const UPGRADES = [

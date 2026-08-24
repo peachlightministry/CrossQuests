@@ -55,7 +55,19 @@ const giftTarget = document.getElementById("dev-gift-target");
 const giftMessage = document.getElementById("dev-gift-message");
 const giftCoins = document.getElementById("dev-gift-coins");
 const giftSpins = document.getElementById("dev-gift-spins");
+const giftSkinList = document.getElementById("dev-gift-skins");
 const giftStatus = document.getElementById("dev-gift-status");
+
+if (giftSkinList && Array.isArray(window.COSMETICS)) {
+  giftSkinList.innerHTML = window.COSMETICS.map(
+    (c) => `
+      <label class="dev-skin-option">
+        <input type="checkbox" name="skin" value="${c.id}">
+        <span class="dev-skin-name">${c.name}</span>
+        ${c.hidden ? '<span class="dev-skin-secret">secret</span>' : ""}
+      </label>`
+  ).join("");
+}
 
 if (giftForm) {
   giftForm.addEventListener("submit", async (e) => {
@@ -72,12 +84,16 @@ if (giftForm) {
         }
         toUid = snap.data().uid;
       }
+      const skinIds = giftSkinList
+        ? Array.from(giftSkinList.querySelectorAll('input[name="skin"]:checked')).map((el) => el.value)
+        : [];
       await addDoc(collection(window.firebaseDb, "gifts"), {
         toUid,
         toUsername: toUid ? targetRaw : null,
         message: giftMessage.value.trim(),
         coins: parseInt(giftCoins.value, 10) || 0,
         spins: parseInt(giftSpins.value, 10) || 0,
+        skins: skinIds,
         createdAt: serverTimestamp(),
       });
       giftStatus.textContent = toUid ? `Gift sent to ${targetRaw}.` : "Gift sent to everyone's inbox.";

@@ -56,10 +56,18 @@ async function fetchMessages() {
   return results;
 }
 
+function skinName(id) {
+  const c = Array.isArray(window.COSMETICS) ? window.COSMETICS.find((c) => c.id === id) : null;
+  return c ? c.name : id;
+}
+
 function claimGift(gift) {
   if (gift.coins && typeof window.addPoints === "function") window.addPoints(gift.coins);
   if (gift.spins && typeof window.grantTestSpin === "function") {
     for (let i = 0; i < gift.spins; i++) window.grantTestSpin();
+  }
+  if (Array.isArray(gift.skins) && typeof window.grantCosmetic === "function") {
+    gift.skins.forEach((id) => window.grantCosmetic(id));
   }
   addToIdSet(CLAIMED_GIFTS_KEY, gift.id);
 }
@@ -88,6 +96,9 @@ async function renderInbox() {
     const parts = [];
     if (g.coins) parts.push(`${g.coins} coins`);
     if (g.spins) parts.push(`${g.spins} spin${g.spins > 1 ? "s" : ""}`);
+    if (Array.isArray(g.skins) && g.skins.length) {
+      parts.push(`${g.skins.map(skinName).join(", ")} skin${g.skins.length > 1 ? "s" : ""}`);
+    }
     items.push({
       sortKey: g.createdAt,
       html: `
