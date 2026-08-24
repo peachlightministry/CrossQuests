@@ -27,10 +27,6 @@
     } catch (e) {}
   })();
 </script>
-<div id="jsq-account-chip" class="jsq-account-chip" hidden>
-  <span id="jsq-account-email"></span>
-  <button id="jsq-account-signout">Sign out</button>
-</div>
 <script>
   setTimeout(function () {
     var gate = document.getElementById('jsq-auth-gate');
@@ -44,6 +40,9 @@
 </script>
 <script type="module" src="js/firebase-init.js"></script>
 <script type="module" src="js/cloud-sync.js"></script>
+<script type="module" src="js/username-registry.js"></script>
+<script type="module" src="js/admin-tools.js"></script>
+<script type="module" src="js/inbox.js"></script>
 <nav class="site-nav ornate-nav">
     <div class="ornate-logo-row">
       <a class="ornate-logo" href="index.html">
@@ -215,6 +214,16 @@
   </div>
 </div>
 
+<button class="inbox-fab" id="inbox-button" title="Inbox" aria-label="Inbox">📬<span class="inbox-badge" id="inbox-badge" hidden></span></button>
+
+<div class="inbox-modal-backdrop" id="inbox-modal-backdrop">
+  <div class="inbox-modal" id="inbox-modal">
+    <button class="inbox-modal-close" id="inbox-modal-close" aria-label="Close">✕</button>
+    <div class="inbox-modal-badge">📬 Inbox</div>
+    <div class="inbox-list" id="inbox-list"></div>
+  </div>
+</div>
+
 <button class="settings-fab" id="settings-button" title="Settings" aria-label="Settings">⚙️</button>
 
 <div class="settings-modal-backdrop" id="settings-modal-backdrop">
@@ -225,6 +234,56 @@
     <div class="settings-section">
       <h3 class="settings-section-title">🎨 Color Palette</h3>
       <div class="palette-swatch-grid" id="palette-swatch-grid"></div>
+    </div>
+
+    <div class="settings-section">
+      <h3 class="settings-section-title">👤 Account</h3>
+      <div class="jsq-account-chip" id="jsq-account-chip" hidden>
+        <span id="jsq-account-email"></span>
+        <button id="jsq-account-signout">Sign out</button>
+      </div>
+    </div>
+
+    <div class="settings-section dev-tools-section" id="dev-tools-section" hidden>
+      <h3 class="settings-section-title">🛠️ Dev Tools</h3>
+
+      <div class="dev-tools-group">
+        <h4>Cheats (this device only)</h4>
+        <label class="dev-toggle-row"><span>Unlimited Coins</span><input type="checkbox" id="dev-unlimited-coins"></label>
+        <label class="dev-toggle-row"><span>Unlimited Spins</span><input type="checkbox" id="dev-unlimited-spins"></label>
+      </div>
+
+      <div class="dev-tools-group">
+        <h4>Send Gift</h4>
+        <form id="dev-gift-form">
+          <input type="text" id="dev-gift-target" placeholder="Username, or leave blank for everyone">
+          <input type="text" id="dev-gift-message" placeholder="Message (optional)">
+          <div class="dev-inline-row">
+            <input type="number" id="dev-gift-coins" placeholder="Coins" min="0">
+            <input type="number" id="dev-gift-spins" placeholder="Spins" min="0">
+          </div>
+          <button type="submit" class="dev-tools-submit">Send Gift</button>
+          <p class="dev-tools-status" id="dev-gift-status"></p>
+        </form>
+      </div>
+
+      <div class="dev-tools-group">
+        <h4>Ban Player</h4>
+        <form id="dev-ban-form">
+          <input type="text" id="dev-ban-username" placeholder="Event username" required>
+          <button type="submit" class="dev-tools-submit">Ban</button>
+          <p class="dev-tools-status" id="dev-ban-status"></p>
+        </form>
+      </div>
+
+      <div class="dev-tools-group">
+        <h4>Send Global Message</h4>
+        <form id="dev-message-form">
+          <input type="text" id="dev-message-text" placeholder="Message to everyone" required>
+          <button type="submit" class="dev-tools-submit">Send</button>
+          <p class="dev-tools-status" id="dev-message-status"></p>
+        </form>
+      </div>
     </div>
   </div>
 </div>

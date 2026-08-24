@@ -31,6 +31,7 @@
     }
     errorEl.textContent = '';
     localStorage.setItem(USERNAME_KEY, value);
+    if (typeof window.jsqSyncUsername === 'function') window.jsqSyncUsername(value);
     render();
   }
 

@@ -1,8 +1,20 @@
 // Cross Points: shared currency balance, displayed in the nav on every page.
 const CROSS_POINTS_KEY = 'jsq-cross-points';
+const DEV_UNLIMITED_COINS_KEY = 'jsq-dev-unlimited-coins';
 let crossIconUidCounter = 0;
 
-function getPoints() {
+function isUnlimitedCoins() {
+  try {
+    return localStorage.getItem(DEV_UNLIMITED_COINS_KEY) === '1';
+  } catch (e) {
+    return false;
+  }
+}
+
+// The real stored balance, ignoring the dev "unlimited coins" toggle —
+// addPoints() always does its math against this so the true balance stays
+// accurate underneath and is restored exactly once the toggle is off again.
+function readRawPoints() {
   try {
     const raw = localStorage.getItem(CROSS_POINTS_KEY);
     const n = raw ? parseInt(raw, 10) : 0;
@@ -12,8 +24,15 @@ function getPoints() {
   }
 }
 
+function getPoints() {
+  if (isUnlimitedCoins()) return 999999;
+  return readRawPoints();
+}
+
 function addPoints(amount) {
-  const next = getPoints() + amount;
+  // While unlimited coins is on, spends (negative amounts) are absorbed for
+  // free instead of draining the real balance; gains still land for real.
+  const next = isUnlimitedCoins() && amount < 0 ? readRawPoints() : readRawPoints() + amount;
   try {
     localStorage.setItem(CROSS_POINTS_KEY, String(next));
   } catch (e) {
@@ -42,7 +61,7 @@ function crossIconSVG(size) {
 
 function refreshCrossPointsDisplay() {
   const el = document.getElementById('cross-points-value');
-  if (el) el.textContent = getPoints();
+  if (el) el.textContent = isUnlimitedCoins() ? '∞' : getPoints();
 }
 
 refreshCrossPointsDisplay();

@@ -14,6 +14,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const SESSION_FLAG_PREFIX = "jsq-cloud-hydrated-";
+const ADMIN_EMAIL = "officecolorstyle@yahoo.com";
 
 const gate = document.getElementById("jsq-auth-gate");
 const gateText = document.getElementById("jsq-auth-gate-text");
@@ -105,8 +106,14 @@ async function hydrateFromCloud(uid) {
   const snap = await getDoc(ref);
 
   if (snap.exists()) {
-    clearLocalAppData();
     const data = snap.data();
+    // Checked against the cloud doc directly, before anything is restored
+    // locally or reloaded — the reload below would otherwise short-circuit
+    // handleSignedIn before it ever got a chance to check.
+    if (await isUsernameBanned(data["jsq-event-username"])) {
+      return "banned";
+    }
+    clearLocalAppData();
     Object.entries(data).forEach(([key, value]) => {
       if (typeof value === "string") localStorage.setItem(key, value);
     });
@@ -123,9 +130,21 @@ async function hydrateFromCloud(uid) {
   return "fresh";
 }
 
+async function isUsernameBanned(username) {
+  if (!username) return false;
+  try {
+    const snap = await getDoc(doc(window.firebaseDb, "bans", username.toLowerCase()));
+    return snap.exists();
+  } catch (err) {
+    console.error("Ban check failed:", err);
+    return false;
+  }
+}
+
 async function handleSignedIn(user) {
   currentUid = user.uid;
   installWriteMirror();
+  window.jsqIsAdmin = user.email === ADMIN_EMAIL;
   accountEmail.textContent = user.email;
   accountChip.hidden = false;
   setGateError("");
@@ -140,6 +159,10 @@ async function handleSignedIn(user) {
   try {
     const result = await hydrateFromCloud(user.uid);
     if (result === "reloading") return;
+    if (result === "banned") {
+      showGate("Your account has been restricted from CrossQuests.", false);
+      return;
+    }
     hideGate();
   } catch (err) {
     console.error(err);
@@ -150,6 +173,7 @@ async function handleSignedIn(user) {
 
 function handleSignedOut() {
   currentUid = null;
+  window.jsqIsAdmin = false;
   accountChip.hidden = true;
   showGate("Sign in with Google to save your progress and play.", true);
 }

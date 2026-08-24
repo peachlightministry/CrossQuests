@@ -5,6 +5,14 @@
 // once every spin was used, so using just 1 of 2 spins and never touching
 // the 2nd left you stuck at "1 remaining" forever instead of refreshing to
 // a full 2 after 12h.)
+function isUnlimitedSpins() {
+  try {
+    return localStorage.getItem('jsq-dev-unlimited-spins') === '1';
+  } catch (e) {
+    return false;
+  }
+}
+
 function createSpinLimiter({ storageKey, maxSpins, windowMs }) {
   function readRaw() {
     try {
@@ -36,6 +44,9 @@ function createSpinLimiter({ storageKey, maxSpins, windowMs }) {
 
   function getState() {
     const raw = currentWindow();
+    if (isUnlimitedSpins()) {
+      return { remaining: 999, resetAt: raw.windowStart + windowMs };
+    }
     return {
       remaining: Math.max(0, maxSpins - raw.used),
       resetAt: raw.windowStart + windowMs,
@@ -62,7 +73,8 @@ function createSpinLimiter({ storageKey, maxSpins, windowMs }) {
   return { getState, canSpin, useSpin, msUntilReset };
 }
 
-// TEMPORARY testing helper — grants 1 extra spin to both limiters at once. Remove later.
+// Grants 1 extra spin to both limiters at once. Used by the "+1 Spin (test
+// only)" debug button and by the Inbox when claiming a gifted spin.
 function grantTestSpin() {
   for (const key of ['jsq-quest-spin-limit', 'jsq-belief-spin-limit']) {
     try {
