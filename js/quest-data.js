@@ -1,9 +1,9 @@
 // Side quest data: rarities ordered from most common to rarest.
 // "oddsN" is the tier's stated "1 in N" chance. For the secret tier,
 // each individual quest is 1 in N (not the tier as a whole). Mustard
-// Seed isn't rolled directly — it's the fallback when nothing rarer
-// hits (see spin.js), so its true chance (~67%) is set by the other
-// five tiers' odds, not by its own oddsN/chanceLabel below.
+// Seed isn't rolled directly — it's held to a fixed 45% overall share
+// (see MUSTARD_TARGET_SHARE in spin.js), not the raw fallback-of-the-
+// other-five-tiers chance its own oddsN/chanceLabel below would imply.
 const RARITIES = [
   {
     id: 'mustard-seed',
