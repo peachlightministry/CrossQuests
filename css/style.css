@@ -750,22 +750,6 @@ body.palette-classic-cream {
   }
 }
 
-.test-spin-button {
-  font-family: inherit;
-  font-size: 0.75rem;
-  color: #999;
-  background: transparent;
-  border: 1px dashed #bbb;
-  border-radius: 8px;
-  padding: 4px 10px;
-  cursor: pointer;
-}
-
-.test-spin-button:hover {
-  color: #666;
-  border-color: #999;
-}
-
 .progress-summary a {
   color: var(--accent-dark);
   font-weight: 700;
@@ -2284,18 +2268,6 @@ body.woh-theme {
     margin-top: 0;
   }
 
-  /* The page ends exactly where the picture ends for this skin — no
-     dev-test buttons, no Crack the Sky (once it's already equipped
-     there's nothing left for it to reveal), no today's-quests panel
-     spilling out below. This also means .page's height really is just
-     the picture's height with nothing padding it out, which is what
-     every top:%/height:% value above already assumes. */
-  body.woh-theme:has(.hero) #test-spin-button,
-  body.woh-theme:has(.hero) #test-points-button,
-  body.woh-theme:has(.hero) .crack-sky-button {
-    display: none;
-  }
-
   /* Today's Quests still needs to actually open under this skin. A normal
      in-flow panel would push page height past the picture's bottom edge,
      which this skin can't have — so instead it opens as a floating
@@ -2353,18 +2325,6 @@ body.woh-theme {
 .cosmetic-swatch-world-over-heaven {
   background: radial-gradient(120% 160% at 50% 0%, #fffdf5 0%, #f3e6c8 45%, #c9a227 100%);
   box-shadow: inset 0 0 0 2px #8a6d2e, 0 0 10px rgba(201, 162, 39, 0.5);
-}
-
-.crack-sky-button {
-  font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #8a6d2e;
-  background: transparent;
-  border: 1px dashed #c9a227;
-  border-radius: 8px;
-  padding: 4px 10px;
-  cursor: pointer;
 }
 
 /* Google sign-in gate + account chip — plain top-level UI chrome,

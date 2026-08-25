@@ -356,21 +356,6 @@ todaysQuestsToggle.addEventListener('click', () => {
   }
 });
 
-document.getElementById('test-spin-button').addEventListener('click', () => {
-  grantTestSpin();
-  refreshSpinStatus();
-});
-
-document.getElementById('test-points-button').addEventListener('click', () => {
-  addPoints(50);
-});
-
-document.getElementById('crack-sky-button').addEventListener('click', () => {
-  revealWorldOverHeaven();
-  playSound('click', { volume: 0.5 });
-  openShop();
-  switchShopTab('cosmetics');
-});
 
 setGreeting();
 updateProgressSummary();

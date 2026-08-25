@@ -282,11 +282,6 @@ pendingLieToggle.addEventListener('click', () => {
   }
 });
 
-document.getElementById('test-spin-button').addEventListener('click', () => {
-  grantTestSpin();
-  refreshSpinStatus();
-});
-
 updateProgressSummary();
 refreshSpinStatus();
 refreshEquippedCosmeticVisual();

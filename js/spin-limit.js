@@ -73,8 +73,8 @@ function createSpinLimiter({ storageKey, maxSpins, windowMs }) {
   return { getState, canSpin, useSpin, msUntilReset };
 }
 
-// Grants 1 extra spin to both limiters at once. Used by the "+1 Spin (test
-// only)" debug button and by the Inbox when claiming a gifted spin.
+// Grants 1 extra spin to both limiters at once. Used by the Inbox when
+// claiming a gifted spin.
 function grantTestSpin() {
   for (const key of ['jsq-quest-spin-limit', 'jsq-belief-spin-limit']) {
     try {
