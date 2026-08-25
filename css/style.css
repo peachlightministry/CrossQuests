@@ -3113,3 +3113,126 @@ body.woh-theme {
   padding: 1px 6px;
   border-radius: 999px;
 }
+
+/* Community page: widen to match the navbar, and social link cards */
+
+body.community-page .page {
+  max-width: 1300px;
+}
+
+.community-links {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin: 32px 0;
+}
+
+.community-card {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 22px 30px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.community-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+}
+
+.community-card-logo {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 22px;
+  overflow: hidden;
+  display: block;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.community-card-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.community-card-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.community-card-title {
+  display: block;
+  font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--accent-dark);
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+a.community-card-title:hover {
+  text-decoration: underline;
+}
+
+.community-card-text p {
+  margin: 0;
+  font-family: 'Nunito', -apple-system, sans-serif;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.community-card.coming-soon {
+  opacity: 0.75;
+}
+
+.community-card.coming-soon .community-card-logo {
+  cursor: default;
+}
+
+.community-coming-soon-badge {
+  display: inline-block;
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.community-backstory {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.community-backstory h2 {
+  margin-bottom: 12px;
+}
+
+.community-backstory-placeholder {
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 640px) {
+  .community-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  .community-card-logo {
+    width: 88px;
+    height: 88px;
+  }
+}
