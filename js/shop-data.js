@@ -161,12 +161,16 @@ const UPGRADES = [
     name: 'Quest Luck 1',
     price: 30,
     description: 'Improves your odds of landing a rarer side quest.',
+    // Existing owners keep it working as normal — this only blocks new
+    // purchases while it's being reworked.
+    disabledLabel: 'Under bugfix',
   },
   {
     id: 'quest-luck-2',
     name: 'Quest Luck 2',
     price: 70,
     description: 'Improves your odds even further, stacking with Quest Luck 1.',
+    disabledLabel: 'Under bugfix',
   },
   {
     id: 'perfectionist',
@@ -179,6 +183,20 @@ const UPGRADES = [
     name: 'Divine Gambling😏',
     price: 25,
     description: "Land Mustard Seed and there's a 1-in-3 chance a Reroll button appears.",
+  },
+  {
+    id: 'quest-expansion-1',
+    name: 'Quest Expansion 1',
+    price: 40,
+    description: 'Adds a fresh wave of side quests to the pool.',
+    comingSoon: true,
+  },
+  {
+    id: 'quest-expansion-2',
+    name: 'Quest Expansion 2',
+    price: 40,
+    description: 'Adds another fresh wave of side quests to the pool.',
+    comingSoon: true,
   },
 ];
 
@@ -201,6 +219,7 @@ function isUpgradeOwned(id) {
 function buyUpgrade(id) {
   const item = UPGRADES.find((u) => u.id === id);
   if (!item || isUpgradeOwned(id)) return false;
+  if (item.comingSoon || item.disabledLabel) return false;
   if (getPoints() < item.price) return false;
 
   addPoints(-item.price);

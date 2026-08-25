@@ -86,6 +86,10 @@ function renderUpgradesPanel() {
     let actionHtml;
     if (owned) {
       actionHtml = `<span class="cosmetic-status equipped">✅ Owned</span>`;
+    } else if (item.comingSoon) {
+      actionHtml = `<button class="cosmetic-action-button" disabled>Coming Soon</button>`;
+    } else if (item.disabledLabel) {
+      actionHtml = `<button class="cosmetic-action-button" disabled>${item.disabledLabel}</button>`;
     } else if (points >= item.price) {
       actionHtml = `<button class="cosmetic-action-button buy" data-action="buy-upgrade" data-id="${item.id}">Buy for ${item.price} ${crossIconSVG(14)}</button>`;
     } else {
