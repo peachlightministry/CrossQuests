@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://peachlightministry.github.io/Jesussidequest/sitemap.xml
+Sitemap: https://peachlightministry.github.io/CrossQuests/sitemap.xml
