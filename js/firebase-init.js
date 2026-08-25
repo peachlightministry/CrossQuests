@@ -1,4 +1,4 @@
-// Firebase connection setup for Jesus Side Quest.
+// Firebase connection setup for CrossQuests.
 // Loaded as a native ES module (<script type="module">) directly from the
 // gstatic CDN — no build tools, no npm install, no change to GitHub Pages hosting.
 // This file only establishes the connection (Auth + Firestore). It does not

@@ -1,4 +1,4 @@
-# Jesus Side Quest
+# CrossQuests
 
 A simple, friendly website that spins random Bible-inspired "side quests" for you to go do, with rarity tiers named after biblical moments.
 
