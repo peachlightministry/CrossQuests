@@ -45,7 +45,11 @@ function createSpinLimiter({ storageKey, maxSpins, windowMs }) {
   function getState() {
     const raw = currentWindow();
     if (isUnlimitedSpins()) {
-      return { remaining: 999, resetAt: raw.windowStart + windowMs };
+      // Always reads as a normal "1 spin left" rather than an
+      // obviously-cheaty big number — useSpin() below still increments
+      // the real counter underneath, but getState() just never looks at
+      // it while this is on, so it never actually depletes.
+      return { remaining: 1, resetAt: raw.windowStart + windowMs };
     }
     return {
       remaining: Math.max(0, maxSpins - raw.used),

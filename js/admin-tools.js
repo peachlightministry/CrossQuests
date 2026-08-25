@@ -45,6 +45,7 @@ if (unlimitedSpinsToggle) {
   unlimitedSpinsToggle.checked = localStorage.getItem("jsq-dev-unlimited-spins") === "1";
   unlimitedSpinsToggle.addEventListener("change", () => {
     localStorage.setItem("jsq-dev-unlimited-spins", unlimitedSpinsToggle.checked ? "1" : "0");
+    if (typeof window.refreshSpinStatus === "function") window.refreshSpinStatus();
   });
 }
 

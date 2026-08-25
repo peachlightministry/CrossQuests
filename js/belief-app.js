@@ -36,17 +36,7 @@ function updateProgressSummary() {
 }
 
 function refreshSpinStatus() {
-  if (isUnlimitedSpins()) {
-    spinButton.disabled = false;
-    spinStatus.textContent = '♾️ Unlimited spins (dev)';
-    if (countdownTimer) {
-      clearInterval(countdownTimer);
-      countdownTimer = null;
-    }
-    return;
-  }
-
-  if (getPendingBeliefId()) {
+  if (getPendingBeliefId() && !isUnlimitedSpins()) {
     spinButton.disabled = true;
     spinStatus.textContent = 'Conquer your pending lie to spin again.';
     if (countdownTimer) {
