@@ -254,10 +254,13 @@
       </div>
 
       <div class="dev-tools-group">
-        <h4>Ban Player</h4>
+        <h4>Ban / Unban Player</h4>
         <form id="dev-ban-form">
           <input type="text" id="dev-ban-username" placeholder="Event username" required>
-          <button type="submit" class="dev-tools-submit">Ban</button>
+          <div class="dev-inline-row">
+            <button type="submit" class="dev-tools-submit">Ban</button>
+            <button type="button" class="dev-tools-submit dev-tools-secondary" id="dev-unban-button">Unban</button>
+          </div>
           <p class="dev-tools-status" id="dev-ban-status"></p>
         </form>
       </div>

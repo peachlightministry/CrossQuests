@@ -9,6 +9,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  deleteDoc,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
@@ -111,6 +112,7 @@ if (giftForm) {
 const banForm = document.getElementById("dev-ban-form");
 const banInput = document.getElementById("dev-ban-username");
 const banStatus = document.getElementById("dev-ban-status");
+const unbanButton = document.getElementById("dev-unban-button");
 
 if (banForm) {
   banForm.addEventListener("submit", async (e) => {
@@ -128,6 +130,22 @@ if (banForm) {
     } catch (err) {
       console.error(err);
       banStatus.textContent = "Failed to ban player.";
+    }
+  });
+}
+
+if (unbanButton) {
+  unbanButton.addEventListener("click", async () => {
+    const username = banInput.value.trim();
+    if (!username) return;
+    banStatus.textContent = "Unbanning…";
+    try {
+      await deleteDoc(doc(window.firebaseDb, "bans", username.toLowerCase()));
+      banStatus.textContent = `"${username}" is unbanned.`;
+      banForm.reset();
+    } catch (err) {
+      console.error(err);
+      banStatus.textContent = "Failed to unban player.";
     }
   });
 }

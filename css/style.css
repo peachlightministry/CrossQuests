@@ -3065,6 +3065,12 @@ body.woh-theme {
   cursor: pointer;
 }
 
+.dev-tools-secondary {
+  background: transparent;
+  color: #33204f;
+  border: 1.5px solid rgba(51, 32, 79, 0.35);
+}
+
 .dev-tools-status {
   font-family: 'Nunito', -apple-system, sans-serif;
   font-size: 0.78rem;
