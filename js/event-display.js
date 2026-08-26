@@ -49,14 +49,18 @@ function renderLeaderboard(contributors) {
   return `
     <ol class="event-leaderboard-list">
       ${rows
-        .map(
-          (r, i) => `
+        .map((r, i) => {
+          const title = r.titleId && window.jsqTitleInfo ? window.jsqTitleInfo(r.titleId) : null;
+          const titleHtml = title
+            ? `<span class="event-leaderboard-title" style="color:${title.color}">${escapeHtml(title.name)}</span>`
+            : "";
+          return `
         <li class="event-leaderboard-row">
           <span class="event-leaderboard-rank">#${i + 1}</span>
-          <span class="event-leaderboard-name">${escapeHtml(r.username || "Anonymous")}</span>
+          <span class="event-leaderboard-name">${escapeHtml(r.username || "Anonymous")}${titleHtml}</span>
           <span class="event-leaderboard-points">${(r.points || 0).toLocaleString()} pts</span>
-        </li>`
-        )
+        </li>`;
+        })
         .join("")}
     </ol>`;
 }

@@ -52,6 +52,7 @@ function refreshSpinStatus() {
     if (msLeft <= 0) {
       clearInterval(countdownTimer);
       countdownTimer = null;
+      if (typeof window.jsqFireSpinResetNotification === 'function') window.jsqFireSpinResetNotification('quest');
       refreshSpinStatus();
       return;
     }

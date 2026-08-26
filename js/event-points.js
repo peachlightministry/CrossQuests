@@ -64,11 +64,13 @@ window.jsqContributeEventPoints = async function (amount) {
       const update = { communityPoints: next };
       if (next >= goal && !data.rewardIssued) update.rewardIssued = true;
 
+      const equippedTitleId = typeof window.jsqGetEquippedTitle === "function" ? window.jsqGetEquippedTitle() : null;
       const contributors = { ...(data.contributors || {}) };
       const existing = contributors[user.uid] || { points: 0 };
       contributors[user.uid] = {
         points: (existing.points || 0) + amount,
         username: eventUsername || existing.username || "Anonymous",
+        titleId: equippedTitleId || null,
       };
       update.contributors = contributors;
 

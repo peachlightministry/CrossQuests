@@ -38,6 +38,12 @@ function showGate(text, showButton) {
 function hideGate() {
   gate.hidden = true;
   sessionStorage.setItem("jsq-cloud-session-active", "1");
+  // Local storage is stable now (any hydrate-triggered clear/repopulate has
+  // already happened) — features that write plain localStorage keys on
+  // sign-in (e.g. the daily streak) should wait for this rather than the
+  // raw jsq-auth-changed event, or a fresh sign-in's clearLocalAppData()
+  // can silently wipe a write that landed a beat too early.
+  document.dispatchEvent(new CustomEvent("jsq-cloud-ready", { detail: { user: window.jsqFirebaseCurrentUser } }));
 }
 
 function setGateError(message) {
