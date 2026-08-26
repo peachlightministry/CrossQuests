@@ -145,7 +145,9 @@ function conquerBelief(belief) {
   if (getPendingBeliefId() === belief.id) {
     setPendingBeliefId(null);
   }
-  if (typeof window.jsqContributeEventPoints === "function") window.jsqContributeEventPoints(20);
+  if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
+    window.jsqContributeEventPoints(window.jsqEventPointsInfo().lieSlain);
+  }
   recordBeliefConquestForPerfectionist();
   playSound('conquered', { volume: 0.7 });
   updateProgressSummary();

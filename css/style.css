@@ -2544,65 +2544,61 @@ body.woh-theme {
   letter-spacing: 0.02em;
 }
 
-.event-riddle-block {
-  background: rgba(224, 185, 87, 0.12);
-  border: 1px solid rgba(224, 185, 87, 0.35);
+.event-inbox-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  text-align: center;
+}
+
+.event-points-info-block {
+  text-align: left;
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 12px;
   padding: 14px 16px;
-  text-align: left;
 }
 
-.event-riddle-day {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+.event-points-info-title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-family: 'Cinzel', serif;
   color: var(--accent-dark);
-  margin-bottom: 6px;
 }
 
-.event-riddle-text {
-  margin: 0 0 6px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.event-riddle-hint {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  font-style: italic;
-}
-
-.event-solution-block {
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-  padding: 12px 16px;
-  text-align: left;
-}
-
-.event-solution-label {
+.event-points-info-group-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: var(--ink-soft);
-  margin-bottom: 6px;
+  margin: 8px 0 4px;
 }
 
-.event-solution-riddle {
-  margin: 0 0 4px;
-  font-size: 0.8rem;
-  font-style: italic;
-  color: var(--ink-soft);
-}
-
-.event-solution-text {
+.event-points-info-list {
+  list-style: none;
   margin: 0;
-  font-weight: 600;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.event-points-info-list li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 3px 0;
+}
+
+.event-points-info-list li span:first-child {
+  color: var(--ink);
+}
+
+.event-points-info-list li span:last-child {
+  font-weight: 700;
+  color: var(--accent-dark);
 }
 
 .event-progress-block {
@@ -2698,8 +2694,8 @@ body.woh-theme {
 
 .event-info-card {
   text-align: left;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding-top: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 14px;
 }
 
 .event-info-name {
@@ -3215,6 +3211,44 @@ body.woh-theme {
   cursor: pointer;
 }
 
+.inbox-riddle-answer-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.inbox-riddle-answer-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+
+.inbox-riddle-answer-submit {
+  font: inherit;
+  font-weight: 700;
+  background: linear-gradient(135deg, #e8912b 0%, #b8730f 100%);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+.inbox-riddle-answer-feedback {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #c0392b;
+  min-height: 1em;
+}
+
 @media (max-width: 640px) {
   .inbox-fab {
     right: 64px;
@@ -3312,6 +3346,14 @@ body.woh-theme {
   background: transparent;
   color: #33204f;
   border: 1.5px solid rgba(51, 32, 79, 0.35);
+}
+
+.dev-tools-subhead {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted, #7a6a55);
 }
 
 .dev-tools-status {

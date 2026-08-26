@@ -19,7 +19,7 @@ const ADMIN_EMAIL = "officecolorstyle@yahoo.com";
 const EVENT_DURATION_MS = (5 * 24 + 4) * 60 * 60 * 1000;
 const EVENT_NAME = "Event: The Lightbearers";
 const EVENT_DESCRIPTION =
-  "Work together with the Discord community — log new quests, complete side quests, slay lies, and solve daily riddles to reach 10,000 points as one.";
+  "Work together with the community — log new quests, complete side quests, slay lies, and solve daily riddles to reach 10,000 points as one.";
 const EVENT_REWARD_COINS = 20;
 const EVENT_REWARD_SKINS = ["divine"];
 
@@ -184,7 +184,7 @@ if (messageForm) {
   });
 }
 
-// ---- Event: launch on its own, post riddles (+solutions) independently ----
+// ---- Event: launch the countdown ----
 
 const eventLaunchButton = document.getElementById("dev-event-launch-button");
 const eventRiddleForm = document.getElementById("dev-event-riddle-form");
@@ -206,10 +206,6 @@ function freshEventConfig(now) {
     rewardCoins: EVENT_REWARD_COINS,
     rewardSkins: EVENT_REWARD_SKINS,
     contributors: {},
-    todaysRiddle: "",
-    todaysSolution: "",
-    previousRiddle: "",
-    previousSolution: "",
   };
 }
 
@@ -233,37 +229,25 @@ if (eventLaunchButton) {
   });
 }
 
+// ---- Riddle: posted separately from the event itself, straight to every
+// player's inbox as its own item with an answer box. Not tied to whether
+// the event is running — the +points for solving it just won't land unless
+// an event is currently active (event-points.js already guards that). ----
+
 if (eventRiddleForm) {
   eventRiddleForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = eventRiddleInput.value.trim();
-    const solution = eventSolutionInput.value.trim();
-    if (!text) return;
+    const answer = eventSolutionInput.value.trim();
+    if (!text || !answer) return;
     eventRiddleStatus.textContent = "Posting…";
     try {
-      const ref = doc(window.firebaseDb, "event", "config");
-      const snap = await getDoc(ref);
-      // Posting a riddle before anything is launched starts the event too,
-      // same as the Launch button — the riddle just isn't required for it.
-      const base = snap.exists() && snap.data().active ? {} : freshEventConfig(Date.now());
-      // Whatever was "today's" riddle/solution becomes "yesterday's" —
-      // that's what reveals the previous solution on the Event page.
-      const prevRiddle = snap.exists() ? snap.data().todaysRiddle || "" : "";
-      const prevSolution = snap.exists() ? snap.data().todaysSolution || "" : "";
-      await setDoc(
-        ref,
-        {
-          ...base,
-          previousRiddle: prevRiddle,
-          previousSolution: prevSolution,
-          todaysRiddle: text,
-          todaysSolution: solution,
-          riddleUpdatedAt: serverTimestamp(),
-        },
-        { merge: true }
-      );
-      eventRiddleStatus.textContent =
-        snap.exists() && snap.data().active ? "Riddle updated." : "Event launched with this riddle! Countdown started.";
+      await addDoc(collection(window.firebaseDb, "eventRiddles"), {
+        text,
+        answer,
+        sentAt: serverTimestamp(),
+      });
+      eventRiddleStatus.textContent = "Riddle sent to every inbox.";
       eventRiddleForm.reset();
       document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
     } catch (err) {

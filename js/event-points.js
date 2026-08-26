@@ -8,17 +8,33 @@ import { doc, runTransaction } from "https://www.gstatic.com/firebasejs/12.18.0/
 // Points awarded for a brand-new quest log entry (a fresh spin result),
 // keyed by rarity id. Mustard Seed is the base, +10 per ascending rarity,
 // with a bigger jump for the rarest ordinary tier and the secret tier.
-const RARITY_EVENT_POINTS = {
-  "mustard-seed": 25,
-  "loaves-and-fishes": 35,
-  "widows-mite": 45,
-  "wilderness-wanderer": 55,
-  "refiners-fire": 125,
-  "burning-bush": 500,
-};
+// Also doubles as the single source of truth for the "how to earn points"
+// info bar on the Event page — names here match RARITIES in quest-data.js.
+const RARITY_EVENT_POINTS = [
+  { id: "mustard-seed", name: "Mustard Seed", points: 25 },
+  { id: "loaves-and-fishes", name: "Loaves & Fishes", points: 35 },
+  { id: "widows-mite", name: "Widow's Mite", points: 45 },
+  { id: "wilderness-wanderer", name: "Wilderness Wanderer", points: 55 },
+  { id: "refiners-fire", name: "Refiner's Fire", points: 125 },
+  { id: "burning-bush", name: "Burning Bush (secret)", points: 500 },
+];
+
+const QUEST_COMPLETE_EVENT_POINTS = 20;
+const LIE_SLAIN_EVENT_POINTS = 20;
+const RIDDLE_SOLVED_EVENT_POINTS = 55;
 
 window.jsqEventPointsForRarity = function (rarityId) {
-  return RARITY_EVENT_POINTS[rarityId] || 0;
+  const entry = RARITY_EVENT_POINTS.find((r) => r.id === rarityId);
+  return entry ? entry.points : 0;
+};
+
+window.jsqEventPointsInfo = function () {
+  return {
+    newQuestByRarity: RARITY_EVENT_POINTS,
+    questCompleted: QUEST_COMPLETE_EVENT_POINTS,
+    lieSlain: LIE_SLAIN_EVENT_POINTS,
+    riddleSolved: RIDDLE_SOLVED_EVENT_POINTS,
+  };
 };
 
 window.jsqContributeEventPoints = async function (amount) {

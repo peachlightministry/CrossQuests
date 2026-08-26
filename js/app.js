@@ -336,7 +336,9 @@ function completeQuestEntry(index, buttonEl) {
 
   if (found) {
     addPoints(found.rarity.points);
-    if (typeof window.jsqContributeEventPoints === "function") window.jsqContributeEventPoints(20);
+    if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
+      window.jsqContributeEventPoints(window.jsqEventPointsInfo().questCompleted);
+    }
   }
   recordQuestCompletionForPerfectionist();
   recordQuestCompletionForAchievements();

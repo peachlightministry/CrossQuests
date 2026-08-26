@@ -74,6 +74,25 @@ function renderInfoCard(config) {
     </div>`;
 }
 
+function renderPointsInfoBar() {
+  if (typeof window.jsqEventPointsInfo !== "function") return "";
+  const info = window.jsqEventPointsInfo();
+  const rarityRows = info.newQuestByRarity
+    .map((r) => `<li><span>${escapeHtml(r.name)}</span><span>+${r.points}</span></li>`)
+    .join("");
+  return `
+    <div class="event-points-info-block">
+      <h3 class="event-points-info-title">✨ How to Earn Points</h3>
+      <span class="event-points-info-group-label">New quest logged, by rarity</span>
+      <ul class="event-points-info-list">${rarityRows}</ul>
+      <ul class="event-points-info-list">
+        <li><span>Quest completed</span><span>+${info.questCompleted}</span></li>
+        <li><span>Lie slain</span><span>+${info.lieSlain}</span></li>
+        <li><span>Riddle solved</span><span>+${info.riddleSolved}</span></li>
+      </ul>
+    </div>`;
+}
+
 function render() {
   if (!liveArea) return;
 
@@ -93,6 +112,7 @@ function render() {
   if (now < startAt) {
     liveArea.innerHTML = `
       <div class="event-live">
+        ${renderInfoCard(cachedConfig)}
         <div class="event-countdown-block">
           <span class="event-countdown-label">${escapeHtml(cachedConfig.eventName || "Event")} starts in</span>
           <span class="event-countdown-value">${formatDuration(startAt - now)}</span>
@@ -102,7 +122,6 @@ function render() {
   }
 
   const ended = now > endAt;
-  const dayIndex = Math.min(5, Math.max(1, Math.floor((now - startAt) / 86400000) + 1));
 
   const topBlockHtml = rewardIssued
     ? '<p class="event-goal-banner">🎉 Goal reached — thank you for questing together! Check your inbox for a reward.</p>'
@@ -113,38 +132,24 @@ function render() {
         <span class="event-countdown-value">${formatDuration(endAt - now)}</span>
       </div>`;
 
-  const riddleHtml =
-    !ended && cachedConfig.todaysRiddle
-      ? `<div class="event-riddle-block">
-          <span class="event-riddle-day">Day ${dayIndex} of 5</span>
-          <p class="event-riddle-text">🧩 ${escapeHtml(cachedConfig.todaysRiddle)}</p>
-          <p class="event-riddle-hint">Solve it together in our Discord!</p>
-        </div>`
-      : "";
-
-  const solutionHtml =
-    cachedConfig.previousRiddle && cachedConfig.previousSolution
-      ? `<div class="event-solution-block">
-          <span class="event-solution-label">✅ Yesterday's Solution</span>
-          <p class="event-solution-riddle">${escapeHtml(cachedConfig.previousRiddle)}</p>
-          <p class="event-solution-text">${escapeHtml(cachedConfig.previousSolution)}</p>
-        </div>`
-      : "";
+  const inboxHintHtml = !ended
+    ? '<p class="event-inbox-hint">📬 Check your inbox for today\'s riddle!</p>'
+    : "";
 
   liveArea.innerHTML = `
     <div class="event-live">
+      ${renderInfoCard(cachedConfig)}
       ${topBlockHtml}
-      ${riddleHtml}
-      ${solutionHtml}
+      ${inboxHintHtml}
       <div class="event-progress-block">
         <div class="event-progress-label"><span>Community Goal</span><span>${points.toLocaleString()} / ${goal.toLocaleString()}</span></div>
         <div class="event-progress-bar"><div class="event-progress-fill" style="width:${pct}%"></div></div>
       </div>
+      ${renderPointsInfoBar()}
       <div class="event-leaderboard-block">
         <h3 class="event-leaderboard-title">🏆 Top Lightbearers</h3>
         ${renderLeaderboard(cachedConfig.contributors)}
       </div>
-      ${renderInfoCard(cachedConfig)}
     </div>`;
 }
 

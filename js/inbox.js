@@ -13,7 +13,7 @@ import {
 
 const CLAIMED_GIFTS_KEY = "jsq-inbox-claimed-gifts";
 const READ_MESSAGES_KEY = "jsq-inbox-read-messages";
-const READ_RIDDLES_KEY = "jsq-inbox-read-riddles";
+const SOLVED_RIDDLES_KEY = "jsq-inbox-solved-riddles";
 
 function getIdSet(key) {
   try {
@@ -74,31 +74,20 @@ async function fetchGifts() {
   return results;
 }
 
-// Today's riddle also shows up as its own inbox item (not just on the Event
-// page) — reading it for the first time is what triggers the red "!" alert
-// to clear, and also awards this player's one-time +55 contribution for it.
-async function fetchEventRiddle() {
+// Riddles are their own broadcast collection, posted separately from
+// launching the event — each one lands in every inbox as its own item with
+// an answer box. Solving it (matching the admin's stored answer) is what
+// clears the red "!" alert and awards this player's +55 contribution.
+async function fetchRiddles() {
   const db = window.firebaseDb;
+  const results = [];
   try {
-    const snap = await getDoc(doc(db, "event", "config"));
-    if (!snap.exists()) return null;
-    const data = snap.data();
-    if (!data.active || !data.todaysRiddle) return null;
-    const endAt = typeof data.endAt === "number" ? data.endAt : 0;
-    if (Date.now() > endAt) return null;
-    const stamp =
-      data.riddleUpdatedAt && typeof data.riddleUpdatedAt.toMillis === "function"
-        ? data.riddleUpdatedAt.toMillis()
-        : data.startAt || 0;
-    return {
-      id: `event-riddle-${stamp}`,
-      text: data.todaysRiddle,
-      sentAt: data.riddleUpdatedAt || { toMillis: () => stamp },
-    };
+    const snap = await getDocs(collection(db, "eventRiddles"));
+    snap.forEach((d) => results.push({ id: d.id, ...d.data() }));
   } catch (err) {
-    console.error("Failed to load event riddle:", err);
-    return null;
+    console.error("Failed to load riddles:", err);
   }
+  return results;
 }
 
 async function fetchMessages() {
@@ -145,27 +134,32 @@ const inboxRiddleAlert = document.getElementById("inbox-riddle-alert");
 async function renderInbox() {
   if (!inboxList) return;
   inboxList.innerHTML = '<p class="inbox-empty">Loading…</p>';
-  const [gifts, messages, riddle] = await Promise.all([fetchGifts(), fetchMessages(), fetchEventRiddle()]);
+  const [gifts, messages, riddles] = await Promise.all([fetchGifts(), fetchMessages(), fetchRiddles()]);
   const claimed = getIdSet(CLAIMED_GIFTS_KEY);
   const read = getIdSet(READ_MESSAGES_KEY);
-  const readRiddles = getIdSet(READ_RIDDLES_KEY);
+  const solvedRiddles = getIdSet(SOLVED_RIDDLES_KEY);
 
   const items = [];
-  if (riddle) {
-    const isNew = !readRiddles.has(riddle.id);
+  riddles.forEach((r) => {
+    const solved = solvedRiddles.has(r.id);
     items.push({
-      sortKey: riddle.sentAt,
+      sortKey: r.sentAt,
       html: `
-        <div class="inbox-item ${isNew ? "unclaimed" : "claimed"}">
+        <div class="inbox-item ${solved ? "claimed" : "unclaimed"}">
           <div class="inbox-item-title">🧩 Daily Riddle</div>
-          <div class="inbox-item-body">${riddle.text}</div>
+          <div class="inbox-item-body">${r.text}</div>
+          ${
+            solved
+              ? '<span class="inbox-item-status">✅ Solved — +55 earned</span>'
+              : `<div class="inbox-riddle-answer-row">
+                  <input type="text" class="inbox-riddle-answer-input" data-riddle-id="${r.id}" placeholder="Your answer">
+                  <button class="inbox-riddle-answer-submit" data-riddle-id="${r.id}">Submit</button>
+                </div>
+                <p class="inbox-riddle-answer-feedback" data-riddle-id="${r.id}"></p>`
+          }
         </div>`,
     });
-    if (isNew) {
-      addToIdSet(READ_RIDDLES_KEY, riddle.id);
-      if (typeof window.jsqContributeEventPoints === "function") window.jsqContributeEventPoints(55);
-    }
-  }
+  });
   gifts.forEach((g) => {
     const parts = [];
     if (g.coins) parts.push(`${g.coins} coins`);
@@ -216,6 +210,32 @@ async function renderInbox() {
       refreshInboxBadge();
     });
   });
+
+  function trySubmitRiddleAnswer(riddleId) {
+    const riddle = riddles.find((r) => r.id === riddleId);
+    const input = inboxList.querySelector(`.inbox-riddle-answer-input[data-riddle-id="${riddleId}"]`);
+    const feedback = inboxList.querySelector(`.inbox-riddle-answer-feedback[data-riddle-id="${riddleId}"]`);
+    if (!riddle || !input) return;
+    const guess = input.value.trim().toLowerCase();
+    const answer = (riddle.answer || "").trim().toLowerCase();
+    if (guess.length > 0 && guess === answer) {
+      addToIdSet(SOLVED_RIDDLES_KEY, riddle.id);
+      if (typeof window.jsqContributeEventPoints === "function") window.jsqContributeEventPoints(55);
+      renderInbox();
+      refreshInboxBadge();
+    } else if (feedback) {
+      feedback.textContent = "Not quite — try again!";
+    }
+  }
+
+  inboxList.querySelectorAll(".inbox-riddle-answer-submit").forEach((btn) => {
+    btn.addEventListener("click", () => trySubmitRiddleAnswer(btn.dataset.riddleId));
+  });
+  inboxList.querySelectorAll(".inbox-riddle-answer-input").forEach((input) => {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") trySubmitRiddleAnswer(input.dataset.riddleId);
+    });
+  });
 }
 
 async function refreshInboxBadge() {
@@ -226,17 +246,18 @@ async function refreshInboxBadge() {
     if (inboxRiddleAlert) inboxRiddleAlert.hidden = true;
     return;
   }
-  const [gifts, messages, riddle] = await Promise.all([fetchGifts(), fetchMessages(), fetchEventRiddle()]);
+  const [gifts, messages, riddles] = await Promise.all([fetchGifts(), fetchMessages(), fetchRiddles()]);
   const claimed = getIdSet(CLAIMED_GIFTS_KEY);
   const read = getIdSet(READ_MESSAGES_KEY);
-  const readRiddles = getIdSet(READ_RIDDLES_KEY);
+  const solvedRiddles = getIdSet(SOLVED_RIDDLES_KEY);
   if (inboxBadge) {
     const total = gifts.filter((g) => !claimed.has(g.id)).length + messages.filter((m) => !read.has(m.id)).length;
     inboxBadge.textContent = String(total);
     inboxBadge.hidden = total === 0;
   }
   if (inboxRiddleAlert) {
-    inboxRiddleAlert.hidden = !riddle || readRiddles.has(riddle.id);
+    const latest = riddles.slice().sort(sortByTimeDesc)[0];
+    inboxRiddleAlert.hidden = !latest || solvedRiddles.has(latest.id);
   }
 }
 
