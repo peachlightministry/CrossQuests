@@ -248,6 +248,14 @@ body.palette-classic-cream {
   font-size: 1rem;
 }
 
+.greeting-verse {
+  margin-top: 4px !important;
+  font-size: 0.85rem !important;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 /* Hero / spin area */
 .hero {
   margin-top: 36px;
@@ -841,6 +849,13 @@ body.palette-classic-cream {
 .quest-list li.unknown {
   color: var(--ink-soft);
   font-style: italic;
+}
+
+.quest-list li.coming-soon {
+  color: var(--ink-soft);
+  font-style: italic;
+  background: rgba(0, 0, 0, 0.015);
+  border: 1.5px dashed rgba(0, 0, 0, 0.15);
 }
 
 footer.credit {

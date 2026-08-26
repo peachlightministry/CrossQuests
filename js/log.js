@@ -3,7 +3,7 @@ const logContainer = document.getElementById('log-container');
 function renderRaritySection(rarity) {
   const unlocked = hasDiscoveredAnyInRarity(rarity);
   const found = countDiscoveredInRarity(rarity);
-  const total = rarity.quests.length;
+  const total = rarity.quests.filter((q) => !q.locked).length;
 
   const section = document.createElement('section');
   section.className = `rarity-section${unlocked ? '' : ' locked'}`;
@@ -11,6 +11,9 @@ function renderRaritySection(rarity) {
 
   const questItems = rarity.quests
     .map((q) => {
+      if (q.locked) {
+        return `<li class="coming-soon">Coming soon</li>`;
+      }
       const found = isDiscovered(q.id);
       return `<li class="${found ? 'found' : 'unknown'}">${found ? q.text : '???'}</li>`;
     })

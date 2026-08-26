@@ -5,6 +5,9 @@ function renderBeliefLog() {
   beliefProgress.textContent = `${countConquered()} out of ${totalBeliefs()} conquered`;
 
   beliefList.innerHTML = FALSE_BELIEFS.map((belief) => {
+    if (belief.locked) {
+      return `<li class="coming-soon">Coming soon</li>`;
+    }
     const conquered = isConquered(belief.id);
     if (!conquered) {
       return `<li class="unknown">???</li>`;

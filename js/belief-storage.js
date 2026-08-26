@@ -31,7 +31,7 @@ function countConquered() {
 }
 
 function totalBeliefs() {
-  return FALSE_BELIEFS.length;
+  return FALSE_BELIEFS.filter((b) => !b.locked).length;
 }
 
 // Beliefs are single-use: once drawn, a belief is retired from the spin

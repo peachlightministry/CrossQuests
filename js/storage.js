@@ -40,5 +40,5 @@ function totalDiscovered() {
 }
 
 function totalQuests() {
-  return RARITIES.reduce((sum, r) => sum + r.quests.length, 0);
+  return RARITIES.reduce((sum, r) => sum + r.quests.filter((q) => !q.locked).length, 0);
 }

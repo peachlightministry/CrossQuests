@@ -75,13 +75,20 @@ function refreshSpinStatus() {
   countdownTimer = setInterval(tick, 1000);
 }
 
+// "locked" beliefs are "Coming soon" placeholders that pad the Belief Log's
+// slot count — they must never be spun or shown mid-spin.
+function unlockedBeliefs() {
+  return FALSE_BELIEFS.filter((b) => !b.locked);
+}
+
 function randomBelief() {
-  return FALSE_BELIEFS[Math.floor(Math.random() * FALSE_BELIEFS.length)];
+  const pool = unlockedBeliefs();
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function unspunBeliefsPool() {
   const spunIds = getSpunBeliefIds();
-  return FALSE_BELIEFS.filter((b) => !spunIds.has(b.id));
+  return unlockedBeliefs().filter((b) => !spunIds.has(b.id));
 }
 
 function renderReelCycleFrame() {

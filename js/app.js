@@ -5,6 +5,7 @@ const spinButton = document.getElementById('spin-button');
 const spinStatus = document.getElementById('spin-status');
 const progressSummary = document.getElementById('progress-summary');
 const greetingText = document.getElementById('greeting-text');
+const greetingVerse = document.getElementById('greeting-verse');
 const todaysQuestsToggle = document.getElementById('todays-quests-toggle');
 const todaysQuestsPanel = document.getElementById('todays-quests-panel');
 const todaysQuestsBadge = document.getElementById('todays-quests-badge');
@@ -19,12 +20,21 @@ const questSpinLimiter = createSpinLimiter({
 let countdownTimer = null;
 let todaysQuestsTimer = null;
 
+const GREETINGS = [
+  'Hey, grace and peace from our Lord Jesus Christ.',
+  'Glad to have you here🫡',
+  'Welcome tooo.... *drumroll* Competitive Christianity',
+];
+
+// Book, chapter, and verse only — no quoted text, so it stays a nudge to go
+// look it up rather than the whole thing being handed over.
+const MOTIVATION_VERSES = ['Philippians 4:13', 'Joshua 1:9', 'Isaiah 40:31', 'Colossians 3:23', 'Galatians 6:9'];
+
 function setGreeting() {
-  const hour = new Date().getHours();
-  let greeting = "Hey, still glad you stopped by tonight.";
-  if (hour < 12) greeting = "Morning — glad you're here.";
-  else if (hour < 18) greeting = 'Hey, good to see you today.';
-  greetingText.textContent = greeting;
+  greetingText.textContent = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
+  if (greetingVerse) {
+    greetingVerse.textContent = MOTIVATION_VERSES[Math.floor(Math.random() * MOTIVATION_VERSES.length)];
+  }
 }
 
 function updateProgressSummary() {

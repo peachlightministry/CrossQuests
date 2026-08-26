@@ -22,8 +22,15 @@ function effectiveOddsN(rarity) {
   return (tier && tier[rarity.id]) || rarity.oddsN;
 }
 
+// "locked" quests are "Coming soon" placeholders that pad each rarity's
+// slot count for the Quest Log display — they must never be spun.
+function unlockedQuestsOf(rarity) {
+  return rarity.quests.filter((q) => !q.locked);
+}
+
 function randomQuestFrom(rarity) {
-  return rarity.quests[Math.floor(Math.random() * rarity.quests.length)];
+  const pool = unlockedQuestsOf(rarity);
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // Mustard Seed's overall share of ALL spins, once nothing rarer hits.
@@ -44,7 +51,7 @@ const MUSTARD_TARGET_SHARE = 0.45;
 // big the fallback pool even is.
 function rarityHitWeight(rarity, oddsN) {
   if (rarity.secret) {
-    return 1 - Math.pow(1 - 1 / oddsN, rarity.quests.length);
+    return 1 - Math.pow(1 - 1 / oddsN, unlockedQuestsOf(rarity).length);
   }
   return 1 / oddsN;
 }
@@ -68,7 +75,7 @@ function pickRandomQuest() {
       const oddsN = effectiveOddsN(rarity);
       if (rarity.secret) {
         // Each secret quest gets its own independent 1-in-oddsN roll.
-        for (const quest of rarity.quests) {
+        for (const quest of unlockedQuestsOf(rarity)) {
           if (Math.random() < 1 / oddsN) {
             return { rarity, quest };
           }

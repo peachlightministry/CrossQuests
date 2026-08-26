@@ -57,7 +57,7 @@ const ACHIEVEMENTS = [
   {
     id: 'platinum-trophy',
     name: 'Platinum Trophy',
-    description: 'Collect all 62 side quests in your Quest Log.',
+    description: 'Collect all 48 side quests in your Quest Log.',
     condition: () => totalDiscovered() >= totalQuests(),
     progress: () => `${totalDiscovered()} / ${totalQuests()}`,
   },
@@ -71,9 +71,9 @@ const ACHIEVEMENTS = [
   {
     id: 'doom-slayer',
     name: 'Doom Slayer',
-    description: 'Conquer 20 false beliefs.',
-    condition: () => countConquered() >= 20,
-    progress: () => `${Math.min(countConquered(), 20)} / 20`,
+    description: 'Conquer every false belief.',
+    condition: () => countConquered() >= totalBeliefs(),
+    progress: () => `${Math.min(countConquered(), totalBeliefs())} / ${totalBeliefs()}`,
   },
   {
     id: 'holy-gambler',
