@@ -96,9 +96,14 @@ async function refreshEventCache() {
       return;
     }
     const data = snap.data();
-    const active = !!data.active && Date.now() <= (data.endAt || 0);
+    const timeExpired = Date.now() > (data.endAt || 0);
+    const active = !!data.active && !timeExpired;
+    // The Race Marked Out achievement should reflect FINAL standings, not a
+    // mid-event snapshot that could still change — only compute it once the
+    // event has actually concluded (ended early by the admin, or timed out).
+    const ended = !data.active || timeExpired;
     let inTop10 = false;
-    if (user && data.contributors) {
+    if (ended && user && data.contributors) {
       const topUids = Object.entries(data.contributors)
         .filter(([, c]) => c && c.points > 0)
         .sort((a, b) => b[1].points - a[1].points)
@@ -106,7 +111,7 @@ async function refreshEventCache() {
         .map(([uid]) => uid);
       inTop10 = topUids.includes(user.uid);
     }
-    localStorage.setItem("jsq-event-cache", JSON.stringify({ active, inTop10 }));
+    localStorage.setItem("jsq-event-cache", JSON.stringify({ active, inTop10, startAt: data.startAt || 0 }));
   } catch (err) {
     console.error("Event cache refresh failed:", err);
   }

@@ -2577,30 +2577,6 @@ body.woh-theme {
   text-align: center;
 }
 
-.event-points-info-block {
-  text-align: left;
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 12px;
-  padding: 14px 16px;
-}
-
-.event-points-info-title {
-  margin: 0 0 8px;
-  font-size: 1rem;
-  font-family: 'Cinzel', serif;
-  color: var(--accent-dark);
-}
-
-.event-points-info-group-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--ink-soft);
-  margin: 8px 0 4px;
-}
-
 .event-points-info-list {
   list-style: none;
   margin: 0;
@@ -2723,11 +2699,86 @@ body.woh-theme {
   padding-bottom: 14px;
 }
 
+.event-info-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
 .event-info-name {
   font-family: 'Cinzel', serif;
   font-weight: 700;
   font-size: 1.05rem;
-  margin-bottom: 4px;
+}
+
+.event-points-help-button {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-dark);
+  background: transparent;
+  color: var(--accent-dark);
+  font-weight: 800;
+  font-size: 0.72rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.event-points-help-button:hover {
+  background: var(--accent-dark);
+  color: white;
+}
+
+.event-points-popover-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+}
+
+.event-points-popover-backdrop.open {
+  display: flex;
+}
+
+.event-points-popover {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 24px;
+  max-width: 340px;
+  width: 100%;
+  text-align: left;
+}
+
+.event-points-popover-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+
+.event-points-popover-title {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+  font-family: 'Cinzel', serif;
+  color: var(--accent-dark);
 }
 
 .event-info-description {

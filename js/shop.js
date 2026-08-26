@@ -32,12 +32,29 @@ function computeCosmeticsAlert() {
   ).some((item) => !isCosmeticOwned(item.id) && equipped !== item.id && points >= item.price);
 }
 
+// The Event alert dismisses once its tab has been opened, rather than
+// staying lit for the entire event — otherwise it never goes away while an
+// event is running. Re-lights automatically for a genuinely NEW event, since
+// that has a different startAt than whatever was last marked seen.
 function computeEventAlert() {
   try {
-    return JSON.parse(localStorage.getItem('jsq-event-cache') || '{}').active === true;
+    const cache = JSON.parse(localStorage.getItem('jsq-event-cache') || '{}');
+    if (!cache.active) return false;
+    const seen = localStorage.getItem('jsq-shop-event-seen');
+    return String(cache.startAt || 0) !== seen;
   } catch (e) {
     return false;
   }
+}
+
+function markEventTabSeen() {
+  try {
+    const cache = JSON.parse(localStorage.getItem('jsq-event-cache') || '{}');
+    localStorage.setItem('jsq-shop-event-seen', String(cache.startAt || 0));
+  } catch (e) {
+    // ignore
+  }
+  refreshShopBadges();
 }
 
 function refreshShopBadges() {
@@ -175,7 +192,10 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && shopBackdrop.classList.contains('open')) closeShop();
 });
 shopTabs.forEach((btn) => {
-  btn.addEventListener('click', () => switchShopTab(btn.dataset.tab));
+  btn.addEventListener('click', () => {
+    switchShopTab(btn.dataset.tab);
+    if (btn.dataset.tab === 'event') markEventTabSeen();
+  });
 });
 
 refreshShopBadges();

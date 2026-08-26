@@ -11,6 +11,7 @@ const liveArea = document.getElementById("event-live-area");
 let cachedConfig = null;
 let tickTimer = null;
 let pollTimer = null;
+let pointsPopoverOpen = false;
 
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({
@@ -68,29 +69,63 @@ function renderInfoCard(config) {
   }
   return `
     <div class="event-info-card">
-      <div class="event-info-name">${escapeHtml(config.eventName || "Event")}</div>
+      <div class="event-info-name-row">
+        <span class="event-info-name">${escapeHtml(config.eventName || "Event")}</span>
+        <button class="event-points-help-button" id="event-points-help-button" title="How to earn points" aria-label="How to earn points">?</button>
+      </div>
       ${config.eventDescription ? `<p class="event-info-description">${escapeHtml(config.eventDescription)}</p>` : ""}
       ${rewardParts.length ? `<p class="event-info-reward">🏆 Reward: ${rewardParts.join(" + ")}</p>` : ""}
     </div>`;
 }
 
-function renderPointsInfoBar() {
+// Kept deliberately vague on the new-quest-log range (25-500) rather than
+// itemizing every rarity's exact value — spelling that out lets players
+// back-calculate which rarity they just got before the reveal even lands.
+function renderPointsPopover() {
   if (typeof window.jsqEventPointsInfo !== "function") return "";
   const info = window.jsqEventPointsInfo();
-  const rarityRows = info.newQuestByRarity
-    .map((r) => `<li><span>${escapeHtml(r.name)}</span><span>+${r.points}</span></li>`)
-    .join("");
+  const values = info.newQuestByRarity.map((r) => r.points);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
   return `
-    <div class="event-points-info-block">
-      <h3 class="event-points-info-title">✨ How to Earn Points</h3>
-      <span class="event-points-info-group-label">New quest logged, by rarity</span>
-      <ul class="event-points-info-list">${rarityRows}</ul>
-      <ul class="event-points-info-list">
-        <li><span>Quest completed</span><span>+${info.questCompleted}</span></li>
-        <li><span>Lie slain</span><span>+${info.lieSlain}</span></li>
-        <li><span>Riddle solved</span><span>+${info.riddleSolved}</span></li>
-      </ul>
+    <div class="event-points-popover-backdrop${pointsPopoverOpen ? " open" : ""}" id="event-points-popover-backdrop">
+      <div class="event-points-popover">
+        <button class="event-points-popover-close" id="event-points-popover-close" aria-label="Close">✕</button>
+        <h3 class="event-points-popover-title">✨ How to Earn Points</h3>
+        <ul class="event-points-info-list">
+          <li><span>New quest logged, by rarity</span><span>${min}–${max}</span></li>
+          <li><span>Quest completed</span><span>+${info.questCompleted}</span></li>
+          <li><span>Lie slain</span><span>+${info.lieSlain}</span></li>
+          <li><span>Riddle solved</span><span>+${info.riddleSolved}</span></li>
+        </ul>
+      </div>
     </div>`;
+}
+
+function wirePointsPopover() {
+  const helpButton = document.getElementById("event-points-help-button");
+  const backdrop = document.getElementById("event-points-popover-backdrop");
+  const closeButton = document.getElementById("event-points-popover-close");
+  if (helpButton) {
+    helpButton.addEventListener("click", () => {
+      pointsPopoverOpen = true;
+      render();
+    });
+  }
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      pointsPopoverOpen = false;
+      render();
+    });
+  }
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) {
+        pointsPopoverOpen = false;
+        render();
+      }
+    });
+  }
 }
 
 function render() {
@@ -117,7 +152,9 @@ function render() {
           <span class="event-countdown-label">${escapeHtml(cachedConfig.eventName || "Event")} starts in</span>
           <span class="event-countdown-value">${formatDuration(startAt - now)}</span>
         </div>
-      </div>`;
+      </div>
+      ${renderPointsPopover()}`;
+    wirePointsPopover();
     return;
   }
 
@@ -145,12 +182,13 @@ function render() {
         <div class="event-progress-label"><span>Community Goal</span><span>${points.toLocaleString()} / ${goal.toLocaleString()}</span></div>
         <div class="event-progress-bar"><div class="event-progress-fill" style="width:${pct}%"></div></div>
       </div>
-      ${renderPointsInfoBar()}
       <div class="event-leaderboard-block">
         <h3 class="event-leaderboard-title">🏆 Top Lightbearers</h3>
         ${renderLeaderboard(cachedConfig.contributors)}
       </div>
-    </div>`;
+    </div>
+    ${renderPointsPopover()}`;
+  wirePointsPopover();
 }
 
 async function refreshConfig() {

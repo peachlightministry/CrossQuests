@@ -19,7 +19,7 @@ const ADMIN_EMAIL = "officecolorstyle@yahoo.com";
 const EVENT_DURATION_MS = (5 * 24 + 4) * 60 * 60 * 1000;
 const EVENT_NAME = "Event: The Lightbearers";
 const EVENT_DESCRIPTION =
-  "Work together with the community — log new quests, complete side quests, slay lies, and solve daily riddles to reach 10,000 points as one.";
+  "Work together with your fellow Christians to earn 10,000 points. Collect entries to your logbook, complete quests, solve a daily bible riddle (in inbox) together. Join the Community to be able to communicate.";
 const EVENT_REWARD_COINS = 20;
 const EVENT_REWARD_SKINS = ["divine"];
 
@@ -216,7 +216,21 @@ if (eventLaunchButton) {
       const ref = doc(window.firebaseDb, "event", "config");
       const snap = await getDoc(ref);
       if (snap.exists() && snap.data().active) {
-        eventRiddleStatus.textContent = "Event is already running — use \"End Event Now\" first to relaunch.";
+        // Already running — don't reset progress, just push the latest
+        // name/description/reward text from code onto the live doc, so
+        // wording fixes don't need an end+relaunch to take effect.
+        await setDoc(
+          ref,
+          {
+            eventName: EVENT_NAME,
+            eventDescription: EVENT_DESCRIPTION,
+            rewardCoins: EVENT_REWARD_COINS,
+            rewardSkins: EVENT_REWARD_SKINS,
+          },
+          { merge: true }
+        );
+        eventRiddleStatus.textContent = "Event already running — synced the latest name/description/reward text.";
+        document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
         return;
       }
       await setDoc(ref, freshEventConfig(Date.now()));
