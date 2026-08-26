@@ -7,6 +7,8 @@ import {
   query,
   where,
   getDocs,
+  doc,
+  getDoc,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const CLAIMED_GIFTS_KEY = "jsq-inbox-claimed-gifts";
@@ -26,18 +28,45 @@ function addToIdSet(key, id) {
   localStorage.setItem(key, JSON.stringify([...set]));
 }
 
+// The community Event's goal reward isn't a real gifts/ doc — every player's
+// device independently derives the same synthetic, stable-ID item from
+// event/config once rewardIssued flips true, so it just shows up in every
+// inbox without needing a write permission a regular player doesn't have.
+async function fetchEventReward() {
+  const db = window.firebaseDb;
+  try {
+    const snap = await getDoc(doc(db, "event", "config"));
+    if (!snap.exists()) return null;
+    const data = snap.data();
+    if (!data.rewardIssued) return null;
+    return {
+      id: `event-reward-${data.startAt || "evt"}`,
+      coins: data.rewardCoins || 1,
+      spins: 0,
+      skins: [],
+      message: "🎉 The community reached the 10,000-point goal together!",
+      createdAt: { toMillis: () => data.startAt || Date.now() },
+    };
+  } catch (err) {
+    console.error("Failed to load event reward:", err);
+    return null;
+  }
+}
+
 async function fetchGifts() {
   const user = window.firebaseAuth && window.firebaseAuth.currentUser;
   if (!user) return [];
   const db = window.firebaseDb;
   const results = [];
   try {
-    const [mineSnap, globalSnap] = await Promise.all([
+    const [mineSnap, globalSnap, eventReward] = await Promise.all([
       getDocs(query(collection(db, "gifts"), where("toUid", "==", user.uid))),
       getDocs(query(collection(db, "gifts"), where("toUid", "==", null))),
+      fetchEventReward(),
     ]);
     mineSnap.forEach((d) => results.push({ id: d.id, ...d.data() }));
     globalSnap.forEach((d) => results.push({ id: d.id, ...d.data() }));
+    if (eventReward) results.push(eventReward);
   } catch (err) {
     console.error("Failed to load gifts:", err);
   }

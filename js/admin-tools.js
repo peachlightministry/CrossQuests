@@ -15,6 +15,9 @@ import {
 
 const ADMIN_EMAIL = "officecolorstyle@yahoo.com";
 
+// The live community Event runs for exactly 5 days 4 hours once launched.
+const EVENT_DURATION_MS = (5 * 24 + 4) * 60 * 60 * 1000;
+
 function isAdmin() {
   const user = window.firebaseAuth && window.firebaseAuth.currentUser;
   return !!user && user.email === ADMIN_EMAIL;
@@ -172,6 +175,68 @@ if (messageForm) {
     } catch (err) {
       console.error(err);
       messageStatus.textContent = "Failed to send message.";
+    }
+  });
+}
+
+// ---- Event: post today's riddle (first post launches the countdown) ----
+
+const eventRiddleForm = document.getElementById("dev-event-riddle-form");
+const eventRiddleInput = document.getElementById("dev-event-riddle-input");
+const eventRiddleStatus = document.getElementById("dev-event-riddle-status");
+const eventEndButton = document.getElementById("dev-event-end-button");
+
+if (eventRiddleForm) {
+  eventRiddleForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = eventRiddleInput.value.trim();
+    if (!text) return;
+    eventRiddleStatus.textContent = "Posting…";
+    try {
+      const ref = doc(window.firebaseDb, "event", "config");
+      const snap = await getDoc(ref);
+      const now = Date.now();
+      // Only set on first-ever post — this is what actually launches the
+      // event and starts its 5d4h countdown. Later riddle posts just
+      // update the riddle text and leave the running countdown alone.
+      const base = snap.exists()
+        ? {}
+        : {
+            startAt: now,
+            endAt: now + EVENT_DURATION_MS,
+            active: true,
+            goalPoints: 10000,
+            communityPoints: 0,
+            rewardIssued: false,
+            rewardCoins: 1,
+          };
+      await setDoc(
+        ref,
+        { ...base, todaysRiddle: text, riddleUpdatedAt: serverTimestamp() },
+        { merge: true }
+      );
+      eventRiddleStatus.textContent = snap.exists()
+        ? "Riddle updated."
+        : "Event launched! Countdown started.";
+      eventRiddleForm.reset();
+      document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
+    } catch (err) {
+      console.error(err);
+      eventRiddleStatus.textContent = "Failed to post riddle.";
+    }
+  });
+}
+
+if (eventEndButton) {
+  eventEndButton.addEventListener("click", async () => {
+    eventRiddleStatus.textContent = "Ending…";
+    try {
+      await setDoc(doc(window.firebaseDb, "event", "config"), { active: false }, { merge: true });
+      eventRiddleStatus.textContent = "Event ended.";
+      document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
+    } catch (err) {
+      console.error(err);
+      eventRiddleStatus.textContent = "Failed to end event.";
     }
   });
 }
