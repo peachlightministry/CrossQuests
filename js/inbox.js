@@ -13,6 +13,7 @@ import {
 
 const CLAIMED_GIFTS_KEY = "jsq-inbox-claimed-gifts";
 const READ_MESSAGES_KEY = "jsq-inbox-read-messages";
+const READ_RIDDLES_KEY = "jsq-inbox-read-riddles";
 
 function getIdSet(key) {
   try {
@@ -43,8 +44,8 @@ async function fetchEventReward() {
       id: `event-reward-${data.startAt || "evt"}`,
       coins: data.rewardCoins || 1,
       spins: 0,
-      skins: [],
-      message: "🎉 The community reached the 10,000-point goal together!",
+      skins: Array.isArray(data.rewardSkins) ? data.rewardSkins : [],
+      message: `🎉 The community reached the 10,000-point goal in ${data.eventName || "the Event"}!`,
       createdAt: { toMillis: () => data.startAt || Date.now() },
     };
   } catch (err) {
@@ -71,6 +72,33 @@ async function fetchGifts() {
     console.error("Failed to load gifts:", err);
   }
   return results;
+}
+
+// Today's riddle also shows up as its own inbox item (not just on the Event
+// page) — reading it for the first time is what triggers the red "!" alert
+// to clear, and also awards this player's one-time +55 contribution for it.
+async function fetchEventRiddle() {
+  const db = window.firebaseDb;
+  try {
+    const snap = await getDoc(doc(db, "event", "config"));
+    if (!snap.exists()) return null;
+    const data = snap.data();
+    if (!data.active || !data.todaysRiddle) return null;
+    const endAt = typeof data.endAt === "number" ? data.endAt : 0;
+    if (Date.now() > endAt) return null;
+    const stamp =
+      data.riddleUpdatedAt && typeof data.riddleUpdatedAt.toMillis === "function"
+        ? data.riddleUpdatedAt.toMillis()
+        : data.startAt || 0;
+    return {
+      id: `event-riddle-${stamp}`,
+      text: data.todaysRiddle,
+      sentAt: data.riddleUpdatedAt || { toMillis: () => stamp },
+    };
+  } catch (err) {
+    console.error("Failed to load event riddle:", err);
+    return null;
+  }
 }
 
 async function fetchMessages() {
@@ -112,15 +140,32 @@ const inboxBackdrop = document.getElementById("inbox-modal-backdrop");
 const inboxClose = document.getElementById("inbox-modal-close");
 const inboxList = document.getElementById("inbox-list");
 const inboxBadge = document.getElementById("inbox-badge");
+const inboxRiddleAlert = document.getElementById("inbox-riddle-alert");
 
 async function renderInbox() {
   if (!inboxList) return;
   inboxList.innerHTML = '<p class="inbox-empty">Loading…</p>';
-  const [gifts, messages] = await Promise.all([fetchGifts(), fetchMessages()]);
+  const [gifts, messages, riddle] = await Promise.all([fetchGifts(), fetchMessages(), fetchEventRiddle()]);
   const claimed = getIdSet(CLAIMED_GIFTS_KEY);
   const read = getIdSet(READ_MESSAGES_KEY);
+  const readRiddles = getIdSet(READ_RIDDLES_KEY);
 
   const items = [];
+  if (riddle) {
+    const isNew = !readRiddles.has(riddle.id);
+    items.push({
+      sortKey: riddle.sentAt,
+      html: `
+        <div class="inbox-item ${isNew ? "unclaimed" : "claimed"}">
+          <div class="inbox-item-title">🧩 Daily Riddle</div>
+          <div class="inbox-item-body">${riddle.text}</div>
+        </div>`,
+    });
+    if (isNew) {
+      addToIdSet(READ_RIDDLES_KEY, riddle.id);
+      if (typeof window.jsqContributeEventPoints === "function") window.jsqContributeEventPoints(55);
+    }
+  }
   gifts.forEach((g) => {
     const parts = [];
     if (g.coins) parts.push(`${g.coins} coins`);
@@ -174,18 +219,25 @@ async function renderInbox() {
 }
 
 async function refreshInboxBadge() {
-  if (!inboxBadge) return;
+  if (!inboxBadge && !inboxRiddleAlert) return;
   const user = window.firebaseAuth && window.firebaseAuth.currentUser;
   if (!user) {
-    inboxBadge.hidden = true;
+    if (inboxBadge) inboxBadge.hidden = true;
+    if (inboxRiddleAlert) inboxRiddleAlert.hidden = true;
     return;
   }
-  const [gifts, messages] = await Promise.all([fetchGifts(), fetchMessages()]);
+  const [gifts, messages, riddle] = await Promise.all([fetchGifts(), fetchMessages(), fetchEventRiddle()]);
   const claimed = getIdSet(CLAIMED_GIFTS_KEY);
   const read = getIdSet(READ_MESSAGES_KEY);
-  const total = gifts.filter((g) => !claimed.has(g.id)).length + messages.filter((m) => !read.has(m.id)).length;
-  inboxBadge.textContent = String(total);
-  inboxBadge.hidden = total === 0;
+  const readRiddles = getIdSet(READ_RIDDLES_KEY);
+  if (inboxBadge) {
+    const total = gifts.filter((g) => !claimed.has(g.id)).length + messages.filter((m) => !read.has(m.id)).length;
+    inboxBadge.textContent = String(total);
+    inboxBadge.hidden = total === 0;
+  }
+  if (inboxRiddleAlert) {
+    inboxRiddleAlert.hidden = !riddle || readRiddles.has(riddle.id);
+  }
 }
 
 if (inboxButton && inboxBackdrop && inboxClose) {
@@ -204,6 +256,9 @@ if (inboxButton && inboxBackdrop && inboxClose) {
 
 document.addEventListener("jsq-auth-changed", (e) => {
   if (e.detail.user) refreshInboxBadge();
+});
+document.addEventListener("jsq-event-config-changed", () => {
+  refreshInboxBadge();
 });
 if (window.jsqFirebaseAuthSettled && window.jsqFirebaseCurrentUser) {
   refreshInboxBadge();

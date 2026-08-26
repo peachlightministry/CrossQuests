@@ -1,7 +1,7 @@
-// Renders the live Event page: countdown, today's riddle, and the shared
-// community progress bar toward the point goal. Config lives in Firestore
-// (event/config) so the countdown and progress stay in sync across every
-// player's device.
+// Renders the live Event page: name, countdown, today's riddle, the shared
+// community progress bar, a per-player contribution leaderboard, and an
+// event-info card. Config lives in Firestore (event/config) so all of this
+// stays in sync across every player's device.
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const NO_EVENT_HTML =
@@ -12,6 +12,16 @@ let cachedConfig = null;
 let tickTimer = null;
 let pollTimer = null;
 
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[c]));
+}
+
 function formatDuration(ms) {
   const clamped = Math.max(0, ms);
   const totalSeconds = Math.floor(clamped / 1000);
@@ -20,6 +30,48 @@ function formatDuration(ms) {
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = totalSeconds % 60;
   return `${d}d ${String(h).padStart(2, "0")}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+}
+
+function skinName(id) {
+  const c = Array.isArray(window.COSMETICS) ? window.COSMETICS.find((c) => c.id === id) : null;
+  return c ? c.name : id;
+}
+
+function renderLeaderboard(contributors) {
+  const rows = Object.values(contributors || {})
+    .filter((c) => c && c.points > 0)
+    .sort((a, b) => b.points - a.points)
+    .slice(0, 15);
+  if (rows.length === 0) {
+    return '<p class="event-leaderboard-empty">No contributions yet — be the first!</p>';
+  }
+  return `
+    <ol class="event-leaderboard-list">
+      ${rows
+        .map(
+          (r, i) => `
+        <li class="event-leaderboard-row">
+          <span class="event-leaderboard-rank">#${i + 1}</span>
+          <span class="event-leaderboard-name">${escapeHtml(r.username || "Anonymous")}</span>
+          <span class="event-leaderboard-points">${(r.points || 0).toLocaleString()} pts</span>
+        </li>`
+        )
+        .join("")}
+    </ol>`;
+}
+
+function renderInfoCard(config) {
+  const rewardParts = [];
+  if (config.rewardCoins) rewardParts.push(`${config.rewardCoins} coins`);
+  if (Array.isArray(config.rewardSkins) && config.rewardSkins.length) {
+    rewardParts.push(`${config.rewardSkins.map(skinName).join(", ")} skin`);
+  }
+  return `
+    <div class="event-info-card">
+      <div class="event-info-name">${escapeHtml(config.eventName || "Event")}</div>
+      ${config.eventDescription ? `<p class="event-info-description">${escapeHtml(config.eventDescription)}</p>` : ""}
+      ${rewardParts.length ? `<p class="event-info-reward">🏆 Reward: ${rewardParts.join(" + ")}</p>` : ""}
+    </div>`;
 }
 
 function render() {
@@ -42,7 +94,7 @@ function render() {
     liveArea.innerHTML = `
       <div class="event-live">
         <div class="event-countdown-block">
-          <span class="event-countdown-label">Event starts in</span>
+          <span class="event-countdown-label">${escapeHtml(cachedConfig.eventName || "Event")} starts in</span>
           <span class="event-countdown-value">${formatDuration(startAt - now)}</span>
         </div>
       </div>`;
@@ -57,7 +109,7 @@ function render() {
     : ended
     ? `<p class="event-status-message">This event has ended. Final score: ${points.toLocaleString()} / ${goal.toLocaleString()}.</p>`
     : `<div class="event-countdown-block">
-        <span class="event-countdown-label">Event ends in</span>
+        <span class="event-countdown-label">${escapeHtml(cachedConfig.eventName || "Event")} ends in</span>
         <span class="event-countdown-value">${formatDuration(endAt - now)}</span>
       </div>`;
 
@@ -65,7 +117,7 @@ function render() {
     !ended && cachedConfig.todaysRiddle
       ? `<div class="event-riddle-block">
           <span class="event-riddle-day">Day ${dayIndex} of 5</span>
-          <p class="event-riddle-text">🧩 ${cachedConfig.todaysRiddle}</p>
+          <p class="event-riddle-text">🧩 ${escapeHtml(cachedConfig.todaysRiddle)}</p>
           <p class="event-riddle-hint">Solve it together in our Discord!</p>
         </div>`
       : "";
@@ -78,6 +130,11 @@ function render() {
         <div class="event-progress-label"><span>Community Goal</span><span>${points.toLocaleString()} / ${goal.toLocaleString()}</span></div>
         <div class="event-progress-bar"><div class="event-progress-fill" style="width:${pct}%"></div></div>
       </div>
+      <div class="event-leaderboard-block">
+        <h3 class="event-leaderboard-title">🏆 Top Lightbearers</h3>
+        ${renderLeaderboard(cachedConfig.contributors)}
+      </div>
+      ${renderInfoCard(cachedConfig)}
     </div>`;
 }
 

@@ -2444,7 +2444,7 @@ body.woh-theme {
 /* Event page: username capture */
 .event-username-card,
 .event-status-card {
-  max-width: 480px;
+  max-width: 560px;
   margin: 0 auto;
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -2606,6 +2606,90 @@ body.woh-theme {
   margin: 0;
   font-weight: 700;
   color: var(--accent-dark);
+}
+
+.event-leaderboard-block {
+  text-align: left;
+}
+
+.event-leaderboard-title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-family: 'Cinzel', serif;
+  color: var(--accent-dark);
+}
+
+.event-leaderboard-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.event-leaderboard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.event-leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  font-size: 0.85rem;
+}
+
+.event-leaderboard-rank {
+  font-weight: 800;
+  color: var(--accent-dark);
+  min-width: 28px;
+}
+
+.event-leaderboard-name {
+  flex: 1;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-leaderboard-points {
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.event-info-card {
+  text-align: left;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 14px;
+}
+
+.event-info-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.event-info-description {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.event-info-reward {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
 /* ===== Ornate Navbar ===== */
@@ -2943,6 +3027,33 @@ body.woh-theme {
 
 .inbox-badge[hidden] {
   display: none;
+}
+
+.inbox-riddle-alert {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  background: #e63946;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 900;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px var(--card-bg, #fffaf0);
+  animation: inboxRiddlePulse 1.4s ease-in-out infinite;
+}
+
+.inbox-riddle-alert[hidden] {
+  display: none;
+}
+
+@keyframes inboxRiddlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
 }
 
 .inbox-modal-backdrop {

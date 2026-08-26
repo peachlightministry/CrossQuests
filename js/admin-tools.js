@@ -17,6 +17,11 @@ const ADMIN_EMAIL = "officecolorstyle@yahoo.com";
 
 // The live community Event runs for exactly 5 days 4 hours once launched.
 const EVENT_DURATION_MS = (5 * 24 + 4) * 60 * 60 * 1000;
+const EVENT_NAME = "Event: The Lightbearers";
+const EVENT_DESCRIPTION =
+  "Work together with the Discord community — log new quests, complete side quests, slay lies, and solve daily riddles to reach 10,000 points as one.";
+const EVENT_REWARD_COINS = 20;
+const EVENT_REWARD_SKINS = ["divine"];
 
 function isAdmin() {
   const user = window.firebaseAuth && window.firebaseAuth.currentUser;
@@ -202,13 +207,17 @@ if (eventRiddleForm) {
       const base = snap.exists()
         ? {}
         : {
+            eventName: EVENT_NAME,
+            eventDescription: EVENT_DESCRIPTION,
             startAt: now,
             endAt: now + EVENT_DURATION_MS,
             active: true,
             goalPoints: 10000,
             communityPoints: 0,
             rewardIssued: false,
-            rewardCoins: 1,
+            rewardCoins: EVENT_REWARD_COINS,
+            rewardSkins: EVENT_REWARD_SKINS,
+            contributors: {},
           };
       await setDoc(
         ref,
