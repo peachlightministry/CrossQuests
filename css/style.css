@@ -2575,6 +2575,36 @@ body.woh-theme {
   font-style: italic;
 }
 
+.event-solution-block {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.event-solution-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+
+.event-solution-riddle {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.event-solution-text {
+  margin: 0;
+  font-weight: 600;
+}
+
 .event-progress-block {
   text-align: left;
 }

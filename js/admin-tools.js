@@ -184,49 +184,86 @@ if (messageForm) {
   });
 }
 
-// ---- Event: post today's riddle (first post launches the countdown) ----
+// ---- Event: launch on its own, post riddles (+solutions) independently ----
 
+const eventLaunchButton = document.getElementById("dev-event-launch-button");
 const eventRiddleForm = document.getElementById("dev-event-riddle-form");
 const eventRiddleInput = document.getElementById("dev-event-riddle-input");
+const eventSolutionInput = document.getElementById("dev-event-solution-input");
 const eventRiddleStatus = document.getElementById("dev-event-riddle-status");
 const eventEndButton = document.getElementById("dev-event-end-button");
+
+function freshEventConfig(now) {
+  return {
+    eventName: EVENT_NAME,
+    eventDescription: EVENT_DESCRIPTION,
+    startAt: now,
+    endAt: now + EVENT_DURATION_MS,
+    active: true,
+    goalPoints: 10000,
+    communityPoints: 0,
+    rewardIssued: false,
+    rewardCoins: EVENT_REWARD_COINS,
+    rewardSkins: EVENT_REWARD_SKINS,
+    contributors: {},
+    todaysRiddle: "",
+    todaysSolution: "",
+    previousRiddle: "",
+    previousSolution: "",
+  };
+}
+
+if (eventLaunchButton) {
+  eventLaunchButton.addEventListener("click", async () => {
+    eventRiddleStatus.textContent = "Launching…";
+    try {
+      const ref = doc(window.firebaseDb, "event", "config");
+      const snap = await getDoc(ref);
+      if (snap.exists() && snap.data().active) {
+        eventRiddleStatus.textContent = "Event is already running — use \"End Event Now\" first to relaunch.";
+        return;
+      }
+      await setDoc(ref, freshEventConfig(Date.now()));
+      eventRiddleStatus.textContent = "Event launched! Countdown started.";
+      document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
+    } catch (err) {
+      console.error(err);
+      eventRiddleStatus.textContent = "Failed to launch event.";
+    }
+  });
+}
 
 if (eventRiddleForm) {
   eventRiddleForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = eventRiddleInput.value.trim();
+    const solution = eventSolutionInput.value.trim();
     if (!text) return;
     eventRiddleStatus.textContent = "Posting…";
     try {
       const ref = doc(window.firebaseDb, "event", "config");
       const snap = await getDoc(ref);
-      const now = Date.now();
-      // Only set on first-ever post — this is what actually launches the
-      // event and starts its 5d4h countdown. Later riddle posts just
-      // update the riddle text and leave the running countdown alone.
-      const base = snap.exists()
-        ? {}
-        : {
-            eventName: EVENT_NAME,
-            eventDescription: EVENT_DESCRIPTION,
-            startAt: now,
-            endAt: now + EVENT_DURATION_MS,
-            active: true,
-            goalPoints: 10000,
-            communityPoints: 0,
-            rewardIssued: false,
-            rewardCoins: EVENT_REWARD_COINS,
-            rewardSkins: EVENT_REWARD_SKINS,
-            contributors: {},
-          };
+      // Posting a riddle before anything is launched starts the event too,
+      // same as the Launch button — the riddle just isn't required for it.
+      const base = snap.exists() && snap.data().active ? {} : freshEventConfig(Date.now());
+      // Whatever was "today's" riddle/solution becomes "yesterday's" —
+      // that's what reveals the previous solution on the Event page.
+      const prevRiddle = snap.exists() ? snap.data().todaysRiddle || "" : "";
+      const prevSolution = snap.exists() ? snap.data().todaysSolution || "" : "";
       await setDoc(
         ref,
-        { ...base, todaysRiddle: text, riddleUpdatedAt: serverTimestamp() },
+        {
+          ...base,
+          previousRiddle: prevRiddle,
+          previousSolution: prevSolution,
+          todaysRiddle: text,
+          todaysSolution: solution,
+          riddleUpdatedAt: serverTimestamp(),
+        },
         { merge: true }
       );
-      eventRiddleStatus.textContent = snap.exists()
-        ? "Riddle updated."
-        : "Event launched! Countdown started.";
+      eventRiddleStatus.textContent =
+        snap.exists() && snap.data().active ? "Riddle updated." : "Event launched with this riddle! Countdown started.";
       eventRiddleForm.reset();
       document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
     } catch (err) {

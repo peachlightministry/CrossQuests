@@ -302,9 +302,11 @@
       </div>
 
       <div class="dev-tools-group">
-        <h4>Event — Today's Riddle</h4>
+        <h4>Event</h4>
+        <button type="button" class="dev-tools-submit" id="dev-event-launch-button">Launch Event (5d 4h)</button>
         <form id="dev-event-riddle-form">
-          <textarea id="dev-event-riddle-input" rows="2" placeholder="Today's riddle for the Discord community" required></textarea>
+          <textarea id="dev-event-riddle-input" rows="2" placeholder="Today's riddle for the Discord community (optional)"></textarea>
+          <textarea id="dev-event-solution-input" rows="2" placeholder="Solution (revealed once you post the next riddle)"></textarea>
           <div class="dev-inline-row">
             <button type="submit" class="dev-tools-submit">Post Riddle</button>
             <button type="button" class="dev-tools-submit dev-tools-secondary" id="dev-event-end-button">End Event Now</button>

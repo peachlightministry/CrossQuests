@@ -122,10 +122,20 @@ function render() {
         </div>`
       : "";
 
+  const solutionHtml =
+    cachedConfig.previousRiddle && cachedConfig.previousSolution
+      ? `<div class="event-solution-block">
+          <span class="event-solution-label">✅ Yesterday's Solution</span>
+          <p class="event-solution-riddle">${escapeHtml(cachedConfig.previousRiddle)}</p>
+          <p class="event-solution-text">${escapeHtml(cachedConfig.previousSolution)}</p>
+        </div>`
+      : "";
+
   liveArea.innerHTML = `
     <div class="event-live">
       ${topBlockHtml}
       ${riddleHtml}
+      ${solutionHtml}
       <div class="event-progress-block">
         <div class="event-progress-label"><span>Community Goal</span><span>${points.toLocaleString()} / ${goal.toLocaleString()}</span></div>
         <div class="event-progress-bar"><div class="event-progress-fill" style="width:${pct}%"></div></div>
