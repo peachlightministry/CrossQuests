@@ -3,7 +3,7 @@
 // leaderboard. Runs as a Firestore transaction so concurrent players racing
 // to cross the 10,000-point goal can't double-count or double-issue the
 // reward — exactly one transaction ever flips rewardIssued from false to true.
-import { doc, runTransaction } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { doc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 // Points awarded for a brand-new quest log entry (a fresh spin result),
 // keyed by rarity id. Mustard Seed is the base, +10 per ascending rarity,
@@ -78,3 +78,47 @@ window.jsqContributeEventPoints = async function (amount) {
     console.error("Event point contribution failed:", err);
   }
 };
+
+// Plain classic scripts (achievements.js, shop.js) can't read Firestore
+// directly, so this module — loaded on every page — periodically caches the
+// bits of event state they need into localStorage: whether an event is
+// currently active (for the Shop's Event-tab alert) and whether the signed-
+// in player is in the leaderboard's top 10 (for the Race Marked Out
+// achievement).
+async function refreshEventCache() {
+  const db = window.firebaseDb;
+  const user = window.firebaseAuth && window.firebaseAuth.currentUser;
+  if (!db) return;
+  try {
+    const snap = await getDoc(doc(db, "event", "config"));
+    if (!snap.exists()) {
+      localStorage.setItem("jsq-event-cache", JSON.stringify({ active: false, inTop10: false }));
+      return;
+    }
+    const data = snap.data();
+    const active = !!data.active && Date.now() <= (data.endAt || 0);
+    let inTop10 = false;
+    if (user && data.contributors) {
+      const topUids = Object.entries(data.contributors)
+        .filter(([, c]) => c && c.points > 0)
+        .sort((a, b) => b[1].points - a[1].points)
+        .slice(0, 10)
+        .map(([uid]) => uid);
+      inTop10 = topUids.includes(user.uid);
+    }
+    localStorage.setItem("jsq-event-cache", JSON.stringify({ active, inTop10 }));
+  } catch (err) {
+    console.error("Event cache refresh failed:", err);
+  }
+}
+
+document.addEventListener("jsq-auth-changed", (e) => {
+  if (e.detail.user) refreshEventCache();
+});
+document.addEventListener("jsq-event-config-changed", () => {
+  refreshEventCache();
+});
+if (window.jsqFirebaseAuthSettled && window.jsqFirebaseCurrentUser) {
+  refreshEventCache();
+}
+setInterval(refreshEventCache, 30000);

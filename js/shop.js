@@ -13,6 +13,51 @@ function openShop() {
   document.body.classList.add('modal-open');
 }
 
+// "!" alerts: Upgrades/Cosmetics light up while something in them is
+// affordable and not yet owned; Event lights up while an event is live
+// (cached by event-points.js, since this plain script can't reach Firestore
+// itself). The Shop button lights up if any of the three do.
+function computeUpgradesAlert() {
+  const points = getPoints();
+  return UPGRADES.some(
+    (item) => !isUpgradeOwned(item.id) && !item.comingSoon && !item.disabledLabel && points >= item.price
+  );
+}
+
+function computeCosmeticsAlert() {
+  const points = getPoints();
+  const equipped = getEquippedCosmetic();
+  return COSMETICS.filter(
+    (item) => !item.hidden || isCosmeticOwned(item.id) || (item.revealCheck && item.revealCheck())
+  ).some((item) => !isCosmeticOwned(item.id) && equipped !== item.id && points >= item.price);
+}
+
+function computeEventAlert() {
+  try {
+    return JSON.parse(localStorage.getItem('jsq-event-cache') || '{}').active === true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function refreshShopBadges() {
+  const upgradesAlert = computeUpgradesAlert();
+  const cosmeticsAlert = computeCosmeticsAlert();
+  const eventAlert = computeEventAlert();
+
+  const tabAlerts = {
+    upgrades: document.querySelector('[data-tab-alert="upgrades"]'),
+    cosmetics: document.querySelector('[data-tab-alert="cosmetics"]'),
+    event: document.querySelector('[data-tab-alert="event"]'),
+  };
+  if (tabAlerts.upgrades) tabAlerts.upgrades.hidden = !upgradesAlert;
+  if (tabAlerts.cosmetics) tabAlerts.cosmetics.hidden = !cosmeticsAlert;
+  if (tabAlerts.event) tabAlerts.event.hidden = !eventAlert;
+
+  const shopAlertBadge = document.getElementById('shop-alert-badge');
+  if (shopAlertBadge) shopAlertBadge.hidden = !(upgradesAlert || cosmeticsAlert || eventAlert);
+}
+
 function closeShop() {
   shopBackdrop.classList.remove('open');
   document.body.classList.remove('modal-open');
@@ -72,6 +117,7 @@ function renderCosmeticsPanel() {
       }
     });
   });
+  refreshShopBadges();
 }
 
 function renderUpgradesPanel() {
@@ -114,6 +160,7 @@ function renderUpgradesPanel() {
       }
     });
   });
+  refreshShopBadges();
 }
 
 shopButton.addEventListener('click', () => {
@@ -130,3 +177,6 @@ document.addEventListener('keydown', (e) => {
 shopTabs.forEach((btn) => {
   btn.addEventListener('click', () => switchShopTab(btn.dataset.tab));
 });
+
+refreshShopBadges();
+setInterval(refreshShopBadges, 5000);

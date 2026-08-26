@@ -25,12 +25,6 @@ const COSMETICS = [
     description: 'Blinding white and gold, with embers rising from the seat.',
   },
   {
-    id: 'divine2',
-    name: 'Divine Glory 2',
-    price: 1,
-    description: 'Same glory, with a light that actually travels the frame in a figure-eight.',
-  },
-  {
     id: 'world-over-heaven',
     name: 'The World Over Heaven',
     price: 0,

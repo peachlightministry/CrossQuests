@@ -1172,6 +1172,31 @@ body.modal-open {
   color: white;
 }
 
+.shop-tab {
+  position: relative;
+}
+
+.shop-tab-alert {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #e63946;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 900;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px var(--card-bg, #fffaf0);
+}
+
+.shop-tab-alert[hidden] {
+  display: none;
+}
+
 .shop-panel {
   display: none;
   text-align: left;
@@ -2814,6 +2839,28 @@ body.woh-theme {
   border: none;
   cursor: pointer;
   transition: filter 0.15s ease;
+  position: relative;
+}
+
+.shop-alert-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  background: #e63946;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 900;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px #fffaf0;
+}
+
+.shop-alert-badge[hidden] {
+  display: none;
 }
 
 .ornate-segment.group-start {

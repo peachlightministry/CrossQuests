@@ -23,6 +23,19 @@ function getTotalQuestsCompletedEver() {
   }
 }
 
+// Firestore data isn't reachable from this plain script, so event-points.js
+// (a module, loaded on every page) periodically caches whether the signed-in
+// player is currently in the event leaderboard's top 10, and this just reads
+// that cache. Once claimed, the achievement stays claimed even if a later
+// event or a drop in rank makes the condition go false again.
+function isInEventTop10() {
+  try {
+    return JSON.parse(localStorage.getItem('jsq-event-cache') || '{}').inTop10 === true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function recordQuestCompletionForAchievements() {
   const next = getTotalQuestsCompletedEver() + 1;
   try {
@@ -52,8 +65,8 @@ const ACHIEVEMENTS = [
     id: 'race-marked-out',
     name: 'The Race Marked Out',
     description: 'Place top 10 in an event.',
-    condition: () => false,
-    progress: () => 'Coming soon',
+    condition: () => isInEventTop10(),
+    progress: () => (isInEventTop10() ? "You're in the Top 10!" : 'Check the Event leaderboard'),
   },
   {
     id: 'doom-slayer',
@@ -80,8 +93,8 @@ const ACHIEVEMENTS = [
     id: 'brotherhood',
     name: 'Brotherhood',
     description: 'Join the Discord community.',
-    condition: () => false,
-    progress: () => 'Coming soon',
+    condition: () => true,
+    progress: () => 'Ready to claim!',
   },
 ];
 
