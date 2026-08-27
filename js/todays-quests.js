@@ -100,6 +100,19 @@ function completeTodaysQuestEntryAt(index) {
   return entry;
 }
 
+// Removes a specific entry by identity (questId + spunAt) rather than array
+// index, since the index can shift between when a quest is completed and
+// when its short "completed" glow finishes and it's actually removed.
+function removeTodaysQuestEntry(questId, spunAt) {
+  const state = getTodaysQuestsState();
+  const idx = state.entries.findIndex((e) => e.questId === questId && e.spunAt === spunAt);
+  if (idx !== -1) {
+    state.entries.splice(idx, 1);
+    writeTodaysQuestsState(state);
+  }
+  return state;
+}
+
 function canCompleteEntry(entry) {
   return !entry.completed && Date.now() - entry.spunAt >= QUEST_COMPLETE_COOLDOWN_MS;
 }

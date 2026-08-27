@@ -357,6 +357,17 @@ function completeQuestEntry(index, buttonEl) {
   if (buttonEl) triggerSubtleConfetti(buttonEl);
 
   renderTodaysQuestsPanel();
+
+  // Show the "Completed" glow briefly, then drop the card so claimed
+  // quests don't linger in the list.
+  const { questId, spunAt } = entry;
+  setTimeout(() => {
+    removeTodaysQuestEntry(questId, spunAt);
+    refreshTodaysQuestsBadge();
+    if (todaysQuestsPanel.classList.contains('open')) {
+      renderTodaysQuestsPanel();
+    }
+  }, 1200);
 }
 
 todaysQuestsToggle.addEventListener('click', () => {
