@@ -291,9 +291,7 @@ function renderTodaysQuestsPanel() {
     const { rarity, quest } = found;
 
     let actionHtml;
-    if (entry.completed) {
-      actionHtml = `<span class="todays-quest-done-badge">✅ Completed — +${rarity.points} earned</span>`;
-    } else if (canCompleteEntry(entry)) {
+    if (canCompleteEntry(entry)) {
       actionHtml = `
         <button class="quest-done-button" data-index="${index}">✅ Side quest is done!</button>
         <span class="quest-reward-label">+${rarity.points} ${crossIconSVG(14)}</span>
@@ -305,10 +303,8 @@ function renderTodaysQuestsPanel() {
       `;
     }
 
-    const justCompleted = entry.completed && entry.completedAt && Date.now() - entry.completedAt < 1500;
-
     return `
-      <div class="todays-quest-card${justCompleted ? ' just-completed' : ''}" style="border-left-color:${rarity.color}">
+      <div class="todays-quest-card" style="border-left-color:${rarity.color}">
         <span class="todays-quest-rarity" style="color:${rarity.color}">${rarity.name}</span>
         <span class="todays-quest-text">${quest.text}</span>
         <div class="todays-quest-action">${actionHtml}</div>
@@ -325,7 +321,6 @@ function renderTodaysQuestsPanel() {
     const fresh = getTodaysQuestsState();
     let needsFullRerender = false;
     fresh.entries.forEach((entry, index) => {
-      if (entry.completed) return;
       if (canCompleteEntry(entry)) {
         needsFullRerender = true;
       } else {
@@ -340,10 +335,10 @@ function renderTodaysQuestsPanel() {
 function completeQuestEntry(index, buttonEl) {
   const state = getTodaysQuestsState();
   const entry = state.entries[index];
-  if (!entry || entry.completed || !canCompleteEntry(entry)) return;
+  if (!entry || !canCompleteEntry(entry)) return;
 
   const found = findRarityAndQuest(entry.rarityId, entry.questId);
-  completeTodaysQuestEntryAt(index);
+  claimTodaysQuestEntryAt(index);
 
   if (found) {
     addPoints(found.rarity.points);
@@ -356,18 +351,8 @@ function completeQuestEntry(index, buttonEl) {
   playSound('questComplete', { volume: 0.45 });
   if (buttonEl) triggerSubtleConfetti(buttonEl);
 
+  refreshTodaysQuestsBadge();
   renderTodaysQuestsPanel();
-
-  // Show the "Completed" glow briefly, then drop the card so claimed
-  // quests don't linger in the list.
-  const { questId, spunAt } = entry;
-  setTimeout(() => {
-    removeTodaysQuestEntry(questId, spunAt);
-    refreshTodaysQuestsBadge();
-    if (todaysQuestsPanel.classList.contains('open')) {
-      renderTodaysQuestsPanel();
-    }
-  }, 1200);
 }
 
 todaysQuestsToggle.addEventListener('click', () => {

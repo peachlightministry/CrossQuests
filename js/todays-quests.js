@@ -1,12 +1,9 @@
-// Tracks spun-but-not-yet-collected quests, plus per-quest completion state.
-// Entries stick around indefinitely until completed — there's no rolling
-// time window anymore. A completed entry stays visible for the rest of the
-// current visit (so the "collected" state is still readable), then is
-// pruned the next time the player actually leaves and comes back — see
-// pruneCompletedEntriesOncePerSession() below. Independent of the quest
-// spin limiter's own bookkeeping, but driven by the same spins.
+// Tracks spun-but-not-yet-claimed quests. An entry sticks around (no more
+// rolling time window) until the player marks it done, at which point it's
+// removed immediately — claimed quests don't linger in the list.
+// Independent of the quest spin limiter's own bookkeeping, but driven by
+// the same spins.
 const TODAYS_QUESTS_KEY = 'jsq-todays-quests';
-const TODAYS_QUESTS_PRUNED_FLAG_KEY = 'jsq-todays-quests-pruned-this-session';
 const QUEST_COMPLETE_COOLDOWN_MS = 15 * 60 * 1000;
 
 function getTodaysQuestsState() {
@@ -31,39 +28,12 @@ function writeTodaysQuestsState(state) {
   }
 }
 
-// Runs once per browser session (sessionStorage, so a same-tab reload
-// doesn't count as "leaving"): drops any already-completed entries so they
-// vanish the next time the player actually returns to the site, without
-// yanking them away mid-visit right after being collected.
-function pruneCompletedEntriesOncePerSession() {
-  let alreadyPruned = false;
-  try {
-    alreadyPruned = sessionStorage.getItem(TODAYS_QUESTS_PRUNED_FLAG_KEY) === '1';
-  } catch (e) {
-    // ignore — worst case, pruning just runs again
-  }
-  if (alreadyPruned) return;
-  const state = getTodaysQuestsState();
-  const remaining = state.entries.filter((e) => !e.completed);
-  if (remaining.length !== state.entries.length) {
-    writeTodaysQuestsState({ entries: remaining });
-  }
-  try {
-    sessionStorage.setItem(TODAYS_QUESTS_PRUNED_FLAG_KEY, '1');
-  } catch (e) {
-    // ignore
-  }
-}
-pruneCompletedEntriesOncePerSession();
-
 function addTodaysQuestEntry(rarity, quest) {
   const state = getTodaysQuestsState();
   state.entries.push({
     questId: quest.id,
     rarityId: rarity.id,
     spunAt: Date.now(),
-    completed: false,
-    completedAt: null,
   });
   writeTodaysQuestsState(state);
   return state;
@@ -78,8 +48,6 @@ function replaceLastTodaysQuestEntry(rarity, quest) {
     questId: quest.id,
     rarityId: rarity.id,
     spunAt: Date.now(),
-    completed: false,
-    completedAt: null,
   };
   if (state.entries.length > 0) {
     state.entries[state.entries.length - 1] = newEntry;
@@ -90,31 +58,19 @@ function replaceLastTodaysQuestEntry(rarity, quest) {
   return state;
 }
 
-function completeTodaysQuestEntryAt(index) {
+// Marks an entry done and removes it from the list in one step, returning
+// the entry (so the caller can still award points for its rarity).
+function claimTodaysQuestEntryAt(index) {
   const state = getTodaysQuestsState();
   const entry = state.entries[index];
-  if (!entry || entry.completed) return null;
-  entry.completed = true;
-  entry.completedAt = Date.now();
+  if (!entry) return null;
+  state.entries.splice(index, 1);
   writeTodaysQuestsState(state);
   return entry;
 }
 
-// Removes a specific entry by identity (questId + spunAt) rather than array
-// index, since the index can shift between when a quest is completed and
-// when its short "completed" glow finishes and it's actually removed.
-function removeTodaysQuestEntry(questId, spunAt) {
-  const state = getTodaysQuestsState();
-  const idx = state.entries.findIndex((e) => e.questId === questId && e.spunAt === spunAt);
-  if (idx !== -1) {
-    state.entries.splice(idx, 1);
-    writeTodaysQuestsState(state);
-  }
-  return state;
-}
-
 function canCompleteEntry(entry) {
-  return !entry.completed && Date.now() - entry.spunAt >= QUEST_COMPLETE_COOLDOWN_MS;
+  return Date.now() - entry.spunAt >= QUEST_COMPLETE_COOLDOWN_MS;
 }
 
 function msUntilEntryReady(entry) {
