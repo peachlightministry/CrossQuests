@@ -2668,37 +2668,16 @@ body.woh-theme {
   color: var(--accent-dark);
 }
 
-.event-progress-block {
-  text-align: left;
-}
-
-.event-progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.event-progress-bar {
-  width: 100%;
-  height: 14px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-}
-
-.event-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #e0b957 0%, #f0d78c 100%);
-  transition: width 0.4s ease;
-}
-
 .event-goal-banner {
   margin: 0;
   font-weight: 700;
   color: var(--accent-dark);
+}
+
+.event-rank-line {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink);
 }
 
 .event-leaderboard-block {
@@ -2738,6 +2717,12 @@ body.woh-theme {
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.03);
   font-size: 0.85rem;
+}
+
+.event-leaderboard-row.champion {
+  background: linear-gradient(90deg, rgba(224, 185, 87, 0.25) 0%, rgba(240, 215, 140, 0.15) 100%);
+  border: 1px solid rgba(224, 185, 87, 0.4);
+  font-weight: 700;
 }
 
 .event-leaderboard-rank {
@@ -2855,6 +2840,13 @@ body.woh-theme {
   color: var(--accent-dark);
 }
 
+.event-points-popover-note {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
 .event-info-description {
   margin: 0 0 8px;
   font-size: 0.85rem;
@@ -2866,6 +2858,92 @@ body.woh-theme {
   margin: 0;
   font-weight: 700;
   font-size: 0.85rem;
+}
+
+/* ===== Crusade Bounties ===== */
+
+.crusade-bounties-block {
+  text-align: left;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.crusade-bounties-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-family: 'Cinzel', serif;
+  color: var(--accent-dark);
+}
+
+.crusade-bounties-refresh-status {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.crusade-bounties-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.bounty-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--card-bg);
+  border-left: 5px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow);
+}
+
+.bounty-card.completed {
+  opacity: 0.75;
+}
+
+.bounty-tier {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.bounty-desc {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.bounty-progress {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.bounty-status {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.bounty-refresh-button {
+  align-self: flex-start;
+  margin-top: 4px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+
+.bounty-refresh-button:hover {
+  color: var(--accent-dark);
+  border-color: var(--accent-dark);
 }
 
 /* ===== Ornate Navbar ===== */

@@ -110,6 +110,17 @@ function applyGlobalCosmeticTheme() {
 }
 applyGlobalCosmeticTheme();
 
+// Event points for spending coins in the Shop, plus the "buy something"
+// bounty — shared by both purchase paths below.
+function contributeShopPurchasePoints(price) {
+  if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function" && price > 0) {
+    window.jsqContributeEventPoints(price * window.jsqEventPointsInfo().coinSpentRatio);
+  }
+  if (typeof window.jsqCheckBounties === "function") {
+    window.jsqCheckBounties("shop-purchase", {});
+  }
+}
+
 function buyCosmetic(id) {
   const item = COSMETICS.find((c) => c.id === id);
   if (!item || isCosmeticOwned(id)) return false;
@@ -124,6 +135,7 @@ function buyCosmetic(id) {
     // ignore
   }
   setEquippedCosmetic(id);
+  contributeShopPurchasePoints(item.price);
   return true;
 }
 
@@ -222,5 +234,6 @@ function buyUpgrade(id) {
   } catch (e) {
     // ignore
   }
+  contributeShopPurchasePoints(item.price);
   return true;
 }

@@ -194,8 +194,11 @@ function finishSpin({ rarity, quest }) {
   renderReelContent({ rarity, quest }, { isNew });
   addTodaysQuestEntry(rarity, quest);
   refreshTodaysQuestsBadge({ pop: true });
-  if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsForRarity === "function") {
-    window.jsqContributeEventPoints(window.jsqEventPointsForRarity(rarity.id));
+  if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
+    window.jsqContributeEventPoints(window.jsqEventPointsInfo().questLogged);
+  }
+  if (typeof window.jsqCheckBounties === "function") {
+    window.jsqCheckBounties("quest-logged", { rarity });
   }
 
   reel.classList.remove('spinning');
@@ -393,8 +396,11 @@ function completeQuestEntry(index, buttonEl) {
 
   if (found) {
     addPoints(found.rarity.points);
-    if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
-      window.jsqContributeEventPoints(window.jsqEventPointsInfo().questCompleted);
+    if (typeof window.jsqContributeEventPoints === "function") {
+      window.jsqContributeEventPoints(found.rarity.oddsN);
+    }
+    if (typeof window.jsqCheckBounties === "function") {
+      window.jsqCheckBounties("quest-completed", { rarity: found.rarity });
     }
   }
   recordQuestCompletionForPerfectionist();

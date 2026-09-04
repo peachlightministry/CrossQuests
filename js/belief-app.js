@@ -156,6 +156,9 @@ function conquerBelief(belief) {
   if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
     window.jsqContributeEventPoints(window.jsqEventPointsInfo().lieSlain);
   }
+  if (typeof window.jsqCheckBounties === "function") {
+    window.jsqCheckBounties("lie-slain", {});
+  }
   recordBeliefConquestForPerfectionist();
   playSound('conquered', { volume: 0.7 });
   updateProgressSummary();

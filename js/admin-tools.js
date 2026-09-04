@@ -15,13 +15,13 @@ import {
 
 const ADMIN_EMAIL = "officecolorstyle@yahoo.com";
 
-// The live community Event runs for exactly 5 days 4 hours once launched.
-const EVENT_DURATION_MS = (5 * 24 + 4) * 60 * 60 * 1000;
-const EVENT_NAME = "Event: The Lightbearers";
+// The live Event runs for exactly 7 days once launched.
+const EVENT_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+const EVENT_NAME = "Event: The Crusade";
 const EVENT_DESCRIPTION =
-  "Work together with your fellow Christians to earn 10,000 points. Collect entries to your logbook, complete quests, solve a daily bible riddle (in inbox) together. Join the Community to be able to communicate.";
-const EVENT_REWARD_COINS = 20;
-const EVENT_REWARD_SKINS = ["divine"];
+  "Compete against your fellow Christians for the top of the leaderboard. Complete quests, slay lies, log in daily, and finish bounties to earn points — whoever ranks #1 when the week ends wins the World Over Heaven skin.";
+const EVENT_REWARD_COINS = 0;
+const EVENT_REWARD_SKINS = ["world-over-heaven"];
 
 function isAdmin() {
   const user = window.firebaseAuth && window.firebaseAuth.currentUser;
@@ -187,10 +187,7 @@ if (messageForm) {
 // ---- Event: launch the countdown ----
 
 const eventLaunchButton = document.getElementById("dev-event-launch-button");
-const eventRiddleForm = document.getElementById("dev-event-riddle-form");
-const eventRiddleInput = document.getElementById("dev-event-riddle-input");
-const eventSolutionInput = document.getElementById("dev-event-solution-input");
-const eventRiddleStatus = document.getElementById("dev-event-riddle-status");
+const eventStatus = document.getElementById("dev-event-status");
 const eventEndButton = document.getElementById("dev-event-end-button");
 
 function freshEventConfig(now) {
@@ -200,18 +197,18 @@ function freshEventConfig(now) {
     startAt: now,
     endAt: now + EVENT_DURATION_MS,
     active: true,
-    goalPoints: 10000,
-    communityPoints: 0,
     rewardIssued: false,
     rewardCoins: EVENT_REWARD_COINS,
     rewardSkins: EVENT_REWARD_SKINS,
+    winnerUid: null,
+    winnerUsername: null,
     contributors: {},
   };
 }
 
 if (eventLaunchButton) {
   eventLaunchButton.addEventListener("click", async () => {
-    eventRiddleStatus.textContent = "Launching…";
+    eventStatus.textContent = "Launching…";
     try {
       const ref = doc(window.firebaseDb, "event", "config");
       const snap = await getDoc(ref);
@@ -229,58 +226,30 @@ if (eventLaunchButton) {
           },
           { merge: true }
         );
-        eventRiddleStatus.textContent = "Event already running — synced the latest name/description/reward text.";
+        eventStatus.textContent = "Event already running — synced the latest name/description/reward text.";
         document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
         return;
       }
       await setDoc(ref, freshEventConfig(Date.now()));
-      eventRiddleStatus.textContent = "Event launched! Countdown started.";
+      eventStatus.textContent = "Event launched! Countdown started.";
       document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
     } catch (err) {
       console.error(err);
-      eventRiddleStatus.textContent = "Failed to launch event.";
-    }
-  });
-}
-
-// ---- Riddle: posted separately from the event itself, straight to every
-// player's inbox as its own item with an answer box. Not tied to whether
-// the event is running — the +points for solving it just won't land unless
-// an event is currently active (event-points.js already guards that). ----
-
-if (eventRiddleForm) {
-  eventRiddleForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const text = eventRiddleInput.value.trim();
-    const answer = eventSolutionInput.value.trim();
-    if (!text || !answer) return;
-    eventRiddleStatus.textContent = "Posting…";
-    try {
-      await addDoc(collection(window.firebaseDb, "eventRiddles"), {
-        text,
-        answer,
-        sentAt: serverTimestamp(),
-      });
-      eventRiddleStatus.textContent = "Riddle sent to every inbox.";
-      eventRiddleForm.reset();
-      document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
-    } catch (err) {
-      console.error(err);
-      eventRiddleStatus.textContent = "Failed to post riddle.";
+      eventStatus.textContent = "Failed to launch event.";
     }
   });
 }
 
 if (eventEndButton) {
   eventEndButton.addEventListener("click", async () => {
-    eventRiddleStatus.textContent = "Ending…";
+    eventStatus.textContent = "Ending…";
     try {
       await setDoc(doc(window.firebaseDb, "event", "config"), { active: false }, { merge: true });
-      eventRiddleStatus.textContent = "Event ended.";
+      eventStatus.textContent = "Event ended.";
       document.dispatchEvent(new CustomEvent("jsq-event-config-changed"));
     } catch (err) {
       console.error(err);
-      eventRiddleStatus.textContent = "Failed to end event.";
+      eventStatus.textContent = "Failed to end event.";
     }
   });
 }

@@ -1,7 +1,8 @@
-// Renders the live Event page: name, countdown, today's riddle, the shared
-// community progress bar, a per-player contribution leaderboard, and an
-// event-info card. Config lives in Firestore (event/config) so all of this
-// stays in sync across every player's device.
+// Renders the live Event page: name, countdown, an individual leaderboard
+// (highest score wins), and an event-info card. Config lives in Firestore
+// (event/config) so all of this stays in sync across every player's device.
+// Bounties (a separate, purely local/per-player feature) are rendered by
+// crusade-bounties.js into its own container on this same page.
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const NO_EVENT_HTML =
@@ -38,13 +39,23 @@ function skinName(id) {
   return c ? c.name : id;
 }
 
+function currentUserRank(contributors) {
+  const user = window.firebaseAuth && window.firebaseAuth.currentUser;
+  if (!user) return null;
+  const ranked = Object.entries(contributors || {})
+    .filter(([, c]) => c && c.points > 0)
+    .sort((a, b) => b[1].points - a[1].points);
+  const idx = ranked.findIndex(([uid]) => uid === user.uid);
+  return idx === -1 ? null : { rank: idx + 1, total: ranked.length, points: ranked[idx][1].points };
+}
+
 function renderLeaderboard(contributors) {
   const rows = Object.values(contributors || {})
     .filter((c) => c && c.points > 0)
     .sort((a, b) => b.points - a.points)
     .slice(0, 15);
   if (rows.length === 0) {
-    return '<p class="event-leaderboard-empty">No contributions yet — be the first!</p>';
+    return '<p class="event-leaderboard-empty">No one has scored yet — be the first!</p>';
   }
   return `
     <ol class="event-leaderboard-list">
@@ -54,9 +65,10 @@ function renderLeaderboard(contributors) {
           const titleHtml = title
             ? `<span class="event-leaderboard-title" style="color:${title.color}">${escapeHtml(title.name)}</span>`
             : "";
+          const rankLabel = i === 0 ? "👑" : `#${i + 1}`;
           return `
-        <li class="event-leaderboard-row">
-          <span class="event-leaderboard-rank">#${i + 1}</span>
+        <li class="event-leaderboard-row${i === 0 ? " champion" : ""}">
+          <span class="event-leaderboard-rank">${rankLabel}</span>
           <span class="event-leaderboard-name">${escapeHtml(r.username || "Anonymous")}${titleHtml}</span>
           <span class="event-leaderboard-points">${(r.points || 0).toLocaleString()} pts</span>
         </li>`;
@@ -67,10 +79,10 @@ function renderLeaderboard(contributors) {
 
 function renderInfoCard(config) {
   const rewardParts = [];
-  if (config.rewardCoins) rewardParts.push(`${config.rewardCoins} coins`);
   if (Array.isArray(config.rewardSkins) && config.rewardSkins.length) {
     rewardParts.push(`${config.rewardSkins.map(skinName).join(", ")} skin`);
   }
+  if (config.rewardCoins) rewardParts.push(`${config.rewardCoins} coins`);
   return `
     <div class="event-info-card">
       <div class="event-info-name-row">
@@ -78,30 +90,27 @@ function renderInfoCard(config) {
         <button class="event-points-help-button" id="event-points-help-button" title="How to earn points" aria-label="How to earn points">?</button>
       </div>
       ${config.eventDescription ? `<p class="event-info-description">${escapeHtml(config.eventDescription)}</p>` : ""}
-      ${rewardParts.length ? `<p class="event-info-reward">🏆 Reward: ${rewardParts.join(" + ")}</p>` : ""}
+      ${rewardParts.length ? `<p class="event-info-reward">🏆 Reward (top of the leaderboard only): ${rewardParts.join(" + ")}</p>` : ""}
     </div>`;
 }
 
-// Kept deliberately vague on the new-quest-log range (25-500) rather than
-// itemizing every rarity's exact value — spelling that out lets players
-// back-calculate which rarity they just got before the reveal even lands.
 function renderPointsPopover() {
   if (typeof window.jsqEventPointsInfo !== "function") return "";
   const info = window.jsqEventPointsInfo();
-  const values = info.newQuestByRarity.map((r) => r.points);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
   return `
     <div class="event-points-popover-backdrop${pointsPopoverOpen ? " open" : ""}" id="event-points-popover-backdrop">
       <div class="event-points-popover">
         <button class="event-points-popover-close" id="event-points-popover-close" aria-label="Close">✕</button>
         <h3 class="event-points-popover-title">✨ How to Earn Points</h3>
         <ul class="event-points-info-list">
-          <li><span>New quest logged, by rarity</span><span>${min}–${max}</span></li>
-          <li><span>Quest completed</span><span>+${info.questCompleted}</span></li>
-          <li><span>Lie slain</span><span>+${info.lieSlain}</span></li>
-          <li><span>Riddle solved</span><span>+${info.riddleSolved}</span></li>
+          <li><span>Daily log in</span><span>+${info.dailyLogin}</span></li>
+          <li><span>Claim an achievement</span><span>+${info.achievementClaim}</span></li>
+          <li><span>Slay a lie</span><span>+${info.lieSlain}</span></li>
+          <li><span>Log a new side quest (any rarity)</span><span>+${info.questLogged}</span></li>
+          <li><span>Complete a side quest</span><span>+its rarity's odds</span></li>
+          <li><span>Spend coins in the Shop</span><span>+${info.coinSpentRatio} per coin</span></li>
         </ul>
+        <p class="event-points-popover-note">A side quest's rarity odds ARE its completion points — e.g. a 1-in-30 quest is worth 30 points completed.</p>
       </div>
     </div>`;
 }
@@ -143,10 +152,9 @@ function render() {
   const now = Date.now();
   const startAt = cachedConfig.startAt || 0;
   const endAt = cachedConfig.endAt || 0;
-  const goal = cachedConfig.goalPoints || 10000;
-  const points = Math.min(goal, cachedConfig.communityPoints || 0);
-  const pct = goal > 0 ? Math.min(100, Math.round((points / goal) * 100)) : 0;
   const rewardIssued = !!cachedConfig.rewardIssued;
+  const user = window.firebaseAuth && window.firebaseAuth.currentUser;
+  const isWinner = rewardIssued && user && cachedConfig.winnerUid === user.uid;
 
   if (now < startAt) {
     liveArea.innerHTML = `
@@ -163,31 +171,31 @@ function render() {
   }
 
   const ended = now > endAt;
+  const rank = currentUserRank(cachedConfig.contributors);
 
-  const topBlockHtml = rewardIssued
-    ? '<p class="event-goal-banner">🎉 Goal reached — thank you for questing together! Check your inbox for a reward.</p>'
+  const topBlockHtml = isWinner
+    ? '<p class="event-goal-banner">🏆 You won! Check your inbox for your reward, Champion.</p>'
     : ended
-    ? `<p class="event-status-message">This event has ended. Final score: ${points.toLocaleString()} / ${goal.toLocaleString()}.</p>`
+    ? `<p class="event-status-message">This event has ended.${
+        cachedConfig.winnerUsername ? ` 👑 ${escapeHtml(cachedConfig.winnerUsername)} takes the crown!` : ""
+      }</p>`
     : `<div class="event-countdown-block">
         <span class="event-countdown-label">${escapeHtml(cachedConfig.eventName || "Event")} ends in</span>
         <span class="event-countdown-value">${formatDuration(endAt - now)}</span>
       </div>`;
 
-  const inboxHintHtml = !ended
-    ? '<p class="event-inbox-hint">📬 Check your inbox for today\'s riddle!</p>'
-    : "";
+  const rankHtml =
+    !ended && rank
+      ? `<p class="event-rank-line">You're currently <strong>#${rank.rank}</strong> of ${rank.total} with <strong>${rank.points.toLocaleString()}</strong> points.</p>`
+      : "";
 
   liveArea.innerHTML = `
     <div class="event-live">
       ${renderInfoCard(cachedConfig)}
       ${topBlockHtml}
-      ${inboxHintHtml}
-      <div class="event-progress-block">
-        <div class="event-progress-label"><span>Community Goal</span><span>${points.toLocaleString()} / ${goal.toLocaleString()}</span></div>
-        <div class="event-progress-bar"><div class="event-progress-fill" style="width:${pct}%"></div></div>
-      </div>
+      ${rankHtml}
       <div class="event-leaderboard-block">
-        <h3 class="event-leaderboard-title">🏆 Top Lightbearers</h3>
+        <h3 class="event-leaderboard-title">🏆 Leaderboard</h3>
         ${renderLeaderboard(cachedConfig.contributors)}
       </div>
     </div>
@@ -220,8 +228,8 @@ document.addEventListener("jsq-auth-changed", (e) => {
     startTimers();
   }
 });
-// Fired by admin-tools.js right after a riddle post or "End Event Now" —
-// avoids waiting up to 20s for the next poll to reflect the admin's own edit.
+// Fired by admin-tools.js right after launching/ending the event — avoids
+// waiting up to 20s for the next poll to reflect the admin's own edit.
 document.addEventListener("jsq-event-config-changed", () => {
   refreshConfig();
 });

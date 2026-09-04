@@ -132,6 +132,9 @@ function claimAchievement(id) {
     // ignore
   }
   addPoints(ACHIEVEMENT_REWARD_POINTS);
+  if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
+    window.jsqContributeEventPoints(window.jsqEventPointsInfo().achievementClaim);
+  }
   return true;
 }
 

@@ -216,6 +216,7 @@
     <div id="event-live-area">
       <p class="event-status-message">There's no event running right now. You'll get a notification in your mailbox when there's an event scheduled.</p>
     </div>
+    <div id="crusade-bounties-panel"></div>
   </div>
 </div>
 
@@ -326,17 +327,11 @@
 
       <div class="dev-tools-group">
         <h4>Event</h4>
-        <button type="button" class="dev-tools-submit" id="dev-event-launch-button">Launch Event (5d 4h)</button>
-        <p class="dev-tools-subhead">Daily riddle — sent to every inbox, separate from launching</p>
-        <form id="dev-event-riddle-form">
-          <textarea id="dev-event-riddle-input" rows="2" placeholder="Today's riddle for the community" required></textarea>
-          <textarea id="dev-event-solution-input" rows="2" placeholder="Answer to check player submissions against" required></textarea>
-          <div class="dev-inline-row">
-            <button type="submit" class="dev-tools-submit">Post Riddle</button>
-            <button type="button" class="dev-tools-submit dev-tools-secondary" id="dev-event-end-button">End Event Now</button>
-          </div>
-          <p class="dev-tools-status" id="dev-event-riddle-status"></p>
-        </form>
+        <div class="dev-inline-row">
+          <button type="button" class="dev-tools-submit" id="dev-event-launch-button">Launch Event (7 days)</button>
+          <button type="button" class="dev-tools-submit dev-tools-secondary" id="dev-event-end-button">End Event Now</button>
+        </div>
+        <p class="dev-tools-status" id="dev-event-status"></p>
       </div>
     </div>
   </div>
@@ -395,6 +390,7 @@
 <script src="js/belief-storage.js"></script>
 <script src="js/sound.js"></script>
 <script src="js/points.js"></script>
+<script src="js/crusade-bounties.js"></script>
 <script src="js/shop-data.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/achievements.js"></script>

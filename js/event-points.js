@@ -1,39 +1,24 @@
-// Feeds quest/belief activity into the shared community Event goal, and
-// tracks each signed-in player's own running contribution for the
-// leaderboard. Runs as a Firestore transaction so concurrent players racing
-// to cross the 10,000-point goal can't double-count or double-issue the
-// reward — exactly one transaction ever flips rewardIssued from false to true.
+// Feeds player activity into the current Event's leaderboard, and — once
+// the event's time is up — finalizes exactly one winner (the #1 ranked
+// player) via a Firestore transaction, same "exactly once, race-safe
+// across every client" pattern as the community-goal event this replaced.
 import { doc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-// Points awarded for a brand-new quest log entry (a fresh spin result),
-// keyed by rarity id. Mustard Seed is the base, +10 per ascending rarity,
-// with a bigger jump for the rarest ordinary tier and the secret tier.
-// Also doubles as the single source of truth for the "how to earn points"
-// info bar on the Event page — names here match RARITIES in quest-data.js.
-const RARITY_EVENT_POINTS = [
-  { id: "mustard-seed", name: "Mustard Seed", points: 25 },
-  { id: "loaves-and-fishes", name: "Loaves & Fishes", points: 35 },
-  { id: "widows-mite", name: "Widow's Mite", points: 45 },
-  { id: "wilderness-wanderer", name: "Wilderness Wanderer", points: 55 },
-  { id: "refiners-fire", name: "Refiner's Fire", points: 125 },
-  { id: "burning-bush", name: "Burning Bush (secret)", points: 500 },
-];
-
-const QUEST_COMPLETE_EVENT_POINTS = 20;
-const LIE_SLAIN_EVENT_POINTS = 20;
-const RIDDLE_SOLVED_EVENT_POINTS = 55;
-
-window.jsqEventPointsForRarity = function (rarityId) {
-  const entry = RARITY_EVENT_POINTS.find((r) => r.id === rarityId);
-  return entry ? entry.points : 0;
-};
+// Point sources for The Crusade. Also the single source of truth for the
+// "how to earn points" info popover on the Event page.
+const DAILY_LOGIN_POINTS = 10;
+const ACHIEVEMENT_CLAIM_POINTS = 30;
+const LIE_SLAIN_POINTS = 10;
+const QUEST_LOGGED_POINTS = 5;
+const COIN_SPENT_POINTS_RATIO = 1;
 
 window.jsqEventPointsInfo = function () {
   return {
-    newQuestByRarity: RARITY_EVENT_POINTS,
-    questCompleted: QUEST_COMPLETE_EVENT_POINTS,
-    lieSlain: LIE_SLAIN_EVENT_POINTS,
-    riddleSolved: RIDDLE_SOLVED_EVENT_POINTS,
+    dailyLogin: DAILY_LOGIN_POINTS,
+    achievementClaim: ACHIEVEMENT_CLAIM_POINTS,
+    lieSlain: LIE_SLAIN_POINTS,
+    questLogged: QUEST_LOGGED_POINTS,
+    coinSpentRatio: COIN_SPENT_POINTS_RATIO,
   };
 };
 
@@ -57,12 +42,6 @@ window.jsqContributeEventPoints = async function (amount) {
       if (!data.active) return;
       const endAt = typeof data.endAt === "number" ? data.endAt : 0;
       if (Date.now() > endAt) return;
-      const goal = data.goalPoints || 0;
-      const current = data.communityPoints || 0;
-      if (current >= goal) return;
-      const next = Math.min(goal, current + amount);
-      const update = { communityPoints: next };
-      if (next >= goal && !data.rewardIssued) update.rewardIssued = true;
 
       const equippedTitleId = typeof window.jsqGetEquippedTitle === "function" ? window.jsqGetEquippedTitle() : null;
       const contributors = { ...(data.contributors || {}) };
@@ -72,21 +51,83 @@ window.jsqContributeEventPoints = async function (amount) {
         username: eventUsername || existing.username || "Anonymous",
         titleId: equippedTitleId || null,
       };
-      update.contributors = contributors;
 
-      tx.update(ref, update);
+      tx.update(ref, { contributors });
     });
   } catch (err) {
     console.error("Event point contribution failed:", err);
   }
 };
 
-// Plain classic scripts (achievements.js, shop.js) can't read Firestore
-// directly, so this module — loaded on every page — periodically caches the
-// bits of event state they need into localStorage: whether an event is
-// currently active (for the Shop's Event-tab alert) and whether the signed-
-// in player is in the leaderboard's top 10 (for the Race Marked Out
-// achievement).
+// Called periodically once the event's end time has passed: races safely
+// against every other client to flip rewardIssued exactly once, crowning
+// whoever currently has the most points as the winner.
+async function maybeFinalizeWinner(cachedData) {
+  if (!cachedData || cachedData.rewardIssued) return;
+  // Over either because its 7 days ran out, or an admin ended it early.
+  const isOver = !cachedData.active || Date.now() > (cachedData.endAt || 0);
+  if (!isOver) return;
+  const db = window.firebaseDb;
+  if (!db) return;
+  try {
+    await runTransaction(db, async (tx) => {
+      const ref = doc(db, "event", "config");
+      const snap = await tx.get(ref);
+      if (!snap.exists()) return;
+      const data = snap.data();
+      if (data.rewardIssued) return;
+      if (data.active && Date.now() <= (data.endAt || 0)) return;
+      const ranked = Object.entries(data.contributors || {})
+        .filter(([, c]) => c && c.points > 0)
+        .sort((a, b) => b[1].points - a[1].points);
+      const update = { rewardIssued: true };
+      if (ranked.length > 0) {
+        update.winnerUid = ranked[0][0];
+        update.winnerUsername = ranked[0][1].username || "Anonymous";
+      }
+      tx.update(ref, update);
+    });
+  } catch (err) {
+    console.error("Winner finalization failed:", err);
+  }
+}
+
+// Push notifications, each fired at most once per event (deduped via a
+// localStorage flag keyed by the event's startAt) for players who've
+// granted notification permission.
+const ENDING_SOON_THRESHOLD_MS = 24 * 60 * 60 * 1000;
+
+function notifyOnce(flagKey, body) {
+  try {
+    if (localStorage.getItem(flagKey) === "1") return;
+    localStorage.setItem(flagKey, "1");
+  } catch (e) {
+    return;
+  }
+  if (typeof window.jsqFireNotification === "function") window.jsqFireNotification(body);
+}
+
+function maybeNotifyEventLifecycle(data) {
+  const startAt = data.startAt || 0;
+  if (data.active) {
+    notifyOnce(`jsq-notified-launch-${startAt}`, `${data.eventName || "A new event"} has started! Go check it out. ⚔️`);
+    const msLeft = (data.endAt || 0) - Date.now();
+    if (msLeft > 0 && msLeft <= ENDING_SOON_THRESHOLD_MS) {
+      notifyOnce(`jsq-notified-ending-${startAt}`, `${data.eventName || "The event"} ends soon — last chance to climb the leaderboard! ⏳`);
+    }
+  }
+  const user = window.firebaseAuth && window.firebaseAuth.currentUser;
+  if (data.rewardIssued && user && data.winnerUid === user.uid) {
+    notifyOnce(`jsq-notified-won-${startAt}`, `You won ${data.eventName || "the event"}! Check your inbox for your reward. 🏆`);
+  }
+}
+
+// Plain classic scripts (achievements.js, shop.js, crusade-bounties.js)
+// can't read Firestore directly, so this module — loaded on every page —
+// periodically caches the bits of event state they need into localStorage:
+// whether an event is currently active (for the Shop's Event-tab alert),
+// this player's current rank (for the leaderboard UI), and whether they
+// are the finalized winner (for the "Race Marked Out" achievement).
 async function refreshEventCache() {
   const db = window.firebaseDb;
   const user = window.firebaseAuth && window.firebaseAuth.currentUser;
@@ -100,12 +141,15 @@ async function refreshEventCache() {
     const data = snap.data();
     const timeExpired = Date.now() > (data.endAt || 0);
     const active = !!data.active && !timeExpired;
-    // The Race Marked Out achievement should reflect FINAL standings, not a
-    // mid-event snapshot that could still change — only compute it once the
-    // event has actually concluded (ended early by the admin, or timed out).
-    const ended = !data.active || timeExpired;
+
+    maybeNotifyEventLifecycle(data);
+
+    if (!data.rewardIssued && (!data.active || timeExpired)) {
+      await maybeFinalizeWinner(data);
+    }
+
     let inTop10 = false;
-    if (ended && user && data.contributors) {
+    if ((!data.active || timeExpired) && user && data.contributors) {
       const topUids = Object.entries(data.contributors)
         .filter(([, c]) => c && c.points > 0)
         .sort((a, b) => b[1].points - a[1].points)

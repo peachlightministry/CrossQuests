@@ -29,24 +29,27 @@ function addToIdSet(key, id) {
   localStorage.setItem(key, JSON.stringify([...set]));
 }
 
-// The community Event's goal reward isn't a real gifts/ doc — every player's
-// device independently derives the same synthetic, stable-ID item from
-// event/config once rewardIssued flips true, so it just shows up in every
-// inbox without needing a write permission a regular player doesn't have.
+// The Event's winner reward isn't a real gifts/ doc — the winning player's
+// own device derives this synthetic, stable-ID item from event/config once
+// rewardIssued flips true and winnerUid matches them, so it just shows up
+// in their inbox without needing a write permission a regular player
+// doesn't have. Nobody else's device produces this item.
 async function fetchEventReward() {
   const db = window.firebaseDb;
+  const user = window.firebaseAuth && window.firebaseAuth.currentUser;
+  if (!user) return null;
   try {
     const snap = await getDoc(doc(db, "event", "config"));
     if (!snap.exists()) return null;
     const data = snap.data();
-    if (!data.rewardIssued) return null;
+    if (!data.rewardIssued || data.winnerUid !== user.uid) return null;
     return {
       id: `event-reward-${data.startAt || "evt"}`,
-      coins: data.rewardCoins || 1,
+      coins: data.rewardCoins || 0,
       spins: 0,
       skins: Array.isArray(data.rewardSkins) ? data.rewardSkins : [],
-      message: `🎉 The community reached the 10,000-point goal in ${data.eventName || "the Event"}!`,
-      createdAt: { toMillis: () => data.startAt || Date.now() },
+      message: `🏆 You won ${data.eventName || "the Event"}! Congratulations, Champion.`,
+      createdAt: { toMillis: () => data.endAt || Date.now() },
     };
   } catch (err) {
     console.error("Failed to load event reward:", err);

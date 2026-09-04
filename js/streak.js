@@ -66,6 +66,9 @@ function checkDailyStreak() {
   }
   refreshStreakBadge();
   showStreakCelebration(next);
+  if (typeof window.jsqContributeEventPoints === "function" && typeof window.jsqEventPointsInfo === "function") {
+    window.jsqContributeEventPoints(window.jsqEventPointsInfo().dailyLogin);
+  }
 }
 
 window.jsqGetStreakCount = getStreakCount;

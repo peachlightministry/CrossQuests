@@ -38,25 +38,33 @@ window.addEventListener('appinstalled', () => {
   if (typeof renderNotificationsPanel === 'function') renderNotificationsPanel();
 });
 
-async function fireSpinResetNotification(kind) {
+// Generic notification firer — tries a registered service worker first
+// (required by some browsers, e.g. Android Chrome), falls back to a plain
+// Notification instance.
+async function fireNotification(body, title) {
   if (!isNotificationsGranted()) return;
-  const body =
-    kind === 'belief'
-      ? 'Your Slay a Lie spin has reset — go slay another lie! ⚔️'
-      : 'Your Side Quest spins have reset — go spin something new! 🎲';
   const options = { body, icon: 'img/peachlight-mark.png', badge: 'img/peachlight-mark.png' };
   try {
     if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.getRegistration();
       if (reg) {
-        await reg.showNotification('CrossQuests', options);
+        await reg.showNotification(title || 'CrossQuests', options);
         return;
       }
     }
-    new Notification('CrossQuests', options);
+    new Notification(title || 'CrossQuests', options);
   } catch (e) {
     console.error('Notification failed:', e);
   }
+}
+window.jsqFireNotification = fireNotification;
+
+function fireSpinResetNotification(kind) {
+  const body =
+    kind === 'belief'
+      ? 'Your Slay a Lie spin has reset — go slay another lie! ⚔️'
+      : 'Your Side Quest spins have reset — go spin something new! 🎲';
+  return fireNotification(body);
 }
 window.jsqFireSpinResetNotification = fireSpinResetNotification;
 
