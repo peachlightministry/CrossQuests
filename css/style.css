@@ -2170,10 +2170,10 @@ body.woh-theme {
     display: none;
   }
 
-  body.woh-theme:has(.hero) .brand,
-  body.woh-theme:has(.hero) .brand-cross,
-  body.woh-theme:has(.hero) .brand-name,
-  body.woh-theme:has(.hero) .brand-tagline {
+  /* The picture has its own "Jesus Side Quest" wordmark baked in up top —
+     hide the live logo's name/tagline text so it doesn't sit on top of it. */
+  body.woh-theme:has(.hero) .ornate-logo-name,
+  body.woh-theme:has(.hero) .ornate-logo-tagline {
     color: transparent;
   }
 
