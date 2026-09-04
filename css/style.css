@@ -2121,86 +2121,66 @@ body.woh-theme {
     flex-wrap: nowrap;
   }
 
-  /* Shop is drawn as its own button below-left of the nav strip, not
-     inline with the other nav items — positioned relative to .site-nav
-     itself, in nav-local percentages. */
-  body.woh-theme:has(.hero) .shop-button {
-    position: absolute;
-    top: 137.5%;
-    left: 10.15%;
-    width: 7.14%;
-    height: 93.75%;
-    background: transparent;
-    box-shadow: none;
+  /* Nav labels sit inside a soft pill, echoing how "Spin" is drawn as its
+     own framed segment of the nav bar in the picture — the old flat look,
+     not the gold segmented bar the rest of the site uses. These come
+     BEFORE the shop-button/cross-points overrides below on purpose: those
+     two also carry .ornate-segment (for their normal, non-WOH layout) and
+     need their own absolute-positioned, transparent styling to win. */
+  body.woh-theme:has(.hero) .ornate-bar {
+    border-top: none;
+    border-bottom: none;
   }
 
-  body.woh-theme:has(.hero) .shop-icon {
-    width: 55%;
-    height: auto;
-  }
-
-  body.woh-theme:has(.hero) .shop-label {
-    display: none;
-  }
-
-  /* The medallion coin icon stays baked in the picture (it never
-     changes) — only the live point number renders, right where the
-     picture's own placeholder digits were surgically removed. Pinned
-     absolutely (in nav-local %) rather than left in nav's flex flow, so
-     it always sits on that exact erased spot regardless of how much
-     padding the nav links need to clear the medallion on their side. */
-  body.woh-theme:has(.hero) .cross-points {
-    position: absolute;
-    top: 31.2%;
-    left: 95.4%;
-    width: 5.1%;
-    height: 56.2%;
-    background: transparent;
-    box-shadow: none;
-    color: #6b5013;
-    font-family: 'Cinzel', serif;
-    padding: 0;
-    margin: 0;
-    gap: 0;
-    justify-content: center;
-    align-items: center;
-  }
-
-  body.woh-theme:has(.hero) .cross-points .cross-icon {
-    display: none;
-  }
-
-  /* The picture has its own "Jesus Side Quest" wordmark baked in up top —
-     hide the live logo's name/tagline text so it doesn't sit on top of it. */
-  body.woh-theme:has(.hero) .ornate-logo-name,
-  body.woh-theme:has(.hero) .ornate-logo-tagline {
-    color: transparent;
-  }
-
-  /* Nav labels sit inside a soft pill, echoing how "Spin" is drawn as
-     its own framed segment of the nav bar in the picture. The current
-     page's pill reads a little stronger, matching "Spin" specifically. */
-  body.woh-theme:has(.hero) .nav-link {
+  body.woh-theme:has(.hero) .ornate-segment {
     font-family: 'Cinzel', Georgia, serif;
     font-weight: 600;
     color: #6b5013;
     background: rgba(255, 250, 240, 0.55);
     box-shadow: inset 0 0 0 1px rgba(201, 162, 39, 0.35);
     border-radius: 999px;
-    padding: 0.4em 0.7em;
+    height: auto;
+    padding: 0.4em 0.9em;
+    clip-path: none;
+    border-left: none;
   }
 
-  body.woh-theme:has(.hero) .nav-link.current {
+  body.woh-theme:has(.hero) .ornate-segment.current {
     color: #4a3208;
     font-weight: 700;
     background: #fffaf0;
     box-shadow: inset 0 0 0 1px rgba(201, 162, 39, 0.55);
   }
 
+  body.woh-theme:has(.hero) .ornate-segment.special {
+    background: rgba(255, 250, 240, 0.55);
+    color: #6b5013;
+    box-shadow: inset 0 0 0 1px rgba(201, 162, 39, 0.35);
+  }
+
   /* The baked nav bar has no slot for "Event" — hide it under this skin
      rather than let it crowd the nav's exact-width match to the picture. */
-  body.woh-theme:has(.hero) .nav-link[href="event.html"] {
+  body.woh-theme:has(.hero) .ornate-segment.event {
     display: none;
+  }
+
+  /* Plain text pills, like the old navbar — no gold icons alongside the
+     labels. */
+  body.woh-theme:has(.hero) .ornate-icon {
+    display: none;
+  }
+
+  /* Shop and Cross Points render as ordinary pills in the bar, styled the
+     same as every other segment above — simpler and more reliable than
+     trying to float them onto the picture's own baked "Shop" artwork,
+     which needs pixel-exact calibration this skin's current nav shape
+     doesn't have a reference for. */
+
+  /* The picture has its own "Jesus Side Quest" wordmark baked in up top —
+     hide the live logo's name/tagline text so it doesn't sit on top of it. */
+  body.woh-theme:has(.hero) .ornate-logo-name,
+  body.woh-theme:has(.hero) .ornate-logo-tagline {
+    color: transparent;
   }
 
   /* The picture already has its own greeting baked in — no live override,
