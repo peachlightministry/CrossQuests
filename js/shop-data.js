@@ -155,16 +155,13 @@ const UPGRADES = [
     name: 'Quest Luck 1',
     price: 30,
     description: 'Improves your odds of landing a rarer side quest.',
-    // Existing owners keep it working as normal — this only blocks new
-    // purchases while it's being reworked.
-    disabledLabel: 'Under bugfix',
   },
   {
     id: 'quest-luck-2',
     name: 'Quest Luck 2',
     price: 70,
     description: 'Improves your odds even further, stacking with Quest Luck 1.',
-    disabledLabel: 'Under bugfix',
+    requires: 'quest-luck-1',
   },
   {
     id: 'perfectionist',
@@ -214,6 +211,7 @@ function buyUpgrade(id) {
   const item = UPGRADES.find((u) => u.id === id);
   if (!item || isUpgradeOwned(id)) return false;
   if (item.comingSoon || item.disabledLabel) return false;
+  if (item.requires && !isUpgradeOwned(item.requires)) return false;
   if (getPoints() < item.price) return false;
 
   addPoints(-item.price);

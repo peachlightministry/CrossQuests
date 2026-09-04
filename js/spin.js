@@ -13,7 +13,7 @@ const ROLLED_RARITIES = RARITY_CHECK_ORDER.slice(0, -1);
 // listed here on purpose - it just keeps absorbing whatever's left over.
 const QUEST_LUCK_ODDS = {
   luck1: { 'loaves-and-fishes': 4, 'widows-mite': 8, 'wilderness-wanderer': 24, 'refiners-fire': 40, 'burning-bush': 90 },
-  luck2: { 'loaves-and-fishes': 3, 'widows-mite': 6, 'wilderness-wanderer': 18, 'refiners-fire': 30, 'burning-bush': 85 },
+  luck2: { 'loaves-and-fishes': 4, 'widows-mite': 6, 'wilderness-wanderer': 18, 'refiners-fire': 30, 'burning-bush': 85 },
 };
 
 function effectiveOddsN(rarity) {
