@@ -258,6 +258,25 @@ function formatMMSS(ms) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+function formatExpiryCountdown(ms) {
+  const totalMinutes = Math.max(0, Math.ceil(ms / 60000));
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  if (days > 0) return `${days}d ${hours}h`;
+  const minutes = totalMinutes % 60;
+  return `${hours}h ${minutes}m`;
+}
+
+// Identity (questId + spunAt) of the entry currently showing the "Are you
+// sure?" abandon prompt, if any -- tracked by identity rather than array
+// index so completing/abandoning some OTHER entry (which shifts indices)
+// can't make the prompt jump onto the wrong card.
+let abandonConfirmKey = null;
+
+function todaysQuestEntryKey(entry) {
+  return `${entry.questId}:${entry.spunAt}`;
+}
+
 function triggerSubtleConfetti(anchorEl) {
   const rect = anchorEl.getBoundingClientRect();
   const colors = ['#F2A541', '#66BB6A', '#4FC3F7', '#F06292'];
@@ -291,15 +310,23 @@ function renderTodaysQuestsPanel() {
     const { rarity, quest } = found;
 
     let actionHtml;
-    if (canCompleteEntry(entry)) {
+    if (abandonConfirmKey === todaysQuestEntryKey(entry)) {
+      actionHtml = `
+        <span class="quest-abandon-confirm-text">Are you sure?</span>
+        <button class="quest-abandon-confirm-button" data-index="${index}">Yes, remove it</button>
+        <button class="quest-abandon-cancel-button" data-index="${index}">Cancel</button>
+      `;
+    } else if (canCompleteEntry(entry)) {
       actionHtml = `
         <button class="quest-done-button" data-index="${index}">✅ Side quest is done!</button>
         <span class="quest-reward-label">+${rarity.points} ${crossIconSVG(14)}</span>
+        <button class="quest-abandon-button" data-index="${index}">I can't do it</button>
       `;
     } else {
       actionHtml = `
         <button class="quest-done-button" disabled>Ready in <span class="quest-cooldown" data-index="${index}">${formatMMSS(msUntilEntryReady(entry))}</span></button>
         <span class="quest-reward-label">+${rarity.points} ${crossIconSVG(14)}</span>
+        <button class="quest-abandon-button" data-index="${index}">I can't do it</button>
       `;
     }
 
@@ -307,6 +334,7 @@ function renderTodaysQuestsPanel() {
       <div class="todays-quest-card" style="border-left-color:${rarity.color}">
         <span class="todays-quest-rarity" style="color:${rarity.color}">${rarity.name}</span>
         <span class="todays-quest-text">${quest.text}</span>
+        <span class="todays-quest-expiry" data-index="${index}">Expires in ${formatExpiryCountdown(msUntilEntryExpires(entry))}</span>
         <div class="todays-quest-action">${actionHtml}</div>
       </div>
     `;
@@ -315,10 +343,31 @@ function renderTodaysQuestsPanel() {
   todaysQuestsPanel.querySelectorAll('.quest-done-button:not(:disabled)').forEach((btn) => {
     btn.addEventListener('click', () => completeQuestEntry(parseInt(btn.dataset.index, 10), btn));
   });
+  todaysQuestsPanel.querySelectorAll('.quest-abandon-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.index, 10);
+      const current = getTodaysQuestsState().entries[i];
+      if (current) abandonConfirmKey = todaysQuestEntryKey(current);
+      renderTodaysQuestsPanel();
+    });
+  });
+  todaysQuestsPanel.querySelectorAll('.quest-abandon-cancel-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      abandonConfirmKey = null;
+      renderTodaysQuestsPanel();
+    });
+  });
+  todaysQuestsPanel.querySelectorAll('.quest-abandon-confirm-button').forEach((btn) => {
+    btn.addEventListener('click', () => abandonQuestEntry(parseInt(btn.dataset.index, 10)));
+  });
 
   if (todaysQuestsTimer) clearInterval(todaysQuestsTimer);
   todaysQuestsTimer = setInterval(() => {
     const fresh = getTodaysQuestsState();
+    if (fresh.entries.length !== state.entries.length) {
+      renderTodaysQuestsPanel();
+      return;
+    }
     let needsFullRerender = false;
     fresh.entries.forEach((entry, index) => {
       if (canCompleteEntry(entry)) {
@@ -327,6 +376,8 @@ function renderTodaysQuestsPanel() {
         const el = todaysQuestsPanel.querySelector(`.quest-cooldown[data-index="${index}"]`);
         if (el) el.textContent = formatMMSS(msUntilEntryReady(entry));
       }
+      const expiryEl = todaysQuestsPanel.querySelector(`.todays-quest-expiry[data-index="${index}"]`);
+      if (expiryEl) expiryEl.textContent = `Expires in ${formatExpiryCountdown(msUntilEntryExpires(entry))}`;
     });
     if (needsFullRerender) renderTodaysQuestsPanel();
   }, 1000);
@@ -338,7 +389,7 @@ function completeQuestEntry(index, buttonEl) {
   if (!entry || !canCompleteEntry(entry)) return;
 
   const found = findRarityAndQuest(entry.rarityId, entry.questId);
-  claimTodaysQuestEntryAt(index);
+  removeTodaysQuestEntryAt(index);
 
   if (found) {
     addPoints(found.rarity.points);
@@ -355,9 +406,21 @@ function completeQuestEntry(index, buttonEl) {
   renderTodaysQuestsPanel();
 }
 
+// Abandoning a quest just removes it -- no points, no completion tracking.
+function abandonQuestEntry(index) {
+  const state = getTodaysQuestsState();
+  if (!state.entries[index]) return;
+  removeTodaysQuestEntryAt(index);
+  abandonConfirmKey = null;
+  playSound('click', { volume: 0.4 });
+  refreshTodaysQuestsBadge();
+  renderTodaysQuestsPanel();
+}
+
 todaysQuestsToggle.addEventListener('click', () => {
   const isOpen = todaysQuestsPanel.classList.contains('open');
   if (isOpen) {
+    abandonConfirmKey = null;
     todaysQuestsPanel.classList.remove('open');
     if (todaysQuestsTimer) {
       clearInterval(todaysQuestsTimer);

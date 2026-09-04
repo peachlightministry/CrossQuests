@@ -586,6 +586,14 @@ body.palette-classic-cream {
   font-weight: 600;
 }
 
+.todays-quest-expiry {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
 .todays-quest-action {
   display: flex;
   align-items: center;
@@ -625,6 +633,50 @@ body.palette-classic-cream {
   font-size: 0.85rem;
   font-weight: 800;
   color: var(--accent-dark);
+}
+
+.quest-abandon-button {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.quest-abandon-button:hover {
+  color: #c62828;
+  border-color: #c62828;
+}
+
+.quest-abandon-confirm-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.quest-abandon-confirm-button,
+.quest-abandon-cancel-button {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.quest-abandon-confirm-button {
+  color: white;
+  background: #c62828;
+}
+
+.quest-abandon-cancel-button {
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 /* Pending Lie panel — Slay a Lie's equivalent of Today's Quests, styled
