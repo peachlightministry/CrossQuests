@@ -1583,11 +1583,15 @@ body.modal-open {
 .reel-wrapper.divine2-theme .reel {
   position: absolute;
   left: 11.5%;
-  top: 34.5%;
+  top: 33.5%;
   width: 77%;
-  height: auto;
-  min-height: 29%;
-  overflow: visible;
+  /* Pinned to the frame image's actual painted white panel (measured at
+     ~30.8% of the image's height) rather than height:auto, which let long
+     revealed quest text grow the white box taller than the panel and spill
+     out past the frame's gold border. Longer text scrolls inside instead. */
+  height: 30%;
+  min-height: 0;
+  overflow-y: auto;
   background: #fffdf7;
   border: none;
   border-radius: 14px;
@@ -1640,6 +1644,16 @@ body.modal-open {
   .reel-wrapper.divine-theme .reel-verse,
   .reel-wrapper.divine2-theme .reel-verse {
     display: none;
+  }
+
+  .reel-wrapper.divine-theme .reel-quest,
+  .reel-wrapper.divine-theme .reel-placeholder,
+  .reel-wrapper.divine-theme .belief-quote,
+  .reel-wrapper.divine2-theme .reel-quest,
+  .reel-wrapper.divine2-theme .reel-placeholder,
+  .reel-wrapper.divine2-theme .belief-quote {
+    font-size: 3.1cqw;
+    line-height: 1.15;
   }
 }
 
