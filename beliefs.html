@@ -59,71 +59,139 @@
 <script type="module" src="js/admin-tools.js"></script>
 <script type="module" src="js/inbox.js"></script>
 <script type="module" src="js/event-points.js"></script>
-<nav class="site-nav">
-    <a class="brand" href="index.html">
-      <span class="brand-row">
-        <svg class="brand-cross" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
-          <path d="M11 2h2v7h7v2h-7v11h-2V11H4V9h7V2z" fill="currentColor"/>
-        </svg>
-        <span class="brand-name">CrossQuests</span>
+<nav class="site-nav ornate-nav">
+    <div class="ornate-logo-row">
+      <a class="ornate-logo" href="index.html">
+      <img src="img/peachlight-mark.png" alt="Peachlight Ministry mark" class="ornate-logo-mark">
+      <span class="ornate-logo-text">
+        <span class="ornate-logo-name">CrossQuests</span>
+        <span class="ornate-logo-tagline">We got faith, and side quests. Why not both?</span>
       </span>
-      <span class="brand-tagline">We got faith, and side quests. Why not both?</span>
     </a>
-    <div class="nav-right">
-      <div class="nav-links">
-        <div class="nav-group">
-          <a class="nav-link" href="index.html">Spin</a>
-          <a class="nav-link current" href="beliefs.html" aria-current="page">Slay a Lie</a>
-        </div>
-        <div class="nav-group">
-          <a class="nav-link" href="log.html">Quest Log</a>
-          <a class="nav-link" href="beliefs-log.html">Belief Log</a>
-        </div>
-      </div>
-      <a class="nav-link nav-link-boxed" href="event.html">Event</a>
-      <a class="nav-link nav-link-boxed" href="community.html">Community</a>
-      <button class="streak-badge-button" id="streak-badge-button" title="Login streak">
-        🔥 <span id="streak-count-value">0</span>
-        <span class="streak-tooltip" id="streak-tooltip" hidden>Unlock special rewards as you hit higher streaks.</span>
-      </button>
-      <div class="cross-points" title="Cross Points">
-        <svg class="cross-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-          <defs>
-            <linearGradient id="crossGradNav" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FFD54F"/>
-              <stop offset="100%" stop-color="#E8912B"/>
-            </linearGradient>
-          </defs>
-          <circle cx="12" cy="12" r="11" fill="url(#crossGradNav)"/>
-          <path d="M11 5h2v5h5v2h-5v7h-2v-7H6v-2h5V5z" fill="white"/>
-        </svg>
-        <span id="cross-points-value">0</span>
-      </div>
-      <button class="shop-button" id="shop-button" title="Shop">
-        <svg class="shop-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <defs>
-            <linearGradient id="chestLid" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#FFD54F"/>
-              <stop offset="100%" stop-color="#D9A521"/>
-            </linearGradient>
-            <linearGradient id="chestBody" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#E8912B"/>
-              <stop offset="100%" stop-color="#B8730F"/>
-            </linearGradient>
-          </defs>
-          <path d="M2.5 11 C2.5 6.5 6.8 3.5 12 3.5 C17.2 3.5 21.5 6.5 21.5 11 L21.5 12.5 L2.5 12.5 Z" fill="url(#chestLid)" stroke="#7A5900" stroke-width="0.7"/>
-          <rect x="2.5" y="11" width="19" height="1.8" fill="#7A5900" opacity="0.85"/>
-          <rect x="2.5" y="12.5" width="19" height="8" rx="1.8" fill="url(#chestBody)" stroke="#7A5900" stroke-width="0.7"/>
-          <rect x="2.5" y="15.2" width="19" height="1.3" fill="#7A5900" opacity="0.55"/>
-          <rect x="10.6" y="12.5" width="2.8" height="3.6" rx="0.6" fill="#7A5900"/>
-          <circle cx="12" cy="14.1" r="0.55" fill="#FFE9A8"/>
-          <rect x="11.1" y="5.5" width="1.8" height="5.2" rx="0.4" fill="#FFF7DE"/>
-          <rect x="9.4" y="7.2" width="5.2" height="1.8" rx="0.4" fill="#FFF7DE"/>
-        </svg>
-        <span class="shop-label">Shop</span>
-        <span class="shop-alert-badge" id="shop-alert-badge" hidden>!</span>
-      </button>
     </div>
+
+    <div class="ornate-nav-row">
+      <div class="ornate-bar">
+      <div class="ornate-group">
+        <a class="ornate-segment group-start" href="index.html">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-spin"/></svg>
+          Spin
+        </a>
+        <a class="ornate-segment group-end current" href="beliefs.html" aria-current="page">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-swords"/></svg>
+          Slay a Lie
+        </a>
+      </div>
+      <div class="ornate-group">
+        <a class="ornate-segment group-start" href="log.html">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-scroll"/></svg>
+          Quest Log
+        </a>
+        <a class="ornate-segment group-end" href="beliefs-log.html">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-book"/></svg>
+          Belief Log
+        </a>
+      </div>
+      <div class="ornate-group">
+        <a class="ornate-segment special event group-start" href="event.html">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-star"/></svg>
+          Event
+        </a>
+        <a class="ornate-segment special community group-end" href="community.html">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-crown"/></svg>
+          Community
+        </a>
+      </div>
+      <div class="ornate-group">
+        <button class="ornate-segment group-start" id="streak-badge-button" title="Login streak">
+          🔥 <span id="streak-count-value">0</span>
+          <span class="streak-tooltip" id="streak-tooltip" hidden>Unlock special rewards as you hit higher streaks.</span>
+        </button>
+        <div class="ornate-segment" title="Cross Points">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-coin"/></svg>
+          <span id="cross-points-value">0</span>
+        </div>
+        <button class="ornate-segment group-end" id="shop-button" title="Shop">
+          <svg class="ornate-icon" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><use href="#ornate-icon-chest"/></svg>
+          Shop
+          <span class="shop-alert-badge" id="shop-alert-badge" hidden>!</span>
+        </button>
+      </div>
+    </div>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="ornateGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fff6d9"/>
+          <stop offset="45%" stop-color="#e0b957"/>
+          <stop offset="100%" stop-color="#9c7a2e"/>
+        </linearGradient>
+        <linearGradient id="ornatePaleGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fffef8"/>
+          <stop offset="100%" stop-color="#f0d78c"/>
+        </linearGradient>
+
+        <g id="ornate-icon-spin">
+          <path d="M16 5a11 11 0 1 1-7.78 3.22" fill="none" stroke="url(#ornateGold)" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M3.6 4.6 L3.6 11.4 L10.4 11.4 Z" fill="url(#ornateGold)"/>
+        </g>
+
+        <g id="ornate-icon-swords">
+          <g transform="rotate(45 16 16)">
+            <rect x="14.4" y="3" width="3.2" height="19" rx="1" fill="url(#ornateGold)"/>
+            <rect x="10" y="20.5" width="12" height="2.6" rx="1" fill="url(#ornateGold)"/>
+            <rect x="14.4" y="23" width="3.2" height="6" rx="1" fill="url(#ornateGold)"/>
+          </g>
+          <g transform="rotate(-45 16 16)">
+            <rect x="14.4" y="3" width="3.2" height="19" rx="1" fill="url(#ornateGold)"/>
+            <rect x="10" y="20.5" width="12" height="2.6" rx="1" fill="url(#ornateGold)"/>
+            <rect x="14.4" y="23" width="3.2" height="6" rx="1" fill="url(#ornateGold)"/>
+          </g>
+        </g>
+
+        <g id="ornate-icon-scroll">
+          <rect x="9" y="6" width="14" height="20" rx="1" fill="url(#ornateGold)"/>
+          <ellipse cx="9" cy="6" rx="3" ry="2.3" fill="url(#ornateGold)"/>
+          <ellipse cx="23" cy="6" rx="3" ry="2.3" fill="url(#ornateGold)"/>
+          <ellipse cx="9" cy="26" rx="3" ry="2.3" fill="url(#ornateGold)"/>
+          <ellipse cx="23" cy="26" rx="3" ry="2.3" fill="url(#ornateGold)"/>
+          <line x1="12.5" y1="12" x2="19.5" y2="12" stroke="#6b5013" stroke-width="0.9" opacity="0.55"/>
+          <line x1="12.5" y1="16" x2="19.5" y2="16" stroke="#6b5013" stroke-width="0.9" opacity="0.55"/>
+          <line x1="12.5" y1="20" x2="19.5" y2="20" stroke="#6b5013" stroke-width="0.9" opacity="0.55"/>
+        </g>
+
+        <g id="ornate-icon-book">
+          <path d="M16 9 C13 7 9 7 5 8 L5 24 C9 23 13 23 16 25 C19 23 23 23 27 24 L27 8 C23 7 19 7 16 9 Z" fill="url(#ornateGold)"/>
+          <line x1="16" y1="9" x2="16" y2="25" stroke="#6b5013" stroke-width="1" opacity="0.5"/>
+        </g>
+
+        <g id="ornate-icon-star">
+          <path d="M16 3 C17 12 20 15 29 16 C20 17 17 20 16 29 C15 20 12 17 3 16 C12 15 15 12 16 3 Z" fill="url(#ornatePaleGold)"/>
+        </g>
+
+        <g id="ornate-icon-crown">
+          <path d="M6 14 L10 22 L16 12 L22 22 L26 14 L24 24 L8 24 Z" fill="url(#ornatePaleGold)"/>
+          <rect x="7" y="24" width="18" height="3" rx="1" fill="url(#ornatePaleGold)"/>
+          <circle cx="6" cy="12" r="1.7" fill="url(#ornatePaleGold)"/>
+          <circle cx="16" cy="10" r="1.9" fill="url(#ornatePaleGold)"/>
+          <circle cx="26" cy="12" r="1.7" fill="url(#ornatePaleGold)"/>
+        </g>
+
+        <g id="ornate-icon-coin">
+          <circle cx="16" cy="16" r="13" fill="url(#ornateGold)" stroke="#6b5013" stroke-width="0.8"/>
+          <path d="M15 8h2v6h6v2h-6v8h-2v-8H9v-2h6V8z" fill="#6b5013" opacity="0.8"/>
+        </g>
+
+        <g id="ornate-icon-chest" transform="scale(1.333)">
+          <path d="M2.5 11 C2.5 6.5 6.8 3.5 12 3.5 C17.2 3.5 21.5 6.5 21.5 11 L21.5 12.5 L2.5 12.5 Z" fill="url(#ornateGold)" stroke="#6b5013" stroke-width="0.7"/>
+          <rect x="2.5" y="11" width="19" height="1.8" fill="#6b5013" opacity="0.7"/>
+          <rect x="2.5" y="12.5" width="19" height="8" rx="1.8" fill="url(#ornateGold)" stroke="#6b5013" stroke-width="0.7"/>
+          <rect x="2.5" y="15.2" width="19" height="1.3" fill="#6b5013" opacity="0.4"/>
+          <rect x="10.6" y="12.5" width="2.8" height="3.6" rx="0.6" fill="#6b5013"/>
+          <circle cx="12" cy="14.1" r="0.55" fill="#fff6d9"/>
+        </g>
+      </defs>
+    </svg>
   </nav>
 <div class="page">
   <div class="woh-sidebar woh-sidebar-left" aria-hidden="true"></div>

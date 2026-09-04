@@ -2170,10 +2170,10 @@ body.woh-theme {
     display: none;
   }
 
-  body.woh-theme:has(.hero) .brand,
-  body.woh-theme:has(.hero) .brand-cross,
-  body.woh-theme:has(.hero) .brand-name,
-  body.woh-theme:has(.hero) .brand-tagline {
+  /* The picture has its own "Jesus Side Quest" wordmark baked in up top —
+     hide the live logo's name/tagline text so it doesn't sit on top of it. */
+  body.woh-theme:has(.hero) .ornate-logo-name,
+  body.woh-theme:has(.hero) .ornate-logo-tagline {
     color: transparent;
   }
 
@@ -2946,85 +2946,103 @@ body.woh-theme {
   border-color: var(--accent-dark);
 }
 
-/* ===== Navbar ===== */
+/* ===== Ornate Navbar ===== */
 
-.site-nav {
+/* The nav is intentionally NOT inside .page -- it gets its own wider,
+   independently-centered container so it can be wider than the 720px
+   content column every other page element still uses. */
+.ornate-nav {
+  display: block;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto 8px;
+  padding: 24px 20px 0;
+  box-sizing: border-box;
+}
+
+.ornate-logo-row {
+  margin-bottom: 14px;
+}
+
+.ornate-nav-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ornate-logo {
+  display: flex;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
-.nav-right {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 18px;
+.ornate-logo-mark {
+  height: 38px;
+  width: auto;
+  display: block;
 }
 
-.nav-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 70px;
-}
-
-.nav-group {
-  display: flex;
-  gap: 6px;
-}
-
-.nav-link.current {
-  background: rgba(0, 0, 0, 0.14);
-  font-weight: 900;
-  cursor: default;
-}
-
-.cross-points {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.75);
-  padding: 6px 14px;
-  border-radius: 999px;
-  box-shadow: var(--shadow);
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.shop-button {
-  position: relative;
+.ornate-logo-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1px;
-  background: rgba(255, 255, 255, 0.75);
-  border: none;
-  padding: 5px 12px 6px;
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: transform 0.15s ease;
 }
 
-.shop-button:hover {
-  transform: translateY(-1px);
+.ornate-logo-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  line-height: 1.15;
 }
 
-.shop-icon {
-  display: block;
-  filter: drop-shadow(0 2px 3px rgba(122, 89, 0, 0.4));
-}
-
-.shop-label {
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.ornate-logo-tagline {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
   color: var(--ink-soft);
+}
+
+.ornate-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px solid #c9a227;
+  border-bottom: 2px solid #c9a227;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  min-height: 44px;
+  padding: 0 4px;
+}
+
+/* Each group is two segments fused into one pill (thin divider between
+   them); real gaps only appear BETWEEN groups, via .ornate-bar's own gap. */
+.ornate-group {
+  display: flex;
+  align-items: center;
+}
+
+.ornate-segment {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 44px;
+  padding: 0 18px;
+  background: linear-gradient(180deg, #fffaf0 0%, #f0e0b8 100%);
+  color: #4a3208;
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+  position: relative;
 }
 
 .shop-alert-badge {
@@ -3048,87 +3066,41 @@ body.woh-theme {
   display: none;
 }
 
-.brand {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 3px;
+.ornate-segment.group-start {
+  clip-path: polygon(12px 0%, 100% 0%, 100% 100%, 12px 100%, 0% 50%);
 }
 
-.brand-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.ornate-segment.group-end {
+  clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 0% 100%);
+  border-left: 1px solid rgba(107, 80, 19, 0.35);
 }
 
-.brand-cross {
-  color: var(--ink);
+.ornate-segment:hover {
+  filter: brightness(1.06);
+}
+
+.ornate-segment.current {
+  background: linear-gradient(180deg, #fff3d0 0%, #e3c684 100%);
+  box-shadow: inset 0 0 0 1px rgba(155, 121, 39, 0.55);
+}
+
+.ornate-segment.special {
+  background: linear-gradient(180deg, #1c2c4e 0%, #101a30 100%);
+  color: #f0d78c;
+  box-shadow: inset 0 0 0 1px #c9a227;
+}
+
+.ornate-segment.special.group-end {
+  border-left-color: rgba(201, 162, 39, 0.7);
+}
+
+.ornate-segment.special.community {
+  background: linear-gradient(180deg, #33204f 0%, #1e1130 100%);
+}
+
+.ornate-icon {
+  display: block;
   flex-shrink: 0;
-}
-
-.brand-name {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--ink);
-  letter-spacing: 0.02em;
-}
-
-.brand-tagline {
-  font-family: var(--font-body);
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--ink-soft);
-  letter-spacing: 0.01em;
-}
-
-.nav-link {
-  color: var(--ink);
-  text-decoration: none;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: var(--shadow);
-  transition: transform 0.15s ease;
-}
-
-.nav-link:hover {
-  transform: translateY(-2px);
-}
-
-.nav-link-boxed {
-  background: linear-gradient(135deg, #FFD700 0%, var(--accent-dark) 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(217, 140, 43, 0.35);
-  border-radius: 10px;
-  padding: 8px 16px;
-}
-
-.nav-link-boxed:hover {
-  transform: translateY(-2px);
-}
-
-.nav-link-boxed.current {
-  background: linear-gradient(135deg, #FFD700 0%, var(--accent-dark) 100%);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7), 0 4px 12px rgba(217, 140, 43, 0.35);
-}
-
-.streak-badge-button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.75);
-  border: none;
-  padding: 6px 14px;
-  border-radius: 999px;
-  box-shadow: var(--shadow);
-  font-weight: 800;
-  font-size: 0.95rem;
-  font-family: inherit;
-  color: var(--ink);
-  cursor: pointer;
 }
 
 /* ===== Settings (gear button, top-right) + Color Palette picker ===== */
@@ -3803,6 +3775,9 @@ a.community-card-title:hover {
 }
 
 /* ===== Daily streak ===== */
+
+/* .streak-badge-button is #streak-badge-button, styled by .ornate-segment
+   (already position:relative) — the tooltip just needs its own rule. */
 
 .streak-tooltip {
   position: absolute;
